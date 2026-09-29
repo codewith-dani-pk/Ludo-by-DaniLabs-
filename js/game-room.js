@@ -2,13 +2,15 @@
 /* DaniLabs v20 match-room presentation. No rules, odds or private settings are changed here. */
 (function(){
 const AV=['🦊','🐼','🦁','🐙','🚀','👑'];
-const COLOR_AV={red:'◆',green:'●',yellow:'✦',blue:'▲'};
+const AV_POOL=['🐯','🐵','🐰','🐻','🐨','🐺','🐱','🐶','🐸','🐧','🦉','🦅','🦄','🤖','👽','🐲','🦋','🐬'];
 let lastGame=null,lastTurn='',lastPos={},lastRoll={},rollHistory={};
 const prof=()=>Object.assign({name:'Guest player',av:0},Store.get('ldb_prof',{}));
 const DEFAULT_NAME={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
 const humanName=c=>NAMES[c]!==DEFAULT_NAME[c]?NAMES[c]:(c==='red'?(prof().name||'Guest player'):(NAMES[c]+' player'));
 const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c);
-const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(isBot(c)?'🤖':COLOR_AV[c]);
+function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const used=new Set(Object.values(G.uiAvatars));let changed=false;G.cols.forEach(c=>{if(c==='red'&&!isBot(c))return;if(!G.uiAvatars[c]){const choices=AV_POOL.filter(a=>!used.has(a)),a=(choices.length?choices:AV_POOL)[Math.floor(Math.random()*(choices.length||AV_POOL.length))];G.uiAvatars[c]=a;used.add(a);changed=true}});if(changed)saveG();return G.uiAvatars}
+const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
+const powerBadges=c=>{const a=(G&&G.cards&&G.cards[c])||[];if(!a.length)return'';const icons={shield:'🛡️',reroll:'🎲',freeze:'❄️'};return '<div class="player-powers" aria-label="'+NAMES[c]+' powers">'+a.map(t=>'<span title="'+(typeof CARDS!=='undefined'&&CARDS[t]?CARDS[t][0]:t)+'">'+(icons[t]||'✨')+'</span>').join('')+'</div>'};
 const targetTokens=()=>G&&G.variant==='quick'?2:4;
 const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===56).length:0;
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
@@ -28,7 +30,7 @@ function playerHTML(c){
  const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0;
  const stat=done?'#'+(rank+1)+' FINISH':(homeCount(c)+'/'+targetTokens()+' HOME');
  return '<article class="room-player '+(active?'active ':'')+(done?'finished':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
- '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+displayName(c)+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':NAMES[c])+'</small></div>'+playerDieHTML(c)+'</article>';
+ '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+displayName(c)+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+powerBadges(c)+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':NAMES[c])+'</small></div>'+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
  const has=c=>G.cols.includes(c);let a=[],b=[];
