@@ -44,11 +44,11 @@ function cgPlay(i,col){const p=cgCur(),c=p.hand.splice(i,1)[0];CG.disc.push(c);C
  cgAdv();fin()}
 function cgBot(){if(!CG||CG.over)return;const p=cgCur();if(!p.bot||CG.cover||!$('#cg').classList.contains('on'))return;
  const nxt=CG.pl[(CG.turn+CG.dir+CG.pl.length)%CG.pl.length],pool=p.hand.map((c,i)=>({c,i})).filter(o=>cgOk(o.c));
- if(!pool.length||(CG.drew&&false))return cgDrawTurn(p);
+ if(!pool.length)return cgDrawTurn(p);
  const cnt={r:0,g:0,y:0,b:0};p.hand.forEach(c=>{if(c.c!=='w')cnt[c.c]++});
  pool.forEach(o=>{let s=Math.random();if(o.c.c==='w')s-=6;if('SRDF'.includes(o.c.v)&&nxt.hand.length<=2)s+=8;else if('SRD'.includes(o.c.v))s+=1;if(o.c.c!=='w')s+=cnt[o.c.c]*.4;o.s=s});
  pool.sort((a,b)=>b.s-a.s);const pick=pool[0];let col=null;if(pick.c.c==='w'){col=CGK.slice().sort((a,b)=>cnt[b]-cnt[a])[0];if(!cnt[col])col=CGK[cgRnd(4)]}
- if(CG.drew&&pick.c.c==='w'&&false)return;cgPlay(pick.i,col)}
+ cgPlay(pick.i,col)}
 function cgWin(p){Stats2.add(p.col);confetti();Snd.play('win');buzz(200);const st=Stats2.get();modalCg('<h2>'+cgName(p)+' wins!</h2><p class="hint">'+CG.pl.map(q=>cgName(q)+': '+q.hand.length+' left').join(' · ')+'</p><div class="row"><button class="btn" id="cgAgain">Play again</button><button class="btn ghost" id="cgHomeB">Home</button></div>')}
 const Stats2={get:()=>Object.assign({games:0,wins:{}},Store.get('ldb_cgstats',{})),add(c){const s=this.get();s.games++;s.wins[c]=(s.wins[c]||0)+1;Store.set('ldb_cgstats',s)}};
 function cgStatsLine(){const s=Stats2.get();$('#cgStats').textContent=s.games?s.games+' card games · '+Object.entries(s.wins).map(([c,n])=>NAMES[c]+' '+n).join(' · '):''}
