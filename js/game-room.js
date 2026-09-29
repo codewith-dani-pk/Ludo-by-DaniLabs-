@@ -40,10 +40,10 @@ function paintPlayerDice(n){
 }
 
 function playerHTML(c){
- const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0,pct=done?100:progressPct(c);
+ const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0,wildChoice=active&&phase==='pick'&&!isBot(c),pct=done?100:progressPct(c);
  const stat=done?'#'+(rank+1)+' FINISH':pct+'%';
  const progress='<div class="player-progress" aria-label="'+pct+' percent progress"><i style="width:'+pct+'%"></i><span>'+homeCount(c)+'/'+targetTokens()+' home</span></div>';
- return '<article class="room-player '+(active?'active ':'')+(done?'finished':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
+ return '<article class="room-player '+(active?'active ':'')+(done?'finished ':'')+(wildChoice?'choosing-wild':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
  '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+progress+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':'progress')+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
