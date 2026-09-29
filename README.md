@@ -1,30 +1,45 @@
-# Ludo by DaniLabs — v26
+# Ludo by DaniLabs — v27
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
-## Current game room
+## Current Ludo experience
 
 - 2, 3 or 4-player local pass-and-play with optional computer opponents.
-- Separate color-matched dice for every Ludo player; only the current human player's dice is actionable.
-- Individual player cards with random match avatars, recent dice history and active-turn feedback.
-- Party mode gives every player their own random power card: Shield, Re-roll or Freeze.
-- Power cards live on the owning player's panel; the old shared bottom power area is disabled.
-- Each player panel has its own local emoji/reaction control.
-- Duplicate powers in old saved games are cleaned when a game is continued.
+- Classic, Quick and Rush variants plus Party options.
+- Separate color-matched dice for every player; only the current human player's dice is actionable.
+- Player cards with match avatars, recent dice history, active-turn feedback and local reactions.
+- Party powers live on the owning player's panel: Shield, Re-roll and Freeze.
+- Re-roll now works after a dead/no-move roll for humans and bots.
+- All owned powers remain reachable on narrow phones instead of hiding later power buttons.
 - Bots can use Shield, Freeze and situational Re-roll powers.
-- Classic, Quick and Rush variants plus Party options, safe cells, captures, exact finish, extra turns and three-six handling.
+- Safe cells, captures, exact finish, extra turns, three-six handling, undo, save/continue, rankings, rematch and replay.
+
+## Reliability and mobile audit
+
+v27 adds a full related-system hardening pass:
+
+- Saved Ludo games are validated and normalized before continue.
+- Stored gameplay and host options are normalized to supported values.
+- Profile data is sanitized before match-card rendering.
+- Daily rewards use the device's local calendar day instead of UTC day boundaries.
+- Stored game-mode values fall back safely to Classic when invalid.
+- Mobile zoom is no longer disabled.
+- Small-screen player power controls can scroll so every owned power remains accessible.
+- PWA updates automatically refresh an already controlled page when the new service worker takes control.
+- Dead Color Cards bot branches were removed.
+- Service-worker cache is `ludo-danilabs-v27`.
 
 ## Cosmetics and local features
 
 - Board themes, dice skins and pawn styles in Collection.
 - Local profile name/avatar and cosmetic coin rewards.
-- Sounds, haptics, speed controls, save/continue, rankings, rematch and replay.
+- Sounds, haptics, speed controls and local statistics.
 - Separate Color Cards game.
-- PWA/offline app shell with versioned cache updates.
+- Offline/PWA app shell with versioned cache updates.
 
 ## Private DaniLabs controls
 
-The existing local DaniLabs Control Center and its per-color legal dice-weighting controls are preserved. Private controls are not shown in the normal public match UI. The local credential barrier is convenience-level client-side protection, not server security.
+The existing local DaniLabs Control Center is preserved, including per-color legal dice-weighting controls, power-click timing and secret click rules. These private controls are not shown in the normal public match UI. The local credential barrier is convenience-level client-side protection, not server security.
 
 ## Project structure
 
@@ -64,8 +79,10 @@ Import the repository root into Vercel.
 
 ## PWA / offline
 
-`sw.js` precaches the local app shell. Navigation uses network-first with an offline fallback; static assets use cache-first with background refresh. Bump the cache version whenever cached deployable assets change.
+`sw.js` precaches the local app shell. Navigation uses network-first with an offline fallback; static assets use cache-first with background refresh. The cache version is bumped whenever cached deployable assets change.
 
-## Audit notes
+## Audit status
 
-The v26 audit checks JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved Party-state normalization, private power-click timing and Vercel/PWA configuration. Browser/device QA is still recommended after deployment because static checks do not replace real mobile runtime testing.
+The v27 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+
+Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
