@@ -12,7 +12,7 @@ applyLook();
 /* ---- per-game state ---- */
 const nowModes=()=>({chaos:O.chaos,cards:O.cards,events:O.events,underdog:O.underdog,helper:Object.assign({},O.helper)});
 function modeText(){const m=G.mx,a=[];if(m.chaos)a.push('Wild star dice');if(m.cards)a.push('Power cards');if(m.events)a.push('Party events');if(m.underdog)a.push('Underdog boost');const h=G.cols.filter(c=>m.helper[c]);if(h.length)a.push('Helper re-roll: '+h.map(c=>NAMES[c]).join(', '));return a.join(' | ')}
-function ensureExtras(){G.bots=G.bots||[];G.cards=G.cards||{};G.shield=G.shield||{};G.peace=G.peace||0;G.tc=G.tc||0;G.skip=G.skip||null;G.rep=G.rep||[];G.secretPowers=G.secretPowers||{};G.mx=G.mx||{chaos:0,cards:0,events:0,underdog:0,helper:{}};G.mx.helper=G.mx.helper||{}}
+function ensureExtras(){G.bots=Array.isArray(G.bots)?G.bots.filter(c=>G.cols.includes(c)):[];G.cards=G.cards&&typeof G.cards==='object'?G.cards:{};COLORS.forEach(c=>{const a=Array.isArray(G.cards[c])?G.cards[c]:[];G.cards[c]=[...new Set(a)].filter(k=>CARDS[k]).slice(0,3)});G.shield=G.shield&&typeof G.shield==='object'?G.shield:{};G.peace=Math.max(0,+G.peace||0);G.tc=Math.max(0,+G.tc||0);G.skip=G.cols.includes(G.skip)?G.skip:null;G.rep=Array.isArray(G.rep)?G.rep:[];G.secretPowers=G.secretPowers&&typeof G.secretPowers==='object'?G.secretPowers:{};G.mx=G.mx&&typeof G.mx==='object'?G.mx:{chaos:0,cards:0,events:0,underdog:0,helper:{}};G.mx.helper=G.mx.helper&&typeof G.mx.helper==='object'?G.mx.helper:{}}
 const frame=(c,r)=>({p:Object.fromEntries(G.cols.map(k=>[k,G.pos[k].slice()])),c:c||null,r:r||null});
 function rec(c,r){G.rep.push(frame(c,r));if(G.rep.length>700)G.rep.splice(1,G.rep.length-700)}
 function initExtras(){G.mx=nowModes();ensureExtras();G.cols.forEach(c=>{G.cards[c]=[]});if(G.mx.cards){const starter=Object.keys(CARDS);G.cols.forEach(c=>giveCard(c,starter[Math.floor(Math.random()*starter.length)],true))}G.rep=[frame()];Undo.h=[];const t=modeText();if(t)setTimeout(()=>toast('Modes: '+t),300)}
@@ -26,12 +26,13 @@ function useCard(t){if(!G||busy||REPLAYING||G.over)return;const c=cur(),a=G.card
  else{if(phase!=='roll')return;if(t==='shield'){G.shield[c]=1;toast(NAMES[c]+' is shielded until their next turn')}else{G.skip=nextColor();toast(NAMES[G.skip]+' will skip a turn')}}
  a.splice(ix,1);Snd.play('tap');saveG();render()}
 function botCards(c){if(!G.cards||!G.cards[c])return;const a=G.cards[c];let i=a.indexOf('shield');if(i>=0&&!G.shield[c]&&Math.random()<.4){a.splice(i,1);G.shield[c]=1;toast(NAMES[c]+' uses Shield')}i=a.indexOf('freeze');if(i>=0&&Math.random()<.3){a.splice(i,1);G.skip=nextColor();toast(NAMES[G.skip]+' will skip a turn (Freeze)')}}
+function botMaybeReroll(c,r,b){if(!G||!isBot(c)||phase!=='move'||!G.cards||!G.cards[c])return false;const a=G.cards[c],i=a.indexOf('reroll');if(i<0)return false;const f=Rules.feats(G,c,r),weak=!f.cap&&!f.fin&&!f.out&&(r<=2||f.danger>.7),chance=O.diff==='hard'?.72:O.diff==='easy'?.28:.5;if(!weak||Math.random()>chance)return false;a.splice(i,1);if(r===6)G.sixes=Math.max(0,G.sixes-1);G.roll=null;phase='roll';busy=false;toast(NAMES[c]+' uses 🎲 Re-roll');saveG();render();setTimeout(()=>{if(G&&!G.over&&cur()===c&&isBot(c)&&phase==='roll'&&!busy)doRoll()},420*S.speed);return true}
 const prog=c=>G.pos[c].reduce((n,p)=>n+(p<0?0:p+1),0);
 function hostTick(){if(!G||!G.mx)return;const act=G.cols.filter(c=>!G.ranks.includes(c));
  if(G.mx.events&&G.tc%10===0){const e=Math.floor(Math.random()*3);if(e===0){const c=cur();giveCard(c);toast('Party gift for '+NAMES[c])}else if(e===1){G.peace=G.cols.length;toast('Peace time: no captures for one round')}else{const w=act.slice().sort((a,b)=>prog(a)-prog(b))[0];giveCard(w,'reroll');toast('Comeback: '+NAMES[w]+' gets a Re-roll')}}
  if(G.mx.underdog&&G.tc%8===0&&act.length>1){const s=act.slice().sort((a,b)=>prog(a)-prog(b));if(prog(s[s.length-1])-prog(s[0])>30){giveCard(s[0],'reroll');toast('Underdog boost: '+NAMES[s[0]]+' gets a Re-roll')}}}
-function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(!G||REPLAYING||!G.cols){box.innerHTML=pk.innerHTML='';u.hidden=true;return}const c=cur(),a=(G.cards&&G.cards[c])||[];
- box.innerHTML=''; // v25: power controls now live on each player's own panel
+function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(!G||REPLAYING||!G.cols){box.innerHTML=pk.innerHTML='';u.hidden=true;return}const c=cur();
+ box.innerHTML=''; // powers live on each player's own panel
  pk.innerHTML=(phase==='pick'&&!isBot(c))?[1,2,3,4,5,6].map(v=>'<button class="btn" data-v="'+v+'">'+v+'</button>').join(''):'';
  u.hidden=!(O.rules.undo&&Undo.h.length&&!G.over)}
 $('#cards').onclick=e=>{const b=e.target.closest('[data-card]');if(b)useCard(b.dataset.card)};
