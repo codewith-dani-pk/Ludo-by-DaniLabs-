@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v36
+# Ludo by DaniLabs — v37
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v36`.
+- Service-worker cache is `ludo-danilabs-v37`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v36 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v37 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -132,3 +132,14 @@ Owner Tools now load on demand. Replay and stats-reset controls have working act
 Private power state now has a tactile-only in-game confirmation on supported devices: activation uses two short pulses and deactivation uses one longer pulse. Secret click-rule activation no longer plays the public game sound. Match-hold shortcuts use the same ON/OFF haptic language and do not add a public badge.
 
 Bad Match now includes a no-win guard. While a color has the match-scoped Bad Match state, a move that would complete its final pawn is removed from its legal move choices. Chaos Wild Star is also suppressed for that color so it cannot bypass the guard. Other movement, captures and normal turn rules remain unchanged.
+
+
+## Settings cleanup v37
+
+Quick Settings now contains only device and feel controls: Sound, Music, Game vibration, Shake to Roll and one Dice animation preset. The old separate Instant Roll and Animation Speed controls were consolidated into the single Dice animation selector while preserving the same internal instant/speed behavior.
+
+Gameplay rules are no longer duplicated in Quick Settings. Paired-token safety lives only in Game rules & options with the other core Ludo rules. Restart current match appears only during an active match.
+
+Game rules & options are grouped into Core rules, Computer, Accessibility, Party features, Player helpers & names, and a collapsed Tools & privacy section. Stats, replay, backup and the local options PIN remain available without occupying the main rules surface.
+
+The v36 private power haptics, Bad Match no-win guard, long-press match shortcuts, secret click rules and power timing are preserved.
