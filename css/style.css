@@ -150,3 +150,10 @@ body[data-turn=blue] #board{box-shadow:0 12px 30px #0009,0 0 0 6px var(--blue)}
 .cp-fast-layout>.cp-settings.cp-fine{padding:10px;border-radius:14px;background:#ffffff04}.cp-fast-layout>.cp-settings.cp-fine .cp-settings-head{margin-bottom:0}
 @media(max-width:520px){.cp-fast-actions-clean{grid-template-columns:1.3fr .7fr}.cp-fast-actions-clean .danger{grid-column:auto}.cp-fine-grid{grid-template-columns:1fr}.cp-fast-note{font-size:.45rem}}
 @media(max-width:360px){.cp-fast-actions-clean{grid-template-columns:1fr 1fr}.cp-fast-actions-clean .danger{grid-column:auto}.cp-follow{font-size:.48rem!important;padding-inline:7px!important}}
+
+
+/* v34 — private match-hold shortcuts */
+.tok{touch-action:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.cp-hold-note{display:grid;gap:3px;padding:8px 10px;border:1px solid #ffffff14;border-radius:10px;background:#08061266}.cp-hold-note>b{font-size:.55rem;color:#d8ccef}.cp-hold-note>span{font-size:.51rem;color:#b9accf;line-height:1.35}.cp-hold-note strong{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ffffff10;color:#fff}.cp-hold-note>small{font-size:.43rem;color:#817692}
+.cp-utility-body .cp-global-actions{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:520px){.cp-utility-body .cp-global-actions{grid-template-columns:1fr 1fr}.cp-utility-body .cp-global-actions>button:last-child{grid-column:1/-1}}
