@@ -171,3 +171,38 @@ body[data-theme=vegas] #game.game-room{background:radial-gradient(circle at 50% 
  .player-progress{display:block;width:min(78px,100%);height:4px}
 }
 @media(prefers-reduced-motion:reduce){.player-progress i{transition:none}}
+
+
+/* v29 — Wild Star chooser belongs to the rolling player */
+.wild-picker{display:grid;grid-column:3/5;gap:4px;min-width:0;padding:4px 5px;border:1px solid color-mix(in srgb,var(--pc) 58%,#fff);border-radius:11px;background:linear-gradient(145deg,color-mix(in srgb,var(--pc) 24%,#1a1031),#0b071b);box-shadow:0 0 12px color-mix(in srgb,var(--pc) 28%,transparent),inset 0 1px #fff2}
+.room-player.choosing-wild .room-score{display:none}
+.wild-picker>b{display:flex;align-items:center;gap:4px;font-size:.47rem;letter-spacing:.04em;text-transform:uppercase;color:#fff7c9}
+.wild-picker>b span{font-size:.72rem;color:#ffe26b;filter:drop-shadow(0 0 5px #ffd24a)}
+.wild-picker>div{display:grid;grid-template-columns:repeat(6,minmax(24px,1fr));gap:3px}
+.wild-picker button{min-width:24px;height:27px;padding:0;border:1px solid #ffffff42;border-radius:8px;background:#ffffff12;color:#fff;font:900 .62rem/1 inherit;box-shadow:0 2px 0 #0005;cursor:pointer}
+.wild-picker button:hover,.wild-picker button:focus-visible{border-color:#fff;background:color-mix(in srgb,var(--pc) 38%,#ffffff18);outline:2px solid #fff;outline-offset:1px}
+.wild-picker button:active{transform:translateY(1px);box-shadow:none}
+.player-die.wild-die{opacity:1;border-color:#ffe26b;box-shadow:0 4px 0 #5f4310,0 0 0 2px #ffe26b,0 0 19px #ffd24a}
+.mini-wild-face{display:grid!important;place-items:center!important;background:radial-gradient(circle at 35% 30%,#fffbd8,#ffd24a 52%,#9d6810)!important}
+.mini-wild-face b{font-size:1.05rem;color:#4d2d00;text-shadow:0 1px #fff8}
+#game #pick{display:none!important}
+
+@media(max-width:700px){
+ .room-player.choosing-wild{grid-template-columns:36px minmax(0,1fr) 41px}
+ .room-player.choosing-wild .wild-picker{grid-column:2/3}
+ .wild-picker>div{grid-template-columns:repeat(6,25px);overflow-x:auto;scrollbar-width:none}
+ .wild-picker>div::-webkit-scrollbar{display:none}
+ .wild-picker button{width:25px;min-width:25px}
+}
+@media(max-width:430px){
+ .room-player.choosing-wild{grid-template-areas:"avatar copy die" "avatar wild die"}
+ .room-player.choosing-wild .wild-picker{grid-area:wild;grid-column:auto;padding:3px 4px}
+ .wild-picker>b{font-size:.42rem}
+ .wild-picker>div{grid-template-columns:repeat(6,24px);gap:2px}
+ .wild-picker button{width:24px;min-width:24px;height:24px;font-size:.56rem}
+}
+@media(max-width:350px){
+ .room-player.choosing-wild .wild-picker{max-width:146px}
+ .wild-picker>div{overflow-x:auto}
+}
+@media(prefers-reduced-motion:reduce){.player-die.wild-die{animation:none!important}}
