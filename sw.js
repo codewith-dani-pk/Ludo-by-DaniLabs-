@@ -1,4 +1,4 @@
-const V='ludo-danilabs-v9',FILES=['./','index.html','manifest.json','css/style.css','js/app.js','js/host.js','js/cards.js','assets/icons/icon.svg','assets/icons/icon-192.png','assets/icons/icon-512.png','assets/icons/apple-touch-icon.png'];
+const V='ludo-danilabs-v15',FILES=['./','index.html','manifest.json','css/style.css','css/upgrade.css','js/app.js','js/themes.js','js/host.js','js/cards.js','assets/icons/icon.svg','assets/icons/icon-192.png','assets/icons/icon-512.png','assets/icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
