@@ -15,10 +15,10 @@ function modeText(){const m=G.mx,a=[];if(m.chaos)a.push('Wild star dice');if(m.c
 function ensureExtras(){G.bots=G.bots||[];G.cards=G.cards||{};G.shield=G.shield||{};G.peace=G.peace||0;G.tc=G.tc||0;G.skip=G.skip||null;G.rep=G.rep||[];G.secretPowers=G.secretPowers||{};G.mx=G.mx||{chaos:0,cards:0,events:0,underdog:0,helper:{}};G.mx.helper=G.mx.helper||{}}
 const frame=(c,r)=>({p:Object.fromEntries(G.cols.map(k=>[k,G.pos[k].slice()])),c:c||null,r:r||null});
 function rec(c,r){G.rep.push(frame(c,r));if(G.rep.length>700)G.rep.splice(1,G.rep.length-700)}
-function initExtras(){G.mx=nowModes();ensureExtras();G.cols.forEach(c=>{G.cards[c]=[]});if(G.mx.cards)G.cols.forEach(c=>giveCard(c,null,true));G.rep=[frame()];Undo.h=[];const t=modeText();if(t)setTimeout(()=>toast('Modes: '+t),300)}
+function initExtras(){G.mx=nowModes();ensureExtras();G.cols.forEach(c=>{G.cards[c]=[]});if(G.mx.cards){const starter=Object.keys(CARDS);G.cols.forEach(c=>giveCard(c,starter[Math.floor(Math.random()*starter.length)],true))}G.rep=[frame()];Undo.h=[];const t=modeText();if(t)setTimeout(()=>toast('Modes: '+t),300)}
 
 /* ---- power cards, events, underdog ---- */
-function giveCard(c,t,quiet){G.cards[c]=G.cards[c]||[];if(G.cards[c].length>=3)return;t=t||Object.keys(CARDS)[Math.floor(Math.random()*3)];G.cards[c].push(t);if(!quiet)toast(NAMES[c]+' got '+CARDS[t][1]+' '+CARDS[t][0])}
+function giveCard(c,t,quiet){G.cards[c]=G.cards[c]||[];const a=G.cards[c],available=Object.keys(CARDS).filter(k=>!a.includes(k));if(a.length>=3||!available.length)return;if(t&&a.includes(t))return;t=t||available[Math.floor(Math.random()*available.length)];if(!CARDS[t])return;a.push(t);if(!quiet)toast(NAMES[c]+' got '+CARDS[t][1]+' '+CARDS[t][0])}
 const captureCard=c=>{if(G.mx&&G.mx.cards)giveCard(c)};
 function nextColor(){let i=G.turn;do i=(i+1)%G.cols.length;while(G.ranks.includes(G.cols[i]));return G.cols[i]}
 function useCard(t){if(!G||busy||REPLAYING||G.over)return;const c=cur(),a=G.cards[c]||[],ix=a.indexOf(t);if(ix<0||isBot(c))return;
