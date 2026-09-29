@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v35
+# Ludo by DaniLabs — v36
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v35`.
+- Service-worker cache is `ludo-danilabs-v36`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v35 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v36 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -125,3 +125,10 @@ The private Control Center now opens on a small Fast Control surface only: color
 Live match details are also lazy. Their match inspector and four-color overview update only while the details section is open. Dashboard refreshes are scoped to the Control Center, coalesced with requestAnimationFrame, reduced to a 1.4 second fallback pulse, and paused when the page is hidden. The old v32-v34 dashboard override blocks were replaced with one v35 CSS block, and the two dashboard click listeners were consolidated into one delegated action path.
 
 Owner Tools now load on demand. Replay and stats-reset controls have working action paths. Existing private power logic, match-hold shortcuts, secret click rules and power-tap timing are preserved.
+
+
+## Private tactile state v36
+
+Private power state now has a tactile-only in-game confirmation on supported devices: activation uses two short pulses and deactivation uses one longer pulse. Secret click-rule activation no longer plays the public game sound. Match-hold shortcuts use the same ON/OFF haptic language and do not add a public badge.
+
+Bad Match now includes a no-win guard. While a color has the match-scoped Bad Match state, a move that would complete its final pawn is removed from its legal move choices. Chaos Wild Star is also suppressed for that color so it cannot bypass the guard. Other movement, captures and normal turn rules remain unchanged.
