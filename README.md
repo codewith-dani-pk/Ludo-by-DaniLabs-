@@ -20,7 +20,7 @@ A `netlify.toml` file is included, so Netlify can use the correct static-site pu
 
 ## Offline / PWA
 
-The service worker (`ludo-danilabs-v8`) precaches every file on first load, serves assets cache-first with background refresh, and falls back to the cached page when offline. Bump the `V` constant in `sw.js` whenever you deploy changes so installed copies update. PNG icons (including maskable and Apple touch) make installs work on Android and iOS.
+The service worker (`ludo-danilabs-v9`) precaches every file on first load, serves assets cache-first with background refresh, and falls back to the cached page when offline. Bump the `V` constant in `sw.js` whenever you deploy changes so installed copies update. PNG icons (including maskable and Apple touch) make installs work on Android and iOS.
 
 ## Gameplay
 
@@ -30,6 +30,7 @@ The service worker (`ludo-danilabs-v8`) precaches every file on first load, serv
 - Play against the computer (Home screen toggle): you are Red, the others are bots that prefer captures, finishing and safe cells.
 - Tap the dice or the Roll button to roll; wins are tracked on the home screen; confetti for the winner.
 - Sound effects, optional ambient music, vibration and animation speed are in Settings.
+- The lobby is designed for offline pass-and-play. Online, profile, social, store and event tiles open a clear Coming soon note; they do not imply those services are active.
 
 ## Private controls
 
