@@ -1,5 +1,7 @@
 # Ludo by DaniLabs
 
+NEW 
+
 Mobile-first offline Ludo for 2-4 friends, built with HTML, CSS and vanilla JavaScript.
 
 ## Vercel deployment
