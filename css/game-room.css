@@ -110,24 +110,6 @@ body[data-theme=vegas] #game.game-room{background:radial-gradient(circle at 50% 
 @media(prefers-reduced-motion:reduce){.player-die.rolling .mini-die-face,.room-player.active:before,#game .tok.can{animation:none!important}}
 
 
-/* v24 — individual Party powers + player identities */
-.player-powers{display:flex;align-items:center;gap:3px;min-height:15px;margin-top:2px}
-.player-powers span{display:grid;place-items:center;width:17px;height:17px;border:1px solid #ffffff38;border-radius:6px;background:linear-gradient(145deg,#ffffff25,#ffffff0b);box-shadow:0 2px 4px #0005;font-size:.58rem;line-height:1}
-.room-player.active .player-powers span{border-color:color-mix(in srgb,var(--pc) 65%,#fff);box-shadow:0 0 8px color-mix(in srgb,var(--pc) 48%,transparent)}
-#game #cards{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;width:100%;min-height:0;margin:0}
-#game #cards:empty{display:none}
-#game #cards .pcard{min-width:118px;max-width:180px;min-height:43px;padding:7px 12px;border-radius:14px;font-size:.75rem;box-shadow:0 4px 0 #0005,0 7px 12px #0004}
-#game #cards .pcard+ .pcard{margin-left:0}
-@media(max-width:460px){
- .player-powers{position:absolute;left:44px;bottom:3px;margin:0}
- .player-powers span{width:15px;height:15px;font-size:.52rem;border-radius:5px}
- .room-player{position:relative}
- .room-player-copy{padding-bottom:7px}
- #game #cards .pcard{min-width:104px;min-height:39px;padding:6px 10px;font-size:.68rem}
-}
-@media(max-height:640px){.player-powers{display:none}}
-
-
 /* v25 — powers + reactions belong to each player */
 .room-player{grid-template-columns:40px minmax(0,1fr) auto auto 46px}
 .player-tools{display:flex;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
