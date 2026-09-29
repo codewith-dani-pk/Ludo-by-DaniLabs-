@@ -5,7 +5,7 @@ const PATH=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0
 const COL={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,13],[7,12],[7,11],[7,10],[7,9]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
 const START={red:0,green:13,yellow:26,blue:39},SAFE=new Set([0,8,13,21,26,34,39,47]),BOFF={red:[0,0],green:[9,0],yellow:[9,9],blue:[0,9]},SLOT=[[1.5,1.5],[3.5,1.5],[1.5,3.5],[3.5,3.5]],STR={low:.5,med:1,high:2};
 const Store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
-const S=Object.assign({sound:1,music:0,vib:1,speed:1,stack:1},Store.get('ldb_set',{})),saveS=()=>Store.set('ldb_set',S);
+const S=Object.assign({sound:1,music:0,vib:1,speed:1,stack:1},Store.get('ldb_set',{})),saveS=()=>Store.set('ldb_set',S);['sound','music','vib','stack'].forEach(k=>S[k]=+!!S[k]);S.speed=[.5,1,1.6].includes(+S.speed)?+S.speed:1;
 const defCfg=()=>Object.fromEntries(COLORS.map(c=>[c,{mode:'normal',taps:5,strength:'med',status:'disabled',count:0,duration:'game',uses:0,powers:{},diceNums:[1,2,3,4,5,6],tapTarget:'any'}]));
 let CFG=Object.assign(defCfg(),Store.get('ldb_cfg',{}));const saveC=()=>Store.set('ldb_cfg',CFG);let LOG=Store.get('ldb_log',[]);
 const log=m=>{LOG.unshift(new Date().toLocaleTimeString()+'  '+m);LOG.length=Math.min(LOG.length,40);Store.set('ldb_log',LOG)};
