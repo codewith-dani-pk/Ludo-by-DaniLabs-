@@ -18,6 +18,7 @@ function playerToolsHTML(c){
 }
 const targetTokens=()=>G&&G.variant==='quick'?2:4;
 const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===56).length:0;
+const progressPct=c=>{if(!G)return 0;const a=G.pos[c].slice(0,targetTokens()),max=57*a.length,done=a.reduce((n,p)=>n+(p<0?0:Math.min(57,p+1)),0);return max?Math.round(done/max*100):0};
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
 const miniFace=n=>'<span class="mini-die-face">'+Array.from({length:9},(_,i)=>'<i'+(MINI_PIPS[n].includes(i)?' class="p"':'')+'></i>').join('')+'</span>';
 function playerDieHTML(c){
@@ -32,10 +33,11 @@ function paintPlayerDice(n){
 }
 
 function playerHTML(c){
- const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0;
- const stat=done?'#'+(rank+1)+' FINISH':(homeCount(c)+'/'+targetTokens()+' HOME');
+ const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0,pct=done?100:progressPct(c);
+ const stat=done?'#'+(rank+1)+' FINISH':pct+'%';
+ const progress='<div class="player-progress" aria-label="'+pct+' percent progress"><i style="width:'+pct+'%"></i><span>'+homeCount(c)+'/'+targetTokens()+' home</span></div>';
  return '<article class="room-player '+(active?'active ':'')+(done?'finished':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
- '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':NAMES[c])+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
+ '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+progress+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':'progress')+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
  const has=c=>G.cols.includes(c);let a=[],b=[];
