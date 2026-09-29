@@ -18,6 +18,7 @@
 .room-player.active:after{content:"YOUR TURN";position:absolute;right:5px;top:3px;font-size:.38rem;letter-spacing:.08em;color:#fff9}
 .room-avatar{width:40px;height:40px;border:2px solid #fff9;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff8,var(--pc) 48%,#120b2f);font-size:1.2rem;box-shadow:0 3px 7px #0008,0 0 0 2px color-mix(in srgb,var(--pc) 55%,transparent)}
 .room-player-copy{display:grid;gap:2px;min-width:0}.room-player-copy b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.73rem}.room-player-copy small{font-size:.52rem;color:#b9acd6}.room-score{display:grid;justify-items:end;gap:1px}.room-score b{font-size:.68rem}.room-score small{font-size:.43rem;color:#afa1ce;text-transform:uppercase}
+.player-progress{position:relative;width:min(118px,100%);height:5px;margin-top:1px;border-radius:999px;background:#ffffff13;box-shadow:inset 0 1px 2px #0006;overflow:visible}.player-progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--pc) 70%,#fff),var(--pc));box-shadow:0 0 7px color-mix(in srgb,var(--pc) 60%,transparent);transition:width .25s ease}.player-progress span{position:absolute;left:calc(100% + 5px);top:50%;translate:0 -50%;font-size:.38rem;font-weight:900;color:#a99cc3;white-space:nowrap}
 .turn-banner{--pc:#8f7ab7;display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:6px;width:min(92%,430px);min-height:31px;padding:4px 10px;border:1px solid #ffffff16;border-radius:999px;background:#080617a6;box-shadow:inset 0 1px #fff1;color:#fff;transition:.2s}
 .turn-dot{width:8px;height:8px;border-radius:50%;background:var(--pc);box-shadow:0 0 9px var(--pc)}.turn-banner b{font-size:.67rem}.turn-banner small{font-size:.55rem;color:#bcaed6;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .turn-banner.turn-change{animation:turnFlash .4s ease-out}@keyframes turnFlash{35%{transform:scale(1.025);box-shadow:0 0 18px color-mix(in srgb,var(--pc) 60%,transparent)}}
@@ -160,3 +161,13 @@ body[data-theme=vegas] #game.game-room{background:radial-gradient(circle at 50% 
  .player-power-list{max-width:48px}
 }
 @media(prefers-reduced-motion:reduce){.player-power.ready,.player-reaction-pop.on{animation:none!important}.player-reaction-pop.on{opacity:1;transform:translate(-50%,-20px) scale(1)}}
+
+/* v28 — reference-inspired progress polish */
+@media(max-width:700px){
+ .player-progress{width:min(86px,100%)}
+ .player-progress span{display:none}
+}
+@media(max-width:430px){
+ .player-progress{display:block;width:min(78px,100%);height:4px}
+}
+@media(prefers-reduced-motion:reduce){.player-progress i{transition:none}}
