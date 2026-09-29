@@ -1,5 +1,5 @@
 'use strict';
-/* DaniLabs v20 match-room presentation. No rules, odds or private settings are changed here. */
+/* DaniLabs match-room presentation. No rules, odds or private settings are changed here. */
 (function(){
 const AV=['🦊','🐼','🦁','🐙','🚀','👑'];
 const AV_POOL=['🐯','🐵','🐰','🐻','🐨','🐺','🐱','🐶','🐸','🐧','🦉','🦅','🦄','🤖','👽','🐲','🦋','🐬'];
@@ -7,14 +7,14 @@ let lastGame=null,lastTurn='',lastPos={},lastRoll={},rollHistory={};
 const prof=()=>Object.assign({name:'Guest player',av:0},Store.get('ldb_prof',{}));
 const DEFAULT_NAME={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
 const humanName=c=>NAMES[c]!==DEFAULT_NAME[c]?NAMES[c]:(c==='red'?(prof().name||'Guest player'):(NAMES[c]+' player'));
-const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c);
+const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c),safeText=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const used=new Set(Object.values(G.uiAvatars));let changed=false;G.cols.forEach(c=>{if(c==='red'&&!isBot(c))return;if(!G.uiAvatars[c]){const choices=AV_POOL.filter(a=>!used.has(a)),a=(choices.length?choices:AV_POOL)[Math.floor(Math.random()*(choices.length||AV_POOL.length))];G.uiAvatars[c]=a;used.add(a);changed=true}});if(changed)saveG();return G.uiAvatars}
 const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
 const POWER_ICON={shield:'🛡️',reroll:'🎲',freeze:'❄️'},POWER_NAME={shield:'Shield',reroll:'Re-roll',freeze:'Freeze'};
 function playerToolsHTML(c){
  const a=(G&&G.cards&&G.cards[c])||[],active=c===cur()&&!G.over&&!isBot(c);
  const powers=a.map(t=>{const ok=active&&!busy&&(t==='reroll'?phase==='move':phase==='roll');return '<button type="button" class="player-power '+(ok?'ready':'')+'" data-player-card="'+c+'" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+(POWER_NAME[t]||t)+'"><span>'+(POWER_ICON[t]||'✨')+'</span><em>'+(POWER_NAME[t]||t)+'</em></button>'}).join('');
- return '<div class="player-tools"><div class="player-power-list">'+powers+'</div><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button>👍</button><button>😂</button><button>🎉</button><button>😮</button><button>👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>';
+ return '<div class="player-tools"><div class="player-power-list">'+powers+'</div><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>';
 }
 const targetTokens=()=>G&&G.variant==='quick'?2:4;
 const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===56).length:0;
@@ -35,7 +35,7 @@ function playerHTML(c){
  const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0;
  const stat=done?'#'+(rank+1)+' FINISH':(homeCount(c)+'/'+targetTokens()+' HOME');
  return '<article class="room-player '+(active?'active ':'')+(done?'finished':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
- '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+displayName(c)+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':NAMES[c])+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
+ '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':NAMES[c])+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
  const has=c=>G.cols.includes(c);let a=[],b=[];
