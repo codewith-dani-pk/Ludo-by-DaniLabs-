@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v31
+# Ludo by DaniLabs — v32
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v31`.
+- Service-worker cache is `ludo-danilabs-v32`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v31 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v32 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -97,3 +97,8 @@ Real mobile/browser runtime QA on the deployed production build is still recomme
 ## Control Center v31
 
 The private Control Center now includes a read-only live match inspector, one-tap jump to the current player, selectable 1/3/5-click quick power presets, a four-color live status dashboard, master re-arm/off controls, and a local power-setup snapshot that can be saved and restored. Existing Easy Power Setup, advanced power controls, click rules and private activation behavior are preserved.
+
+
+## Fast Control Center v32
+
+The private Control Center now prioritizes the normal workflow in one compact mobile-first surface: select a player color, choose Lucky/Bad/Killer/Defender, choose 1/3/5 activation clicks, then Arm, Activate now, or Off. Live match inspection, four-color status, snapshots, fine tuning, click rules, and owner tools remain available through secondary sections so the primary controls require less scrolling. Touch-oriented primary controls use larger targets and the layout compacts further on narrow phones.
