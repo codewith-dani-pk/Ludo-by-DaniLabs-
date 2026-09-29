@@ -1,58 +1,65 @@
-# Ludo by DaniLabs
+# Ludo by DaniLabs — v20
 
-NEW 
+A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a clean static-root project designed for GitHub → Vercel deployment with no build step, CDN, database or environment variables.
 
-Mobile-first offline Ludo for 2-4 friends, built with HTML, CSS and vanilla JavaScript.
+## v20 highlights
+
+- Premium DaniLabs game room with player panels around a large central board.
+- Active-turn lighting, compact turn banner and mobile action dock.
+- 3D-style dice with Classic, Galaxy, Wood, Ice, Gold and Neon skins.
+- Pawn styles: Classic, Gem, Neon, Candy, Pearl and Royal.
+- Board themes: DaniLabs Classic, Vegas Night, Beach, Snow, Royal, Neon and Space.
+- Improved movement, capture, finish and victory feedback.
+- In-app Edit Profile modal, local emoji reactions and cosmetic coin rewards.
+- Offline/PWA cache version `ludo-danilabs-v20`.
+
+## Gameplay preserved
+
+The existing gameplay engine remains intact: 2/3/4-player pass-and-play, computer opponents, Classic/Quick/Rush modes, Party options, Color Cards, save/continue, rankings/rematch, safe cells, captures, exact finish, extra turns, three-six handling, sounds, haptics and local statistics.
+
+## Private DaniLabs Control Center
+
+There is no public admin button. Tap a DaniLabs logo five times to open the local credential screen. Per-color Normal / Good Luck / Bad Luck / Killer / Defender settings, secret tap counts, click rules and legal weighted dice behavior are preserved. Private mode names and counters are not shown in the public match UI.
+
+The private login is local/client-side and is a convenience barrier rather than server-grade security.
+
+## Project structure
+
+```text
+.
+├── assets/
+│   └── icons/          PWA and app icons
+├── css/
+│   ├── style.css       Core UI and board styles
+│   ├── upgrade.css     Theme/premium visual layer
+│   ├── realistic.css   Dice/pawn depth effects
+│   ├── lobby.css       Lobby and customization UI
+│   └── game-room.css   v20 match-room presentation
+├── js/
+│   ├── app.js          Core Ludo engine
+│   ├── host.js         Game options/private controls
+│   ├── cards.js        Color Cards game
+│   ├── themes.js       Cosmetic theme state
+│   ├── realistic.js    Cosmetic dice/pawn behavior
+│   ├── lobby.js        Lobby/profile/collection behavior
+│   └── game-room.js    v20 match-room behavior
+├── index.html
+├── manifest.json
+├── sw.js
+└── vercel.json
+```
 
 ## Vercel deployment
 
-Import this repository into Vercel with the project root set to this directory. It is a static site, so leave the framework preset as **Other**, with no build command and no output directory. Vercel serves `index.html` directly; `vercel.json` sets cache headers so the service worker and page can pick up deployments promptly. No environment variables are required.
+Import this repository into Vercel and deploy the repository root.
 
-## Netlify deployment
-
-Import this GitHub repository into Netlify:
-
-- Production branch: `main`
+- Framework preset: **Other**
 - Build command: leave empty
-- Publish directory: `.`
-- Base directory: leave empty
-- Environment variables: none required
+- Output directory: leave empty
+- Production branch: `main`
 
-A `netlify.toml` file is included, so Netlify can use the correct static-site publish settings automatically.
+`vercel.json` provides the static cache/security headers.
 
-## Offline / PWA
+## PWA / offline
 
-The service worker (`ludo-danilabs-v9`) precaches every file on first load, serves assets cache-first with background refresh, and falls back to the cached page when offline. Bump the `V` constant in `sw.js` whenever you deploy changes so installed copies update. PNG icons (including maskable and Apple touch) make installs work on Android and iOS.
-
-## Gameplay
-
-- Roll a 6 to leave the yard; exact roll needed to reach the center.
-- Captures, sixes and reaching the center give another turn; three 6s in a row lose the turn.
-- House rule (Settings): two of your tokens on one cell can't be captured.
-- Play against the computer (Home screen toggle): you are Red, the others are bots that prefer captures, finishing and safe cells.
-- Tap the dice or the Roll button to roll; wins are tracked on the home screen; confetti for the winner.
-- Sound effects, optional ambient music, vibration and animation speed are in Settings.
-- The lobby is designed for offline pass-and-play. Online, profile, social, store and event tiles open a clear Coming soon note; they do not imply those services are active.
-
-## Private controls
-
-There is no public admin button. Tap the DaniLabs logo five times to reach the local credential screen. On first access, the owner creates the username/password.
-
-The private Control Center opens with a compact row of colors. Select a color to configure multiple powers at once, activation taps and strength, plus preferred dice numbers. You can activate powers directly or set secret click rules that count taps on any token: the defaults give the clicked color Maximum Bad Luck after 3 taps on a friend token and give your color all powers after 5 taps on your token. Add, remove, or customize rules in the Click rules tab. Token tap sequences work anywhere on the board.
-
-Good Luck, Bad Luck, Killer and Defender adjust the weighting of legal dice outcomes; they do not create illegal moves or guarantee a win. Preferences and click rules are kept in this browser's local storage. You can export/import a JSON backup from More controls.
-
-## Security
-
-The control panel is entirely client-side/offline. Its local login is a privacy/convenience barrier, not server-grade security.
-
-## Game options (Settings > Game options)
-
-Optional PIN-lock. House rules (leave-yard roll, exact finish, three 6s, capture bonus turn, paired tokens safe, undo), computer difficulty (Easy/Normal/Hard), player names, colorblind palette, stats + backup/import, and "Watch last game" replay.
-
-Visible party modes, announced to every player at game start: wild star dice (pick 1-6), power cards (Shield, Re-roll, Freeze), party events every 10 turns, underdog boost, and per-player helper re-roll. Bump the `V` constant in `sw.js` on each deploy.
-
-## More games and styles
-
-- Ludo styles (home screen): Classic, Quick (2 tokens each), Rush (tokens start on the track).
-- Color Cards: an original UNO-style matching card game for 2-4 players, pass-and-play or vs computer. Options: stack +2/+4, 7 swaps hands / 0 passes hands, draw until you can play.
+`sw.js` precaches the app shell and required local assets. Core local play is designed to keep working after the service worker has cached the project. Increment the cache version whenever deployable cached assets change.

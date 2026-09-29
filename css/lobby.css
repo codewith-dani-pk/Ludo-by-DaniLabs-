@@ -1,0 +1,40 @@
+/* DaniLabs lobby + extra cosmetics */
+.home-shell{gap:12px;padding:8px 14px 18px}
+.home-top{display:flex;align-items:center;gap:8px}.home-profile{display:flex;align-items:center;gap:8px;flex:1;min-width:0;background:#ffffff14;border:1px solid #ffffff26;border-radius:16px;padding:6px 10px;color:#fff;text-align:left;min-height:48px}
+.home-profile b{display:block;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.home-profile small{font-size:.65rem;color:#9cf5c0}.home-profile small i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5cf59a;margin-right:4px}
+.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;background:linear-gradient(145deg,#ffd24a,#b8791a);flex:none}
+.coin-pill{display:flex;align-items:center;gap:5px;background:#0006;border:1px solid #ffd24a88;border-radius:99px;padding:6px 12px;font-weight:800;color:#ffe27a}.coin{color:#ffd24a}
+.hero3{position:relative;text-align:center;padding:14px 0 4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wordmark{margin:0;font-size:clamp(3.4rem,20vw,5.4rem);letter-spacing:.04em;line-height:1;display:flex;justify-content:center;gap:4px}
+.wordmark i{font-style:normal;font-weight:900;color:var(--c);-webkit-text-stroke:3px #fff;paint-order:stroke fill;text-shadow:0 4px 0 #0005,0 0 22px var(--c);animation:bob 2.4s ease-in-out infinite}
+.wordmark i:nth-child(2){animation-delay:.2s}.wordmark i:nth-child(3){animation-delay:.4s}.wordmark i:nth-child(4){animation-delay:.6s}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
+.by{margin:2px 0 0;letter-spacing:.3em;font-size:.8rem;color:#e9d8ff}.by b{color:#ffd24a}.hero3 .hero-die{position:absolute;right:6px;top:8px;font-size:2.2rem;animation:bob 3s infinite;color:#ffd24a}
+.daily{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;border:1px solid #ffd24a;border-radius:16px;padding:8px 14px;background:linear-gradient(135deg,#7a3bd6,#3a1c71);color:#fff;box-shadow:0 0 18px #ffd24a44}
+.daily span{font-size:1.6rem}.daily b{flex:1;text-align:left}.daily small{color:#ffe27a;font-weight:800}.daily.ready{animation:pulse 1.6s infinite}.daily.done{opacity:.7;box-shadow:none}
+@keyframes pulse{50%{box-shadow:0 0 28px #ffd24acc}}
+.sec{margin:0 0 8px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:#d8c4ff}
+.lp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lp{border:0;border-radius:18px;min-height:88px;color:#fff;display:grid;place-content:center;gap:0;text-align:center;box-shadow:inset 0 3px #fff6,0 5px 0 #0006;font-family:inherit}
+.lp b{font-size:2rem;line-height:1}.lp span{font-size:.72rem;font-weight:700}
+.c2{background:linear-gradient(160deg,#ff6b76,#c1121f)}.c3{background:linear-gradient(160deg,#43d17f,#17703d)}.c4{background:linear-gradient(160deg,#5b93ff,#1c47a8)}
+.lp.cpu{grid-column:1/-1;min-height:0;padding:10px;background:linear-gradient(160deg,#ffd24a,#c98a00);color:#3a2300;grid-template-columns:auto 1fr;align-items:center;gap:10px}
+.cpu span{font-size:.85rem;font-weight:900}.cpu div{display:flex;gap:6px;justify-content:flex-end}.cpu button{min-height:44px;padding:0 12px;border:0;border-radius:12px;background:#3a2300;color:#ffe27a;font-weight:800}
+.lp:active,.cpu button:active,.mode-grid button:active{transform:translateY(2px) scale(.97)}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode-grid button{min-height:56px;border:2px solid #ffffff26;border-radius:14px;background:#ffffff12;color:#fff;text-align:left;padding:8px 12px;display:grid}
+.mode-grid b{font-size:.95rem}.mode-grid small{font-size:.68rem;color:#cbb8f0}.mode-grid button.on{border-color:#ffd24a;background:linear-gradient(135deg,#5b2aa8,#3a1c71);box-shadow:0 0 14px #ffd24a55}.mode-grid .cc{background:linear-gradient(135deg,#ff2e9a,#7a1fa2)}
+.soon-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.soon-row button{min-height:48px;border:1px dashed #ffffff44;border-radius:12px;background:#0003;color:#d8c4ff;font-size:.78rem}.soon-row small{display:block;color:#ffd24a;font-size:.6rem}
+.tabs{display:flex;gap:6px;width:100%}.tabs button{flex:1;min-height:44px;border:0;border-radius:12px;background:#ffffff14;color:#fff;font-weight:800}.tabs .on{background:#ffd24a;color:#2a1600}
+.coll-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%}.coll-grid button{border:2px solid #ffffff22;border-radius:14px;background:#ffffff10;color:#fff;padding:8px;display:grid;gap:6px;justify-items:center;min-height:88px}
+.coll-grid button.on{border-color:#ffd24a;box-shadow:0 0 14px #ffd24a66}.sw3{width:100%;height:38px;border-radius:9px;box-shadow:inset 0 0 0 2px #fff4}
+.tok-pv{width:38px;height:38px;border-radius:50%;background:#e63946;border:3px solid #fff}
+/* extra board themes */
+body[data-theme=royal]{--bg:#4a1d8a;--bg2:#160736;--cell:#fff3d0}body[data-theme=royal] #board{background:#fff1c8;box-shadow:0 0 0 5px #ffd24a,0 0 26px #ffd24a88}
+body[data-theme=neon]{--bg:#1c0b5e;--bg2:#0a0630;--cell:#ece6ff}body[data-theme=neon] #board{background:#e8e1ff;box-shadow:0 0 0 4px #19f0ff,0 0 30px #ff2ea6,0 0 60px #19f0ff66}
+body[data-theme=space]{--bg:#15206b;--bg2:#050a24;--cell:#e2ebff}body[data-theme=space] #board{background:#dce6ff;box-shadow:0 0 0 4px #8b7bff,0 0 30px #5b6cff88}
+body[data-theme=space]::after{background-image:radial-gradient(circle,#fff 0 1.5px,transparent 2.5px),radial-gradient(circle,#b9c6ff 0 1px,transparent 2px);background-size:110px 140px,70px 90px;animation:tw 4s ease-in-out infinite alternate}
+body[data-theme=royal] .board-frame{background:linear-gradient(145deg,#ffe27a,#b8791a 50%,#ffd24a)}body[data-theme=neon] .board-frame{background:linear-gradient(145deg,#2a0f6e,#0a0630)}body[data-theme=space] .board-frame{background:linear-gradient(145deg,#3b3f8f,#0d1240)}
+body[data-dice=neon] #die{background:#0a0630;box-shadow:0 0 16px #19f0ff,inset 0 0 8px #ff2ea6}body[data-dice=neon] #die .p{background:#19f0ff}
+body[data-pawn=royal] .tok{background:radial-gradient(circle at 35% 30%,#fff5b0,var(--c) 55%);border:3px solid #ffd24a;box-shadow:0 0 0 2px #7a4a00,0 3px 6px #0008}
+.tok{transition:transform .12s}
+@media(prefers-reduced-motion:reduce){.wordmark i,.hero-die,.daily.ready{animation:none}}

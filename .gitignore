@@ -1,0 +1,13 @@
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local Vercel state
+.vercel/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp

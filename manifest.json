@@ -1,7 +1,7 @@
 {
   "name": "Ludo by DaniLabs",
   "short_name": "Ludo",
-  "description": "Offline Ludo for 2-4 friends on one device.",
+  "description": "Premium offline Ludo with a polished DaniLabs game room for 2-4 players.",
   "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
