@@ -3,7 +3,7 @@ const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const COLORS=['red','green','yellow','blue'],NAMES={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'},HEX={red:'#e63946',green:'#2a9d5c',yellow:'#f4b400',blue:'#2f6fed'};
 const PATH=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
 const COL={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,13],[7,12],[7,11],[7,10],[7,9]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
-const START={red:0,green:13,yellow:26,blue:39},SAFE=new Set([0,8,13,21,26,34,39,47]),BOFF={red:[0,0],green:[9,0],yellow:[9,9],blue:[0,9]},SLOT=[[2,2],[4,2],[2,4],[4,4]],STR={low:.5,med:1,high:2};
+const START={red:0,green:13,yellow:26,blue:39},SAFE=new Set([0,8,13,21,26,34,39,47]),BOFF={red:[0,0],green:[9,0],yellow:[9,9],blue:[0,9]},SLOT=[[1.5,1.5],[3.5,1.5],[1.5,3.5],[3.5,3.5]],STR={low:.5,med:1,high:2};
 const Store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const S=Object.assign({sound:1,music:0,vib:1,speed:1,stack:1},Store.get('ldb_set',{})),saveS=()=>Store.set('ldb_set',S);
 const defCfg=()=>Object.fromEntries(COLORS.map(c=>[c,{mode:'normal',taps:5,strength:'med',status:'disabled',count:0,duration:'game',uses:0,powers:{},diceNums:[1,2,3,4,5,6],tapTarget:'any'}]));
