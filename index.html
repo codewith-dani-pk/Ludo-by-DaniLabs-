@@ -3,25 +3,57 @@
 <title>Ludo by DaniLabs</title><meta name="theme-color" content="#1b1140">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="description" content="Offline Ludo for 2-4 friends on one device, by DaniLabs.">
 <link rel="stylesheet" href="css/style.css"></head><body>
-<main id="home" class="screen on">
+<main id="home" class="screen on home-screen">
  <div class="dice-deco"><i>⚀</i><i>⚃</i><i>⚅</i><i>⚂</i></div>
- <div class="logo" id="logo"><b>LUDO</b><small>by DaniLabs</small></div>
- <div class="menu">
-  <p class="lbl">Play with friends on this device</p>
-  <label class="sw sel">Ludo style<select id="sVar"><option value="classic">Classic (4 tokens)</option><option value="quick">Quick (2 tokens)</option><option value="rush">Rush (tokens start on track)</option></select></label>
-  <div class="row3"><button class="btn big" data-n="2">2 Players</button><button class="btn big" data-n="3">3 Players</button><button class="btn big" data-n="4">4 Players</button></div>
-  <label class="sw bots"><span>Play against the computer<small>You are Red</small></span><input type="checkbox" id="sBots"></label>
-  <button class="btn cont" id="bCont" hidden>Continue game</button>
-  <button class="btn cards" id="bCards">Play Color Cards (matching card game)</button>
-  <button class="btn ghost" id="bHow">How to play</button>
-  <button class="btn ghost" id="bSet">Settings</button>
-  <button class="btn ghost" id="bInst" hidden>Install app</button>
-  <p id="stats" class="hint"></p>
+ <div class="home-shell">
+  <header class="home-top">
+   <button class="brand-badge" id="logo" aria-label="DaniLabs home"><img src="assets/icons/icon.svg" alt="DaniLabs Ludo icon"></button>
+   <button class="home-profile" data-coming="Profile"><b>Guest player</b><small><i></i> OFFLINE MODE</small></button>
+   <button class="reward-preview" data-coming="Rewards"><span>✦</span> Rewards <small>soon</small></button>
+   <button class="btn sm home-gear" id="bSet" aria-label="Settings">⚙</button>
+  </header>
+  <section class="home-hero">
+   <div class="home-hero-mark"><img src="assets/icons/icon.svg" alt=""></div>
+   <div class="home-hero-copy"><span class="eyebrow">ROLL INTO FUN</span><h1>Ludo <small>by DaniLabs</small></h1><p>Classic fun. Ready whenever you are.</p></div>
+   <span class="hero-die" aria-hidden="true">⚄</span>
+  </section>
+  <div class="offline-banner"><span>✦</span><div><b>Play anywhere</b><small>Your game works offline on this device</small></div><span class="offline-check">✓</span></div>
+  <section class="home-section local-play">
+   <div class="section-title"><div><span class="eyebrow">PASS & PLAY</span><h2>Choose your table</h2></div><span class="live-tag"><i></i> LOCAL</span></div>
+   <div class="play-choice-grid">
+    <button class="player-card two-player" data-n="2"><span class="player-card-art"><i class="pawn red-pawn"></i><i class="pawn blue-pawn"></i><b>2</b></span><span class="player-card-label"><b>Two players</b><small>Quick match</small></span><span class="card-arrow">›</span></button>
+    <button class="player-card four-player" data-n="4"><span class="player-card-art"><i class="pawn red-pawn"></i><i class="pawn green-pawn"></i><i class="pawn yellow-pawn"></i><i class="pawn blue-pawn"></i><b>4</b></span><span class="player-card-label"><b>Four players</b><small>Full table fun</small></span><span class="card-arrow">›</span></button>
+   </div>
+   <button class="three-player" data-n="3"><span class="three-dots"><i></i><i></i><i></i></span><span><b>Playing with 3?</b><small>Start a three player game</small></span><span class="card-arrow">›</span></button>
+   <div class="home-options">
+    <label class="sw home-select"><span>Game style<small>Pick your match</small></span><select id="sVar"><option value="classic">Classic · 4 tokens</option><option value="quick">Quick · 2 tokens</option><option value="rush">Rush · start on track</option></select></label>
+    <label class="sw bots home-bots"><span><b>Play against computer</b><small>You play as Red</small></span><input type="checkbox" id="sBots"></label>
+   </div>
+   <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+  </section>
+  <section class="home-section fun-section">
+   <div class="section-title"><div><span class="eyebrow">MORE WAYS TO PLAY</span><h2>Pick your fun</h2></div></div>
+   <div class="feature-grid">
+    <button class="feature-card feature-cards" id="bCards"><span class="feature-icon">🃏</span><b>Color Cards</b><small>Play the bonus game</small><span class="feature-go">Play now ›</span></button>
+    <button class="feature-card feature-online" data-coming="Online play"><span class="feature-icon">🌐</span><b>Play online</b><small>Challenge friends anywhere</small><span class="feature-go">Coming soon ›</span></button>
+    <button class="feature-card feature-party" data-coming="Party modes"><span class="feature-icon">✨</span><b>Party modes</b><small>More ways to play together</small><span class="feature-go">Coming soon ›</span></button>
+   </div>
+  </section>
+  <section class="future-strip"><span>♙</span><div><b>More fun is on the way</b><small>Friends, events, rewards and new themes</small></div><button data-coming="DaniLabs features" aria-label="More features coming soon">›</button></section>
+  <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
  </div>
+ <nav class="bottom-nav" aria-label="Home navigation">
+  <button class="nav-item active" aria-current="page"><span>⌂</span><small>Home</small></button>
+  <button class="nav-item" data-coming="Events"><span>▣</span><small>Events</small></button>
+  <button class="nav-item" data-coming="Collection"><span>✦</span><small>Collection</small></button>
+  <button class="nav-item" data-coming="Friends"><span>♙</span><small>Friends</small></button>
+  <button class="nav-item" data-coming="Store"><span>◇</span><small>Store</small></button>
+ </nav>
 </main>
 <main id="game" class="screen">
- <header><button class="btn sm" id="bMenu" aria-label="Menu">☰</button><div class="logo mini" id="logo2"><b>LUDO</b><small>by DaniLabs</small></div><span class="hr"><button class="btn sm" id="bUndo" aria-label="Undo last move" hidden>↶</button><button class="btn sm" id="bSet2" aria-label="Settings">⚙</button></span></header>
- <div id="bar"></div><div id="board"></div><div id="msg" aria-live="polite"></div><div id="cards"></div><div id="pick"></div>
+ <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bUndo" aria-label="Undo last move" hidden>↶</button><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
+ <div class="game-label"><span>OFFLINE MATCH</span><b>Pass the device when your turn ends</b></div>
+ <div id="bar"></div><div class="board-frame"><div id="board"></div></div><div id="msg" aria-live="polite"></div><div id="cards"></div><div id="pick"></div>
  <div class="ctrl"><div id="die" role="img" aria-label="Dice"></div><button class="btn big" id="bRoll">Roll dice</button></div>
 </main>
 <main id="cgHome" class="screen">
@@ -57,5 +89,6 @@
 <div class="modal full" id="mHost"><div class="box wide"><div class="row sp"><h2>Game options</h2><button class="btn sm" data-close>✕</button></div><div id="hostbody"></div></div></div>
 <div class="modal" id="mLogin"><div class="box"><h2 id="loginTitle">DaniLabs access</h2><p id="loginHint" class="hint">Private local control center</p><input id="lu" placeholder="Username" autocomplete="off"><input id="lp" type="password" placeholder="Password" autocomplete="off"><p id="lerr" class="err"></p><div class="row"><button class="btn" id="bLogin">Login</button><button class="btn ghost" data-close>Cancel</button></div></div></div>
 <div class="modal" id="mOver"><div class="box"><h2>Game over</h2><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
+<div class="modal" id="mSoon"><div class="box soon-box"><div class="soon-mark">✦</div><span class="eyebrow">DANILABS ROADMAP</span><h2 id="soonTitle">Coming soon</h2><p id="soonText">We’re working on this feature. It will appear here in a future update.</p><button class="btn" data-close>Got it</button></div></div>
 <div class="modal full" id="mCP"><div class="box wide"><div class="row sp"><h2>DaniLabs Control Center</h2><button class="btn sm" data-close>✕</button></div><div id="cpbody"></div></div></div>
 <script src="js/app.js"></script><script src="js/host.js"></script><script src="js/cards.js"></script></body></html>
