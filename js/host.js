@@ -6,6 +6,7 @@ const CARDS={shield:['Shield','🛡','Your tokens cannot be captured until your 
 const defO=()=>({rules:{leave:'six',exact:1,three6:1,capExtra:1,undo:1},diff:'normal',names:{},chaos:0,cards:0,events:0,underdog:0,helper:{},pal:0,pin:null});
 let O=(()=>{const d=defO(),s=Store.get('ldb_opts',{})||{};return Object.assign(d,s,{rules:Object.assign(d.rules,s.rules||{}),names:s.names||{},helper:s.helper||{}})})();
 const saveO=()=>Store.set('ldb_opts',O),clean=s=>String(s||'').replace(/[<>&"'`]/g,'').trim().slice(0,10);
+COLORS.forEach(c=>{O.names[c]=clean(O.names[c]);O.helper[c]=+!!O.helper[c]});O.diff=['easy','normal','hard'].includes(O.diff)?O.diff:'normal';O.rules.leave=['six','any','onesix'].includes(O.rules.leave)?O.rules.leave:'six';['exact','three6','capExtra','undo'].forEach(k=>O.rules[k]=+!!O.rules[k]);['chaos','cards','events','underdog','pal'].forEach(k=>O[k]=+!!O[k]);
 function applyLook(){COLORS.forEach(c=>{NAMES[c]=clean(O.names[c])||DEFN[c];HEX[c]=PAL[O.pal?1:0][c];document.documentElement.style.setProperty('--'+c,HEX[c])})}
 applyLook();
 
