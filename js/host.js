@@ -31,7 +31,7 @@ function hostTick(){if(!G||!G.mx)return;const act=G.cols.filter(c=>!G.ranks.incl
  if(G.mx.events&&G.tc%10===0){const e=Math.floor(Math.random()*3);if(e===0){const c=cur();giveCard(c);toast('Party gift for '+NAMES[c])}else if(e===1){G.peace=G.cols.length;toast('Peace time: no captures for one round')}else{const w=act.slice().sort((a,b)=>prog(a)-prog(b))[0];giveCard(w,'reroll');toast('Comeback: '+NAMES[w]+' gets a Re-roll')}}
  if(G.mx.underdog&&G.tc%8===0&&act.length>1){const s=act.slice().sort((a,b)=>prog(a)-prog(b));if(prog(s[s.length-1])-prog(s[0])>30){giveCard(s[0],'reroll');toast('Underdog boost: '+NAMES[s[0]]+' gets a Re-roll')}}}
 function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(!G||REPLAYING||!G.cols){box.innerHTML=pk.innerHTML='';u.hidden=true;return}const c=cur(),a=(G.cards&&G.cards[c])||[];
- box.innerHTML=isBot(c)?'':a.map(t=>{const ok=!busy&&!G.over&&(t==='reroll'?phase==='move':phase==='roll');return'<button class="btn pcard" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+CARDS[t][2]+'">'+CARDS[t][1]+' '+CARDS[t][0]+'</button>'}).join('');
+ box.innerHTML=''; // v25: power controls now live on each player's own panel
  pk.innerHTML=(phase==='pick'&&!isBot(c))?[1,2,3,4,5,6].map(v=>'<button class="btn" data-v="'+v+'">'+v+'</button>').join(''):'';
  u.hidden=!(O.rules.undo&&Undo.h.length&&!G.over)}
 $('#cards').onclick=e=>{const b=e.target.closest('[data-card]');if(b)useCard(b.dataset.card)};
