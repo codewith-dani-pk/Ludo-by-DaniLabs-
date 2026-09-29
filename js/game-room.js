@@ -52,7 +52,7 @@ function publicTurn(){if(!G)return['Ready','Roll to begin'];const name=displayNa
  if(busy||phase==='wait')return[name+' is moving','Pawn in motion'];
  if(phase==='pick')return[name+' rolled a wild star',isBot(cur())?'Computer is choosing':'Choose 1 to 6'];
  if(phase==='move')return[name+"'s turn",isBot(cur())?'Computer is choosing':'Choose a glowing pawn'];
- return[name+"'s turn",isBot(cur())?'Computer is rolling':'Roll the dice'];
+ return[name+"'s turn",isBot(cur())?'Computer is rolling':(S.shake?'Tap dice or shake phone':'Roll the dice')];
 }
 function decorateTurn(){if(!G)return;const c=cur(),banner=$('#turnBanner'),[title,sub]=publicTurn();
  document.documentElement.style.setProperty('--turn',HEX[c]);if(banner)banner.style.setProperty('--pc',HEX[c]);
