@@ -81,3 +81,30 @@ body[data-theme=vegas] #game.game-room{background:radial-gradient(circle at 50% 
  .room-player-copy small{display:none}
 }
 @media(prefers-reduced-motion:reduce){.player-die.can-roll,.player-die.dice-pop .mini-die-face{animation:none!important}}
+
+
+/* v23 — richer match feedback */
+.turn-order{display:flex;align-items:center;justify-content:center;gap:3px;min-width:52px}
+.turn-order i{width:8px;height:8px;border-radius:50%;background:var(--oc);opacity:.42;box-shadow:0 0 0 1px #fff3;transition:.18s ease}
+.turn-order i.on{opacity:1;transform:scale(1.28);box-shadow:0 0 0 2px #fff,0 0 9px var(--oc)}
+.turn-order i.done{opacity:.2}.turn-order span{font-size:.42rem;color:#a899c8}
+.roll-history{display:flex;align-items:center;gap:3px;height:14px;margin-top:1px}
+.roll-history span{min-width:14px;height:14px;padding:0 3px;display:grid;place-items:center;border-radius:999px;background:#ffffff12;color:#bcaed7;font-size:.42rem;font-weight:900;line-height:1}
+.roll-history span.latest{background:color-mix(in srgb,var(--pc) 34%,#ffffff10);color:#fff;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pc) 55%,transparent)}
+.roll-history span.empty{background:transparent;color:#74698e}
+.player-die.rolling{opacity:1;filter:none;box-shadow:0 4px 0 color-mix(in srgb,var(--pc) 62%,#21152e),0 0 0 2px #fff,0 0 22px var(--pc)}
+.player-die.rolling .mini-die-face{animation:playerDiceRoll .32s linear infinite}
+@keyframes playerDiceRoll{to{transform:rotate(90deg) scale(.9)}}
+.room-player.active{isolation:isolate}.room-player.active:before{animation:seatGlow .9s ease-in-out infinite alternate}
+@keyframes seatGlow{to{width:6px;filter:brightness(1.35);box-shadow:0 0 19px var(--pc)}}
+#game .tok.can{z-index:9;cursor:pointer;animation:legalPawn 1s ease-in-out infinite alternate;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--c),0 0 20px var(--c),0 6px 7px #0008}
+@keyframes legalPawn{to{transform:translate(-50%,-56%) scale(1.13);filter:brightness(1.15)}}
+#game .tok.can:active{transform:translate(-50%,-50%) scale(.96)}
+#game #msg:not(:empty){border:1px solid #ffffff10;background:#08061755;box-shadow:inset 0 1px #fff1}
+.board-stamp{transition:.2s ease}.turn-banner.turn-change~.board-shell .board-stamp{box-shadow:0 3px 8px #0007,0 0 18px var(--turn)}
+@media(max-width:460px){
+ .game-room-meta{gap:5px}.game-room-meta>span{display:none}.turn-order{min-width:46px}
+ .roll-history{height:12px}.roll-history span{min-width:12px;height:12px;font-size:.38rem}
+}
+@media(max-height:640px){.roll-history{display:none}.turn-order span{display:none}}
+@media(prefers-reduced-motion:reduce){.player-die.rolling .mini-die-face,.room-player.active:before,#game .tok.can{animation:none!important}}
