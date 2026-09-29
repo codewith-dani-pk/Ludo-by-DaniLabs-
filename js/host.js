@@ -32,12 +32,11 @@ const prog=c=>G.pos[c].reduce((n,p)=>n+(p<0?0:p+1),0);
 function hostTick(){if(!G||!G.mx)return;const act=G.cols.filter(c=>!G.ranks.includes(c));
  if(G.mx.events&&G.tc%10===0){const e=Math.floor(Math.random()*3);if(e===0){const c=cur();giveCard(c);toast('Party gift for '+NAMES[c])}else if(e===1){G.peace=G.cols.length;toast('Peace time: no captures for one round')}else{const w=act.slice().sort((a,b)=>prog(a)-prog(b))[0];giveCard(w,'reroll');toast('Comeback: '+NAMES[w]+' gets a Re-roll')}}
  if(G.mx.underdog&&G.tc%8===0&&act.length>1){const s=act.slice().sort((a,b)=>prog(a)-prog(b));if(prog(s[s.length-1])-prog(s[0])>30){giveCard(s[0],'reroll');toast('Underdog boost: '+NAMES[s[0]]+' gets a Re-roll')}}}
-function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(!G||REPLAYING||!G.cols){box.innerHTML=pk.innerHTML='';u.hidden=true;return}const c=cur();
+function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(!G||REPLAYING||!G.cols){box.innerHTML=pk.innerHTML='';u.hidden=true;return}
  box.innerHTML=''; // powers live on each player's own panel
- pk.innerHTML=(phase==='pick'&&!isBot(c))?[1,2,3,4,5,6].map(v=>'<button class="btn" data-v="'+v+'">'+v+'</button>').join(''):'';
+ pk.innerHTML=''; // Wild Star picker lives on the active player's panel
  u.hidden=!(O.rules.undo&&Undo.h.length&&!G.over)}
 $('#cards').onclick=e=>{const b=e.target.closest('[data-card]');if(b)useCard(b.dataset.card)};
-$('#pick').onclick=e=>{const b=e.target.closest('[data-v]');if(b&&G&&!isBot(cur()))pickVal(+b.dataset.v)};
 
 /* ---- undo ---- */
 const Undo={h:[],push(){if(!O.rules.undo||!G||G.over)return;this.h.push(JSON.stringify(G));if(this.h.length>40)this.h.shift()},
