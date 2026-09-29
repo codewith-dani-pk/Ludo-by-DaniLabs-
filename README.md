@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v33
+# Ludo by DaniLabs — v34
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v33`.
+- Service-worker cache is `ludo-danilabs-v34`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v33 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v34 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -109,3 +109,10 @@ The private Control Center now prioritizes the normal workflow in one compact mo
 The private dashboard now uses one primary workflow: choose a color, choose Lucky/Bad/Killer/Defender, then choose 1/3/5 clicks. Power and click selections automatically arm the selected setup, so the redundant Arm step is removed from the fast surface. Optional Follow Turn keeps the dashboard on the player whose turn is active; manually selecting another color pauses following. Activate Now and Off remain the only immediate fast actions.
 
 The older duplicate dashboard renderer and obsolete settings listener were removed. Fine Tune now contains only optional strength, click-target, multi-power and custom-dice controls instead of repeating the same basic setup. Match details, snapshots, click rules and owner tools remain progressively disclosed below the primary workflow.
+
+
+## Private match-hold shortcuts v34
+
+After a successful private Control Center login in the current browser session, token 1 and token 2 support match-scoped hold shortcuts. Holding token 1 for about 0.9 seconds toggles Bad Match for that token's color. Holding token 2 toggles Best Powers for that color. Best Powers intentionally combines Good Luck, Killer and Defender but not Bad Luck, avoiding contradictory good/bad weighting. Holding the same token again removes that match shortcut.
+
+The shortcut is stored only with the current match state, survives Continue Game, and clears naturally with a new/completed match. It has no public badge or popup. Pointer movement cancels an unfinished hold, a completed hold suppresses the following normal click so a pawn is not moved accidentally, and the private Control Center can clear all match holds at once.
