@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v32
+# Ludo by DaniLabs — v33
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v32`.
+- Service-worker cache is `ludo-danilabs-v33`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v32 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v33 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -102,3 +102,10 @@ The private Control Center now includes a read-only live match inspector, one-ta
 ## Fast Control Center v32
 
 The private Control Center now prioritizes the normal workflow in one compact mobile-first surface: select a player color, choose Lucky/Bad/Killer/Defender, choose 1/3/5 activation clicks, then Arm, Activate now, or Off. Live match inspection, four-color status, snapshots, fine tuning, click rules, and owner tools remain available through secondary sections so the primary controls require less scrolling. Touch-oriented primary controls use larger targets and the layout compacts further on narrow phones.
+
+
+## Fast Workflow v33
+
+The private dashboard now uses one primary workflow: choose a color, choose Lucky/Bad/Killer/Defender, then choose 1/3/5 clicks. Power and click selections automatically arm the selected setup, so the redundant Arm step is removed from the fast surface. Optional Follow Turn keeps the dashboard on the player whose turn is active; manually selecting another color pauses following. Activate Now and Off remain the only immediate fast actions.
+
+The older duplicate dashboard renderer and obsolete settings listener were removed. Fine Tune now contains only optional strength, click-target, multi-power and custom-dice controls instead of repeating the same basic setup. Match details, snapshots, click rules and owner tools remain progressively disclosed below the primary workflow.
