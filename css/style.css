@@ -140,3 +140,13 @@ body[data-turn=blue] #board{box-shadow:0 12px 30px #0009,0 0 0 6px var(--blue)}
 .cp-fast-layout>.cp-tabs{margin-top:1px}.cp-fast-layout>.cp-settings{opacity:.92}
 @media(max-width:520px){.cp-fast{padding:10px}.cp-fast-colors{gap:5px}.cp-fast-colors button{min-height:48px}.cp-fast-powers{gap:5px}.cp-fast-powers button{min-height:50px}.cp-fast-row{grid-template-columns:42px minmax(0,1fr)}.cp-fast-actions{grid-template-columns:1fr 1fr}.cp-fast-actions .danger{grid-column:1/-1}.cp-fast-head>button{min-height:42px}}
 @media(max-width:360px){.cp-fast-head{align-items:flex-start}.cp-fast-head>button{min-width:62px}.cp-fast-colors button b{display:none}.cp-fast-colors button i{width:15px;height:15px}.cp-fast-row{grid-template-columns:1fr}.cp-fast-row>small{margin-bottom:-4px}.cp-fast-actions{grid-template-columns:1fr}.cp-fast-actions .danger{grid-column:auto}}
+
+
+/* v33 — cleaner auto-ready dashboard workflow */
+.cp-follow{white-space:nowrap}.cp-follow.on{border-color:#8ef0bd55!important;background:#42d98b18!important;color:#baffd8!important}.cp-follow:disabled{opacity:.34}
+.cp-fast-actions-clean{grid-template-columns:1.35fr .75fr}.cp-fast-actions-clean button:disabled{opacity:.34;cursor:default;filter:saturate(.55)}.cp-fast-actions-clean .danger{grid-column:auto}
+.cp-fast-note{margin:-2px 0 0;text-align:center;color:#8f83a8;font-size:.47rem;line-height:1.25}
+.cp-fine{display:grid;gap:10px}.cp-fine-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:8px;padding:10px;border:1px solid #ffffff16;border-radius:13px;background:#ffffff05}.cp-fine-grid label{display:grid;gap:4px;color:#bfb4d3;font-size:.56rem;font-weight:800}.cp-fine-grid select{width:100%;min-height:44px;padding:7px 9px;border:1px solid #ffffff24;border-radius:10px;background:#2c2050;color:#fff;font:700 .64rem inherit}.cp-fine-grid select:disabled{opacity:.4}
+.cp-fast-layout>.cp-settings.cp-fine{padding:10px;border-radius:14px;background:#ffffff04}.cp-fast-layout>.cp-settings.cp-fine .cp-settings-head{margin-bottom:0}
+@media(max-width:520px){.cp-fast-actions-clean{grid-template-columns:1.3fr .7fr}.cp-fast-actions-clean .danger{grid-column:auto}.cp-fine-grid{grid-template-columns:1fr}.cp-fast-note{font-size:.45rem}}
+@media(max-width:360px){.cp-fast-actions-clean{grid-template-columns:1fr 1fr}.cp-fast-actions-clean .danger{grid-column:auto}.cp-follow{font-size:.48rem!important;padding-inline:7px!important}}
