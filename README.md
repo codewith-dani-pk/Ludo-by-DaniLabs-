@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v27
+# Ludo by DaniLabs — v28
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -7,6 +7,9 @@ A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla J
 - 2, 3 or 4-player local pass-and-play with optional computer opponents.
 - Classic, Quick and Rush variants plus Party options.
 - Separate color-matched dice for every player; only the current human player's dice is actionable.
+- Live progress percentage/bar for every player.
+- Optional Shake to Roll on browsers/devices that expose motion events.
+- Optional Instant dice roll for faster matches.
 - Player cards with match avatars, recent dice history, active-turn feedback and local reactions.
 - Party powers live on the owning player's panel: Shield, Re-roll and Freeze.
 - Re-roll now works after a dead/no-move roll for humans and bots.
@@ -16,8 +19,11 @@ A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla J
 
 ## Reliability and mobile audit
 
-v27 adds a full related-system hardening pass:
+v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life features:
 
+- Live player progress now shows both route percentage and home-token count.
+- Shake to Roll requests motion permission when required and only reacts during an eligible human roll turn.
+- Instant dice roll shortens the visual roll without changing the final dice engine or legal-move rules.
 - Saved Ludo games are validated and normalized before continue.
 - Stored gameplay and host options are normalized to supported values.
 - Profile data is sanitized before match-card rendering.
@@ -27,7 +33,7 @@ v27 adds a full related-system hardening pass:
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v27`.
+- Service-worker cache is `ludo-danilabs-v28`.
 
 ## Cosmetics and local features
 
@@ -83,6 +89,6 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v27 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v28 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
