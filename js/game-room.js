@@ -13,7 +13,7 @@ const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(ensureR
 const POWER_ICON={shield:'🛡️',reroll:'🎲',freeze:'❄️'},POWER_NAME={shield:'Shield',reroll:'Re-roll',freeze:'Freeze'};
 function playerToolsHTML(c){
  const a=(G&&G.cards&&G.cards[c])||[],active=c===cur()&&!G.over&&!isBot(c);
- const powers=a.map(t=>{const ok=active&&!busy&&(t==='reroll'?phase==='move':phase==='roll');return '<button type="button" class="player-power '+(ok?'ready':'')+'" data-player-card="'+c+'" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+(POWER_NAME[t]||t)+'"><span>'+(POWER_ICON[t]||'✨')+'</span><em>'+(POWER_NAME[t]||t)+'</em></button>'}).join('');
+ const powers=a.map(t=>{const ok=active&&!busy&&(t==='reroll'?(G.roll!=null&&(phase==='move'||phase==='roll')):phase==='roll');return '<button type="button" class="player-power '+(ok?'ready':'')+'" data-player-card="'+c+'" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+(POWER_NAME[t]||t)+'" aria-label="'+(POWER_NAME[t]||t)+' power"><span>'+(POWER_ICON[t]||'✨')+'</span><em>'+(POWER_NAME[t]||t)+'</em></button>'}).join('');
  return '<div class="player-tools"><div class="player-power-list">'+powers+'</div><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>';
 }
 const targetTokens=()=>G&&G.variant==='quick'?2:4;
@@ -75,7 +75,7 @@ document.addEventListener('click',e=>{const d=e.target.closest('[data-player-die
 /* Player-side powers and local reactions. */
 document.addEventListener('click',e=>{
  const pc=e.target.closest('[data-player-card]');
- if(pc&&G){const c=pc.dataset.playerCard,t=pc.dataset.card;if(c===cur()&&!isBot(c)&&!busy&&!G.over){const ok=t==='reroll'?phase==='move':phase==='roll';if(ok&&typeof useCard==='function')useCard(t)}return}
+ if(pc&&G){const c=pc.dataset.playerCard,t=pc.dataset.card;if(c===cur()&&!isBot(c)&&!busy&&!G.over){const ok=t==='reroll'?(G.roll!=null&&(phase==='move'||phase==='roll')):phase==='roll';if(ok&&typeof useCard==='function')useCard(t)}return}
  const rb=e.target.closest('[data-player-react]');
  if(rb){const c=rb.dataset.playerReact;document.querySelectorAll('[data-player-reaction-tray]').forEach(x=>{if(x.dataset.playerReactionTray!==c)x.hidden=true});const tr=document.querySelector('[data-player-reaction-tray="'+c+'"]');if(tr){tr.hidden=!tr.hidden;Snd.play('tap')}return}
  const em=e.target.closest('[data-player-reaction-tray] button');
