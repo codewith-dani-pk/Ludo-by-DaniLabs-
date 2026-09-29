@@ -1,65 +1,71 @@
-# Ludo by DaniLabs — v20
+# Ludo by DaniLabs — v26
 
-A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a clean static-root project designed for GitHub → Vercel deployment with no build step, CDN, database or environment variables.
+A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
-## v20 highlights
+## Current game room
 
-- Premium DaniLabs game room with player panels around a large central board.
-- Active-turn lighting, compact turn banner and mobile action dock.
-- 3D-style dice with Classic, Galaxy, Wood, Ice, Gold and Neon skins.
-- Pawn styles: Classic, Gem, Neon, Candy, Pearl and Royal.
-- Board themes: DaniLabs Classic, Vegas Night, Beach, Snow, Royal, Neon and Space.
-- Improved movement, capture, finish and victory feedback.
-- In-app Edit Profile modal, local emoji reactions and cosmetic coin rewards.
-- Offline/PWA cache version `ludo-danilabs-v20`.
+- 2, 3 or 4-player local pass-and-play with optional computer opponents.
+- Separate color-matched dice for every Ludo player; only the current human player's dice is actionable.
+- Individual player cards with random match avatars, recent dice history and active-turn feedback.
+- Party mode gives every player their own random power card: Shield, Re-roll or Freeze.
+- Power cards live on the owning player's panel; the old shared bottom power area is disabled.
+- Each player panel has its own local emoji/reaction control.
+- Duplicate powers in old saved games are cleaned when a game is continued.
+- Bots can use Shield, Freeze and situational Re-roll powers.
+- Classic, Quick and Rush variants plus Party options, safe cells, captures, exact finish, extra turns and three-six handling.
 
-## Gameplay preserved
+## Cosmetics and local features
 
-The existing gameplay engine remains intact: 2/3/4-player pass-and-play, computer opponents, Classic/Quick/Rush modes, Party options, Color Cards, save/continue, rankings/rematch, safe cells, captures, exact finish, extra turns, three-six handling, sounds, haptics and local statistics.
+- Board themes, dice skins and pawn styles in Collection.
+- Local profile name/avatar and cosmetic coin rewards.
+- Sounds, haptics, speed controls, save/continue, rankings, rematch and replay.
+- Separate Color Cards game.
+- PWA/offline app shell with versioned cache updates.
 
-## Private DaniLabs Control Center
+## Private DaniLabs controls
 
-There is no public admin button. Tap a DaniLabs logo five times to open the local credential screen. Per-color Normal / Good Luck / Bad Luck / Killer / Defender settings, secret tap counts, click rules and legal weighted dice behavior are preserved. Private mode names and counters are not shown in the public match UI.
-
-The private login is local/client-side and is a convenience barrier rather than server-grade security.
+The existing local DaniLabs Control Center and its per-color legal dice-weighting controls are preserved. Private controls are not shown in the normal public match UI. The local credential barrier is convenience-level client-side protection, not server security.
 
 ## Project structure
 
 ```text
 .
-├── assets/
-│   └── icons/          PWA and app icons
+├── assets/icons/
 ├── css/
-│   ├── style.css       Core UI and board styles
-│   ├── upgrade.css     Theme/premium visual layer
-│   ├── realistic.css   Dice/pawn depth effects
-│   ├── lobby.css       Lobby and customization UI
-│   └── game-room.css   v20 match-room presentation
+│   ├── style.css
+│   ├── upgrade.css
+│   ├── realistic.css
+│   ├── lobby.css
+│   └── game-room.css
 ├── js/
-│   ├── app.js          Core Ludo engine
-│   ├── host.js         Game options/private controls
-│   ├── cards.js        Color Cards game
-│   ├── themes.js       Cosmetic theme state
-│   ├── realistic.js    Cosmetic dice/pawn behavior
-│   ├── lobby.js        Lobby/profile/collection behavior
-│   └── game-room.js    v20 match-room behavior
+│   ├── app.js
+│   ├── host.js
+│   ├── game-room.js
+│   ├── cards.js
+│   ├── themes.js
+│   ├── realistic.js
+│   └── lobby.js
 ├── index.html
 ├── manifest.json
 ├── sw.js
 └── vercel.json
 ```
 
-## Vercel deployment
+## Vercel
 
-Import this repository into Vercel and deploy the repository root.
+Import the repository root into Vercel.
 
 - Framework preset: **Other**
-- Build command: leave empty
-- Output directory: leave empty
+- Build command: none
+- Output directory: none
 - Production branch: `main`
 
-`vercel.json` provides the static cache/security headers.
+`vercel.json` supplies static cache/security headers.
 
 ## PWA / offline
 
-`sw.js` precaches the app shell and required local assets. Core local play is designed to keep working after the service worker has cached the project. Increment the cache version whenever deployable cached assets change.
+`sw.js` precaches the local app shell. Navigation uses network-first with an offline fallback; static assets use cache-first with background refresh. Bump the cache version whenever cached deployable assets change.
+
+## Audit notes
+
+The v26 audit checks JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved Party-state normalization, private power-click timing and Vercel/PWA configuration. Browser/device QA is still recommended after deployment because static checks do not replace real mobile runtime testing.
