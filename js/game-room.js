@@ -11,7 +11,13 @@ const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c),safeText=v=>String(v?
 function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const used=new Set(Object.values(G.uiAvatars));let changed=false;G.cols.forEach(c=>{if(c==='red'&&!isBot(c))return;if(!G.uiAvatars[c]){const choices=AV_POOL.filter(a=>!used.has(a)),a=(choices.length?choices:AV_POOL)[Math.floor(Math.random()*(choices.length||AV_POOL.length))];G.uiAvatars[c]=a;used.add(a);changed=true}});if(changed)saveG();return G.uiAvatars}
 const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
 const POWER_ICON={shield:'🛡️',reroll:'🎲',freeze:'❄️'},POWER_NAME={shield:'Shield',reroll:'Re-roll',freeze:'Freeze'};
+function wildPickerHTML(c){
+ const show=G&&!G.over&&c===cur()&&!isBot(c)&&phase==='pick'&&!busy;
+ if(!show)return'';
+ return '<div class="wild-picker" role="group" aria-label="'+NAMES[c]+' Wild Star value"><b><span>★</span> Choose</b><div>'+[1,2,3,4,5,6].map(v=>'<button type="button" data-wild-player="'+c+'" data-wild-value="'+v+'" aria-label="Choose '+v+'">'+v+'</button>').join('')+'</div></div>';
+}
 function playerToolsHTML(c){
+ const wild=wildPickerHTML(c);if(wild)return wild;
  const a=(G&&G.cards&&G.cards[c])||[],active=c===cur()&&!G.over&&!isBot(c);
  const powers=a.map(t=>{const ok=active&&!busy&&(t==='reroll'?(G.roll!=null&&(phase==='move'||phase==='roll')):phase==='roll');return '<button type="button" class="player-power '+(ok?'ready':'')+'" data-player-card="'+c+'" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+(POWER_NAME[t]||t)+'" aria-label="'+(POWER_NAME[t]||t)+' power"><span>'+(POWER_ICON[t]||'✨')+'</span><em>'+(POWER_NAME[t]||t)+'</em></button>'}).join('');
  return '<div class="player-tools"><div class="player-power-list">'+powers+'</div><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>';
@@ -22,8 +28,9 @@ const progressPct=c=>{if(!G)return 0;const a=G.pos[c].slice(0,targetTokens()),ma
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
 const miniFace=n=>'<span class="mini-die-face">'+Array.from({length:9},(_,i)=>'<i'+(MINI_PIPS[n].includes(i)?' class="p"':'')+'></i>').join('')+'</span>';
 function playerDieHTML(c){
- const active=c===cur()&&!G.over,canRoll=active&&phase==='roll'&&!busy&&!isBot(c),rolling=active&&busy&&phase==='roll',n=(active&&G.roll)||lastRoll[c]||1;
- return '<button type="button" class="player-die '+(active?'active ':'')+(canRoll?'can-roll ':'')+(rolling?'rolling ':'')+(isBot(c)?'bot-die':'')+'" data-player-die="'+c+'" aria-label="'+NAMES[c]+' dice'+(canRoll?' — tap to roll':'')+'" '+(canRoll?'':'disabled')+'>'+miniFace(n)+'<small>'+(rolling?'ROLLING':canRoll?'ROLL':active&&isBot(c)?'BOT':'DICE')+'</small></button>';
+ const active=c===cur()&&!G.over,wild=active&&phase==='pick',canRoll=active&&phase==='roll'&&!busy&&!isBot(c),rolling=active&&busy&&phase==='roll',n=(active&&G.roll)||lastRoll[c]||1;
+ const face=wild?'<span class="mini-die-face mini-wild-face"><b>★</b></span>':miniFace(n);
+ return '<button type="button" class="player-die '+(active?'active ':'')+(wild?'wild-die ':'')+(canRoll?'can-roll ':'')+(rolling?'rolling ':'')+(isBot(c)?'bot-die':'')+'" data-player-die="'+c+'" aria-label="'+NAMES[c]+' dice'+(wild?' — Wild Star':canRoll?' — tap to roll':'')+'" '+(canRoll?'':'disabled')+'>'+face+'<small>'+(wild?'WILD':rolling?'ROLLING':canRoll?'ROLL':active&&isBot(c)?'BOT':'DICE')+'</small></button>';
 }
 const historyHTML=c=>{const h=(rollHistory[c]||[]).slice(-3);return '<div class="roll-history" aria-label="'+NAMES[c]+' recent rolls">'+(h.length?h.map((n,i)=>'<span class="'+(i===h.length-1?'latest':'')+'">'+n+'</span>').join(''):'<span class="empty">–</span>')+'</div>'};
 function paintPlayerDice(n){
@@ -76,6 +83,8 @@ const baseOver=over;over=function(){const winner=G&&G.ranks&&G.ranks[0];const ou
 document.addEventListener('click',e=>{const d=e.target.closest('[data-player-die]');if(!d||!G)return;const c=d.dataset.playerDie;if(c!==cur()||isBot(c)||busy||phase!=='roll'||G.over)return;Snd.play('tap');doRoll()});
 /* Player-side powers and local reactions. */
 document.addEventListener('click',e=>{
+ const w=e.target.closest('[data-wild-value]');
+ if(w&&G){const c=w.dataset.wildPlayer;if(c===cur()&&!isBot(c)&&phase==='pick'&&!busy&&!G.over){Snd.play('tap');pickVal(+w.dataset.wildValue)}return}
  const pc=e.target.closest('[data-player-card]');
  if(pc&&G){const c=pc.dataset.playerCard,t=pc.dataset.card;if(c===cur()&&!isBot(c)&&!busy&&!G.over){const ok=t==='reroll'?(G.roll!=null&&(phase==='move'||phase==='roll')):phase==='roll';if(ok&&typeof useCard==='function')useCard(t)}return}
  const rb=e.target.closest('[data-player-react]');
