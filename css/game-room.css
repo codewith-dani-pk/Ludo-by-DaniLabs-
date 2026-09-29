@@ -188,8 +188,11 @@ body[data-theme=vegas] #game.game-room{background:radial-gradient(circle at 50% 
 #game #pick{display:none!important}
 
 @media(max-width:700px){
- .room-player.choosing-wild{grid-template-columns:36px minmax(0,1fr) 41px}
- .room-player.choosing-wild .wild-picker{grid-column:2/3}
+ .room-player.choosing-wild{grid-template-columns:36px minmax(0,1fr) 41px;grid-template-areas:"avatar copy die" "avatar wild die";row-gap:3px}
+ .room-player.choosing-wild .room-avatar{grid-area:avatar}
+ .room-player.choosing-wild .room-player-copy{grid-area:copy}
+ .room-player.choosing-wild .wild-picker{grid-area:wild;grid-column:auto}
+ .room-player.choosing-wild .player-die{grid-area:die}
  .wild-picker>div{grid-template-columns:repeat(6,25px);overflow-x:auto;scrollbar-width:none}
  .wild-picker>div::-webkit-scrollbar{display:none}
  .wild-picker button{width:25px;min-width:25px}
