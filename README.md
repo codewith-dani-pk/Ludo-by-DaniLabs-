@@ -20,7 +20,7 @@ A `netlify.toml` file is included, so Netlify can use the correct static-site pu
 
 ## Offline / PWA
 
-The service worker (`ludo-danilabs-v4`) precaches every file on first load, serves assets cache-first with background refresh, and falls back to the cached page when offline. Bump the `V` constant in `sw.js` whenever you deploy changes so installed copies update. PNG icons (including maskable and Apple touch) make installs work on Android and iOS.
+The service worker (`ludo-danilabs-v8`) precaches every file on first load, serves assets cache-first with background refresh, and falls back to the cached page when offline. Bump the `V` constant in `sw.js` whenever you deploy changes so installed copies update. PNG icons (including maskable and Apple touch) make installs work on Android and iOS.
 
 ## Gameplay
 
@@ -35,7 +35,9 @@ The service worker (`ludo-danilabs-v4`) precaches every file on first load, serv
 
 There is no public admin button. Tap the DaniLabs logo five times to reach the local credential screen. On first access, the owner creates the username/password.
 
-Each color can use Normal, Good Luck, Bad Luck, Killer or Defender with configurable secret activation taps. The special modes influence ordinary legal Ludo dice/move possibilities and are not labelled on the public game screen.
+The private Control Center opens with a compact row of colors. Select a color to configure multiple powers at once, activation taps and strength, plus preferred dice numbers. You can activate powers directly or set secret click rules that count taps on any token: the defaults give the clicked color Maximum Bad Luck after 3 taps on a friend token and give your color all powers after 5 taps on your token. Add, remove, or customize rules in the Click rules tab. Token tap sequences work anywhere on the board.
+
+Good Luck, Bad Luck, Killer and Defender adjust the weighting of legal dice outcomes; they do not create illegal moves or guarantee a win. Preferences and click rules are kept in this browser's local storage. You can export/import a JSON backup from More controls.
 
 ## Security
 

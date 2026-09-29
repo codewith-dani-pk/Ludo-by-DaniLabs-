@@ -12,7 +12,7 @@ applyLook();
 /* ---- per-game state ---- */
 const nowModes=()=>({chaos:O.chaos,cards:O.cards,events:O.events,underdog:O.underdog,helper:Object.assign({},O.helper)});
 function modeText(){const m=G.mx,a=[];if(m.chaos)a.push('Wild star dice');if(m.cards)a.push('Power cards');if(m.events)a.push('Party events');if(m.underdog)a.push('Underdog boost');const h=G.cols.filter(c=>m.helper[c]);if(h.length)a.push('Helper re-roll: '+h.map(c=>NAMES[c]).join(', '));return a.join(' | ')}
-function ensureExtras(){G.bots=G.bots||[];G.cards=G.cards||{};G.shield=G.shield||{};G.peace=G.peace||0;G.tc=G.tc||0;G.skip=G.skip||null;G.rep=G.rep||[];G.mx=G.mx||{chaos:0,cards:0,events:0,underdog:0,helper:{}};G.mx.helper=G.mx.helper||{}}
+function ensureExtras(){G.bots=G.bots||[];G.cards=G.cards||{};G.shield=G.shield||{};G.peace=G.peace||0;G.tc=G.tc||0;G.skip=G.skip||null;G.rep=G.rep||[];G.secretPowers=G.secretPowers||{};G.mx=G.mx||{chaos:0,cards:0,events:0,underdog:0,helper:{}};G.mx.helper=G.mx.helper||{}}
 const frame=(c,r)=>({p:Object.fromEntries(G.cols.map(k=>[k,G.pos[k].slice()])),c:c||null,r:r||null});
 function rec(c,r){G.rep.push(frame(c,r));if(G.rep.length>700)G.rep.splice(1,G.rep.length-700)}
 function initExtras(){G.mx=nowModes();ensureExtras();G.cols.forEach(c=>{G.cards[c]=[]});if(G.mx.cards)G.cols.forEach(c=>giveCard(c,null,true));G.rep=[frame()];Undo.h=[];const t=modeText();if(t)setTimeout(()=>toast('Modes: '+t),300)}
