@@ -11,7 +11,7 @@ create table if not exists public.online_profiles (
 
 create table if not exists public.online_rooms (
   id uuid primary key default gen_random_uuid(),
-  code text not null unique check (code ~ '^[A-Z0-9]{6}'),
+  code text not null unique check (char_length(code)=6 and code !~ '[^A-Z0-9]'),
   host_id text not null,
   status text not null default 'waiting' check (status in ('waiting','playing','finished')),
   max_players smallint not null check (max_players between 2 and 4),
