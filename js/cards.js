@@ -1,6 +1,6 @@
 'use strict';
 /* UNO-style core card game: offline pass-and-play / bots plus server-authoritative online rooms. */
-const CGK=['r','g','y','b'],CGCOL={r:'red',g:'green',y:'yellow',b:'blue'},CGSYM={S:'⊘',R:'⇄',D:'+2',W:'★',F:'+4'};
+const CGK=['r','g','y','b'],CGCOL={r:'red',g:'green',y:'yellow',b:'blue'},CGCOLORNAME={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'},CGSYM={S:'⊘',R:'⇄',D:'+2',W:'★',F:'+4'};
 let CG=null,cgModalFn=null,cgOnlineWinnerShown='';
 
 const cgRnd=n=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n};
@@ -60,7 +60,7 @@ function cgRender(){
  $('#cgOpp').innerHTML=CG.pl.map((p,i)=>'<div class="chip '+(i===CG.turn&&!CG.over?'act':'')+'" style="--c:'+HEX[p.col]+'">'+cgName(p)+' · '+cgCount(p)+'</div>').join('');
  const t=cgTop();if(!t)return;
  $('#cgTop').className='ucard '+(t.c==='w'?'w':CGCOL[t.c]);$('#cgTop').innerHTML='<span>'+(CGSYM[t.v]||t.v)+'</span>';
- $('#cgCol').style.background=HEX[CGCOL[CG.color]];$('#cgCol').textContent=(CG.dir>0?'↻ ':'↺ ')+NAMES[CGCOL[CG.color]];
+ $('#cgCol').style.background=HEX[CGCOL[CG.color]];$('#cgCol').textContent=(CG.dir>0?'↻ ':'↺ ')+CGCOLORNAME[CGCOL[CG.color]];
  const dr=$('#cgDraw');dr.textContent=CG.drew&&cgMine()?'Pass':'Draw';dr.disabled=CG.busy||CG.cover||CG.over||!cgMine()||cur.bot;
  const viewer=CG.online?CG.pl.find(p=>p.col===CG.myColor):(CG.humans===1?CG.pl[0]:cur);
  const hand=viewer&&viewer.hand||[];
@@ -69,7 +69,7 @@ function cgRender(){
   return cardEl(c,can?'ok':'no').replace('<button','<button data-i="'+i+'"')
  }).join('')
 }
-function chooseColor(done){modalCg('<h2>Choose a color</h2><div class="row">'+CGK.map(k=>'<button class="btn" data-col="'+k+'" style="background:'+HEX[CGCOL[k]]+';color:#fff">'+NAMES[CGCOL[k]]+'</button>').join('')+'</div>',done)}
+function chooseColor(done){modalCg('<h2>Choose a color</h2><div class="row">'+CGK.map(k=>'<button class="btn" data-col="'+k+'" style="background:'+HEX[CGCOL[k]]+';color:#fff">'+CGCOLORNAME[CGCOL[k]]+'</button>').join('')+'</div>',done)}
 $('#cgHand').onclick=e=>{
  const b=e.target.closest('[data-i]');if(!b||!CG||CG.over||CG.busy||CG.cover||!cgMine())return;
  const p=CG.online?CG.pl.find(x=>x.col===CG.myColor):cgCur(),i=+b.dataset.i,c=p&&p.hand[i];
