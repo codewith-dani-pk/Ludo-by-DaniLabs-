@@ -51,3 +51,8 @@
 
 @media(max-width:520px){
 }
+
+/* v42 — clear two-game home hierarchy */
+.game-pair{margin:8px auto 0;width:max-content;max-width:90%;padding:5px 11px;border:1px solid #5f86d7;border-radius:999px;background:#061943cc;color:#dceaff;font-size:.58rem;font-weight:900;letter-spacing:.08em}
+.uno-section{gap:8px}.uno-launch{width:100%;min-height:82px;display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;border:1px solid #ffcc66;border-radius:19px;background:linear-gradient(135deg,#d9384d,#8c173d 48%,#171d58);color:#fff;text-align:left;box-shadow:0 6px 0 #4c1027,0 10px 20px #0007,inset 0 1px #fff5}
+.uno-launch:active{transform:translateY(2px);box-shadow:0 4px 0 #4c1027,0 7px 15px #0007}.uno-mark{display:grid;place-items:center;width:58px;height:58px;border:3px solid #fff;border-radius:50%;background:linear-gradient(145deg,#ffdf44,#ff5a36);color:#221047;font-size:.9rem;font-weight:1000;font-style:italic;transform:rotate(-10deg);box-shadow:0 3px 0 #7b1c28}.uno-launch>span:nth-child(2){display:grid;gap:4px}.uno-launch b{font-size:.95rem}.uno-launch small{color:#ffe7c0;font-size:.62rem;line-height:1.25}.uno-launch i{font-style:normal;font-size:1.7rem;color:#ffe477}
