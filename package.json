@@ -1,0 +1,6 @@
+{
+  "name":"ludo-by-danilabs",
+  "private":true,
+  "type":"module",
+  "engines":{"node":">=22"}
+}
