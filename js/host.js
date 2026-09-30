@@ -1,5 +1,5 @@
 'use strict';
-/* Standard Ludo options only: no weighted dice, secret powers, party cards or hidden match modifiers. */
+/* Standard Ludo options and local replay/stat controls. */
 const DEFN={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
 const PAL=[{red:'#e63946',green:'#2a9d5c',yellow:'#f4b400',blue:'#2f6fed'},{red:'#d55e00',green:'#009e73',yellow:'#f0e442',blue:'#0072b2'}];
 const defO=()=>({diff:'normal',names:{},pal:0,pin:null});
