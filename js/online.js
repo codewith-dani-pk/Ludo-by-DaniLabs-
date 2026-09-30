@@ -45,7 +45,7 @@ function friendlyMessage(m){let x=String(m||'');COLORS.forEach(c=>{x=x.replace(n
 function applyState(r){
  if(!r||!r.state||!r.state.game)return;const st=r.state;room=r;applyNames();
  if(st.game.kind==='uno'){
-  G=null;Snd.ac();Snd.music(1);
+  G=null;Snd.ac();Snd.music(1);st.message=friendlyMessage(st.message);
   if(window.OnlineCards)OnlineCards.applyState(st,r,members,myColor(),sendAction);
   if(st.game.over)stopPoll();
   return
