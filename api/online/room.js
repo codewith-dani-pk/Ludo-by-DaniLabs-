@@ -1,17 +1,17 @@
 import crypto from 'node:crypto';
-import {requireUser,getClerkProfile} from '../_auth.js';
+import {requireUser,requireSameOrigin} from '../_auth.js';
 import {db,enc} from '../_db.js';
 import {newOnlineState} from '../_online-engine.js';
 const send=(res,status,data)=>res.status(status).json(data);
 const code=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>a[crypto.randomInt(0,a.length)]).join('')};
 const colorFor=(seat,max)=>seat===0?'red':seat===1?(max===2?'yellow':'green'):seat===2?'yellow':'blue';
-async function profile(user){const p=await getClerkProfile(user.id);await db('online_profiles?on_conflict=user_id',{method:'POST',body:{user_id:user.id,username:p.username,display_name:p.display_name,last_seen:new Date().toISOString()},prefer:'resolution=merge-duplicates,return=representation'});return p}
+async function profile(user){const p={id:user.id,username:user.username,display_name:user.display_name||user.username};await db('online_profiles?on_conflict=user_id',{method:'POST',body:{user_id:user.id,username:p.username,display_name:p.display_name,last_seen:new Date().toISOString()},prefer:'resolution=merge-duplicates,return=representation'});return p}
 async function roomByCode(c){const a=await db('online_rooms?code=eq.'+enc(c)+'&select=*&limit=1');return a&&a[0]}
 async function roomById(id){const a=await db('online_rooms?id=eq.'+enc(id)+'&select=*&limit=1');return a&&a[0]}
 async function memberList(id){return await db('online_members?room_id=eq.'+enc(id)+'&select=*&order=seat.asc')||[]}
 async function payload(r,user){if(!r)return{room:null,members:[]};const ms=await memberList(r.id);if(!ms.some(m=>m.user_id===user.id))throw Object.assign(new Error('You are not in this room'),{status:403});return{room:r,members:ms}}
 export default async function handler(req,res){try{const user=await requireUser(req);if(req.method==='GET'){if(req.query.mine==='1'){const ms=await db('online_members?user_id=eq.'+enc(user.id)+'&select=room_id,joined_at&order=joined_at.desc&limit=8')||[];for(const m of ms){const r=await roomById(m.room_id);if(r&&r.status!=='finished')return send(res,200,await payload(r,user))}return send(res,200,{room:null,members:[]})}const c=String(req.query.code||'').toUpperCase();const r=await roomByCode(c);if(!r)return send(res,404,{error:'Room not found'});return send(res,200,await payload(r,user))}
- if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});const body=req.body||{},action=body.action;
+ if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});requireSameOrigin(req);const body=req.body||{},action=body.action;
  if(action==='create'){const p=await profile(user),max=[2,3,4].includes(+body.players)?+body.players:2,variant=['classic','quick','rush'].includes(body.variant)?body.variant:'classic';let r=null;for(let i=0;i<6&&!r;i++){try{const out=await db('online_rooms',{method:'POST',body:{code:code(),host_id:user.id,status:'waiting',max_players:max,variant,state:null,version:0}});r=out&&out[0]}catch(e){if(e.status!==409)throw e}}if(!r)throw new Error('Could not create room');await db('online_members',{method:'POST',body:{room_id:r.id,user_id:user.id,seat:0,color:'red',ready:true,username:p.username,display_name:p.display_name}});return send(res,200,await payload(r,user))}
  const c=String(body.code||'').trim().toUpperCase();if(!/^[A-Z0-9]{6}$/.test(c))return send(res,400,{error:'Invalid room code'});let r=await roomByCode(c);if(!r)return send(res,404,{error:'Room not found'});
  if(action==='join'){if(r.status!=='waiting')return send(res,409,{error:'Match already started'});const old=await memberList(r.id);const existing=old.find(m=>m.user_id===user.id);if(existing)return send(res,200,{room:r,members:old});if(old.length>=r.max_players)return send(res,409,{error:'Room is full'});const p=await profile(user),used=new Set(old.map(m=>m.seat));let seat=0;while(used.has(seat)&&seat<4)seat++;await db('online_members',{method:'POST',body:{room_id:r.id,user_id:user.id,seat,color:colorFor(seat,r.max_players),ready:false,username:p.username,display_name:p.display_name}});return send(res,200,await payload(r,user))}
