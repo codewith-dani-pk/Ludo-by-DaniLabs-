@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ludo by DaniLabs</title><meta name="theme-color" content="#1b1140">
+<title>Ludo + UNO by DaniLabs</title><meta name="theme-color" content="#1b1140">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="google-site-verification" content="dfl1sF2t12eNp_HY1hmmsu75NjE-HGMjLW-IT0lKFt4" />
 <meta name="description" content="Play Ludo and UNO locally or online with friends, by DaniLabs.">
 <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"></head><body>
@@ -9,14 +9,12 @@
   <header class="home-top">
    <button class="brand-badge" id="logo" aria-label="DaniLabs home"><img src="assets/icons/icon.svg" alt=""></button>
    <button class="home-profile" id="bProf" aria-label="Edit profile"><span class="avatar" id="avatar">🦊</span><span><b id="pName">Guest player</b><small><i></i> OFFLINE</small></span></button>
-   <span class="coin-pill" aria-label="Coins"><span class="coin">◎</span><b id="coins">0</b></span>
    <button class="btn sm home-gear" id="bSet" aria-label="Settings">⚙</button>
   </header>
   <section class="hero3" id="logo3" aria-label="Ludo by DaniLabs">
    <h1 class="wordmark"><i style="--c:#e63946">L</i><i style="--c:#2a9d5c">U</i><i style="--c:#f4b400">D</i><i style="--c:#2f6fed">O</i></h1>
    <p class="by">by <b>DaniLabs</b></p><span class="hero-die" aria-hidden="true">⚄</span>
   </section>
-  <button class="daily" id="bDaily"><span>🎁</span><b id="dailyT">Daily reward</b><small id="dailyS"></small></button>
   <section class="home-section"><h2 class="sec">Local play</h2>
    <div class="lp-grid">
     <button class="lp c2" data-play="2"><b>2</b><span>Players</span></button>
@@ -35,19 +33,18 @@
    </div>
    <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
   </section>
-  <section class="soon-row"><button id="bOnline" class="online-ready">🌐 Online <small>Play</small></button><button id="bFriends">♙ Friends <small>Online</small></button><button data-coming="Events">▣ Events <small>Soon</small></button></section>
+  <section class="soon-row"><button id="bOnline" class="online-ready">🌐 Online <small>Ludo + UNO</small></button><button id="bFriends">♙ Friends <small>Private rooms</small></button></section>
   <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
  </div>
  <nav class="bottom-nav" aria-label="Home navigation">
   <button class="nav-item active" aria-current="page"><span>⌂</span><small>Home</small></button>
-  <button class="nav-item" id="nDaily"><span>🎁</span><small>Rewards</small></button>
-  <button class="nav-item" id="nColl"><span>✦</span><small>Collection</small></button>
+  <button class="nav-item" id="nOnline"><span>🌐</span><small>Online</small></button>
   <button class="nav-item" id="nFriends"><span>♙</span><small>Friends</small></button>
-  <button class="nav-item" data-coming="Store"><span>◇</span><small>Store</small></button>
+  <button class="nav-item" id="nSettings"><span>⚙</span><small>Settings</small></button>
  </nav>
 </main>
 <main id="game" class="screen game-room">
- <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bUndo" aria-label="Undo last move" hidden>↶</button><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
+ <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
  <div class="game-room-meta"><span>OFFLINE MATCH</span><b id="roomMode">CLASSIC</b><div class="turn-order" id="turnOrder" aria-label="Turn order"></div><i>LOCAL</i></div>
  <div id="bar" aria-hidden="true"></div>
  <section class="game-stage" aria-label="Ludo table">
@@ -88,7 +85,7 @@
 <div id="confetti" aria-hidden="true"></div><div id="toast" role="status" aria-live="polite"></div>
 <div class="modal" id="mRules"><div class="box"><h2>How to play</h2>
 <p>Roll a 6 to bring a token out. Move tokens clockwise around the board and up your home column. You need the exact roll to reach the center.</p>
-<p>Land on an opponent (not on a ★ safe cell) to send them home. Two of your tokens on one cell are a block and cannot be captured (you can turn this off in Settings). A 6, a capture, or reaching the center gives another turn. Three 6s in a row lose the turn.</p>
+<p>Land on an opponent (not on a ★ safe cell) to send them home. Two tokens of the same color on one track cell form a protected block. A 6, a capture, or reaching the center gives another turn. Three 6s in a row lose the turn.</p>
 <p>Glowing tokens with a ▲ can move. Tap one to move it. First to finish all four tokens wins.</p><p>Ludo styles: Classic, Quick (2 tokens each) and Rush (all tokens start on the track). There is also a separate card game on the home screen.</p><p>UNO is available from Home for offline play, and from Online Play for private online rooms.</p><button class="btn" data-close>Close</button></div></div>
 <div class="modal" id="mProfile"><div class="box profile-box"><span class="eyebrow">DANILABS PLAYER</span><h2>Edit profile</h2><div class="profile-preview"><span class="avatar" id="profPreview">🦊</span><div><b id="profPreviewName">Guest player</b><small>Saved on this device</small></div></div><label>Player name<input id="profName" maxlength="12" autocomplete="nickname" placeholder="Player name"></label><div class="avatar-grid" id="profAvatars" aria-label="Choose avatar"></div><div class="row"><button class="btn" id="bProfSave">Save profile</button><button class="btn ghost" data-close>Cancel</button></div></div></div>
 <div class="modal" id="mSet"><div class="box settings-box"><div class="settings-head"><div><span class="eyebrow">QUICK SETTINGS</span><h2>Settings</h2></div><button class="btn sm" data-close aria-label="Close settings">✕</button></div>
@@ -97,8 +94,6 @@
 <div class="settings-actions"><button class="btn ghost" id="bHost">Game rules & options</button><button class="btn ghost danger-lite" id="bRestart" hidden>Restart current match</button></div>
 <p class="settings-note">Gameplay rules are kept in Game rules & options so they are not duplicated here.</p></div></div>
 <div class="modal full" id="mHost"><div class="box wide"><div class="row sp"><h2>Game options</h2><button class="btn sm" data-close>✕</button></div><div id="hostbody"></div></div></div>
-<div class="modal" id="mOver"><div class="box victory-box"><div class="victory-crown">♛</div><span class="eyebrow">MATCH COMPLETE</span><h2 id="victoryTitle">Game over</h2><p id="victorySub">Final ranking</p><div class="victory-reward"><span>◎</span><b>+25</b><small>finish reward</small></div><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
-<div class="modal full" id="mColl"><div class="box wide"><div class="row sp"><h2>Collection</h2><button class="btn sm" data-close>✕</button></div><div class="tabs" id="cTabs"><button data-t="t" class="on">Boards</button><button data-t="d">Dice</button><button data-t="p">Pawns</button></div><div class="coll-grid" id="cGrid"></div><p class="hint">Cosmetics only. They never change rules or odds.</p></div></div>
+<div class="modal" id="mOver"><div class="box victory-box"><div class="victory-crown">♛</div><span class="eyebrow">MATCH COMPLETE</span><h2 id="victoryTitle">Game over</h2><p id="victorySub">Final ranking</p><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
 <div class="modal full" id="mOnline"><div class="box wide online-box"><div class="row sp online-head"><div><span class="eyebrow">DANILABS ONLINE</span><h2>Online Play</h2></div><button class="btn sm" data-close aria-label="Close online play">✕</button></div><p id="onlineMsg" class="online-msg" aria-live="polite"></p><div id="onlineBody"></div><p class="online-safety">Ludo and UNO private rooms use invite codes. There is no public chat; friends are added by username.</p></div></div>
-<div class="modal" id="mSoon"><div class="box soon-box"><div class="soon-mark">✦</div><span class="eyebrow">DANILABS ROADMAP</span><h2 id="soonTitle">Coming soon</h2><p id="soonText">We’re working on this feature. It will appear here in a future update.</p><button class="btn" data-close>Got it</button></div></div>
-<script src="js/app.js"></script><script src="js/themes.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
+<script src="js/app.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
