@@ -2,11 +2,10 @@
 /* Standard Ludo options only: no weighted dice, secret powers, party cards or hidden match modifiers. */
 const DEFN={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
 const PAL=[{red:'#e63946',green:'#2a9d5c',yellow:'#f4b400',blue:'#2f6fed'},{red:'#d55e00',green:'#009e73',yellow:'#f0e442',blue:'#0072b2'}];
-const defO=()=>({rules:{leave:'six',exact:1,three6:1,capExtra:1,undo:0},diff:'normal',names:{},pal:0,pin:null});
-let O=(()=>{const d=defO(),s=Store.get('ldb_opts',{})||{};return Object.assign(d,{diff:s.diff,names:s.names||{},pal:s.pal,pin:s.pin},{rules:d.rules})})();
+const defO=()=>({diff:'normal',names:{},pal:0,pin:null});
+let O=(()=>{const d=defO(),s=Store.get('ldb_opts',{})||{};return Object.assign(d,{diff:s.diff,names:s.names||{},pal:s.pal,pin:s.pin})})();
 const saveO=()=>Store.set('ldb_opts',O),clean=s=>String(s||'').replace(/[<>&"'\x60]/g,'').trim().slice(0,12);
 COLORS.forEach(c=>O.names[c]=clean(O.names[c]));O.diff=['easy','normal','hard'].includes(O.diff)?O.diff:'normal';O.pal=+!!O.pal;
-S.stack=1;saveS();
 function applyLook(){COLORS.forEach(c=>{NAMES[c]=clean(O.names[c])||DEFN[c];HEX[c]=PAL[O.pal?1:0][c];document.documentElement.style.setProperty('--'+c,HEX[c])})}
 applyLook();
 
@@ -14,7 +13,7 @@ function ensureExtras(){G.bots=Array.isArray(G.bots)?G.bots.filter(c=>G.cols.inc
 const frame=(c,r)=>({p:Object.fromEntries(G.cols.map(k=>[k,G.pos[k].slice()])),c:c||null,r:r||null});
 function rec(c,r){G.rep.push(frame(c,r));if(G.rep.length>700)G.rep.splice(1,G.rep.length-700)}
 function initExtras(){ensureExtras();G.rep=[frame()]}
-function renderExtras(){const box=$('#cards'),u=$('#bUndo'),pk=$('#pick');if(box)box.innerHTML='';if(pk)pk.innerHTML='';if(u)u.hidden=true}
+function renderExtras(){const box=$('#cards'),pk=$('#pick');if(box)box.innerHTML='';if(pk)pk.innerHTML=''}
 
 function saveReplay(){try{Store.set('ldb_replay',{cols:G.cols,frames:G.rep})}catch(e){}}
 async function replayLast(){
