@@ -13,7 +13,7 @@
   </header>
   <section class="hero3" id="logo3" aria-label="Ludo by DaniLabs">
    <h1 class="wordmark"><i style="--c:#e63946">L</i><i style="--c:#2a9d5c">U</i><i style="--c:#f4b400">D</i><i style="--c:#2f6fed">O</i></h1>
-   <p class="by">by <b>DaniLabs</b></p><span class="hero-die" aria-hidden="true">⚄</span>
+   <p class="by">by <b>DaniLabs</b></p><p class="game-pair">LUDO + UNO · OFFLINE + ONLINE</p><span class="hero-die" aria-hidden="true">⚄</span>
   </section>
   <section class="home-section"><h2 class="sec">Local play</h2>
    <div class="lp-grid">
@@ -24,14 +24,16 @@
    </div>
    <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
   </section>
-  <section class="home-section"><h2 class="sec">Game modes</h2>
+  <section class="home-section"><h2 class="sec">Ludo ruleset</h2>
    <div class="mode-grid" id="modes">
     <button data-mode="classic" class="on"><b>Classic</b><small>4 tokens</small></button>
-    <button data-mode="quick"><b>Quick</b><small>2 tokens</small></button>
+    <button data-mode="quick"><b>Quick</b><small>2 active tokens</small></button>
     <button data-mode="rush"><b>Rush</b><small>Start on track</small></button>
-    <button id="bCards" class="cc"><b>UNO</b><small>Play offline ›</small></button>
    </div>
    <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
+  </section>
+  <section class="home-section uno-section"><h2 class="sec">UNO</h2>
+   <button id="bCards" class="uno-launch"><span class="uno-mark">UNO</span><span><b>Play UNO offline</b><small>2–4 players · pass & play or computer</small></span><i>›</i></button>
   </section>
   <section class="soon-row"><button id="bOnline" class="online-ready">🌐 Online <small>Ludo + UNO</small></button><button id="bFriends">♙ Friends <small>Private rooms</small></button></section>
   <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
