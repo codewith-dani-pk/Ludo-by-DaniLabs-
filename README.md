@@ -1,175 +1,44 @@
-# Ludo by DaniLabs — v39
+# Ludo by DaniLabs — v40
 
-A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
+Mobile-first Ludo built with plain HTML, CSS and vanilla JavaScript, deployed from GitHub to Vercel.
 
-## Current Ludo experience
+## Play
 
-- 2, 3 or 4-player local pass-and-play with optional computer opponents.
-- Classic, Quick and Rush variants plus Party options.
-- Separate color-matched dice for every player; only the current human player's dice is actionable.
-- Live progress percentage/bar for every player.
-- Optional Shake to Roll on browsers/devices that expose motion events.
-- Optional Instant dice roll for faster matches.
-- Player cards with match avatars, recent dice history, active-turn feedback and local reactions.
-- Party powers live on the owning player's panel: Shield, Re-roll and Freeze.
-- Re-roll now works after a dead/no-move roll for humans and bots.
-- All owned powers remain reachable on narrow phones instead of hiding later power buttons.
-- Bots can use Shield, Freeze and situational Re-roll powers.
-- Safe cells, captures, exact finish, extra turns, three-six handling, undo, save/continue, rankings, rematch and replay.
+- Local pass-and-play for 2, 3 or 4 players, with optional computer opponents.
+- Classic, Quick and Rush variants plus optional Party features.
+- Save/continue, undo, rankings, rematch, replay, local stats, profile, cosmetic coins and Collection.
+- Separate Color Cards game and installable offline-first PWA.
 
-## Reliability and mobile audit
+## Online
 
-v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life features:
+Online play uses DaniLabs username/password accounts and private invite-code rooms. Dice rolls, legal moves and turn ownership are server-authoritative. Friends are username-based and there is no public text chat. Passwords use salted scrypt hashes; sessions use Secure, HttpOnly, SameSite=Strict cookies; recovery values are stored hashed. Local-only controls do not affect online match results.
 
-- Live player progress now shows both route percentage and home-token count.
-- Shake to Roll requests motion permission when required and only reacts during an eligible human roll turn.
-- Instant dice roll shortens the visual roll without changing the final dice engine or legal-move rules.
-- Saved Ludo games are validated and normalized before continue.
-- Stored gameplay and host options are normalized to supported values.
-- Profile data is sanitized before match-card rendering.
-- Daily rewards use the device's local calendar day instead of UTC day boundaries.
-- Stored game-mode values fall back safely to Classic when invalid.
-- Mobile zoom is no longer disabled.
-- Small-screen player power controls can scroll so every owned power remains accessible.
-- PWA updates automatically refresh an already controlled page when the new service worker takes control.
-- Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v39`.
+## Production backend
 
-## Cosmetics and local features
+Apply `supabase/migrations/20260930_online_v38.sql` and then `supabase/migrations/20260930_online_auth_v39.sql`.
 
-- Board themes, dice skins and pawn styles in Collection.
-- Local profile name/avatar and cosmetic coin rewards.
-- Sounds, haptics, speed controls and local statistics.
-- Separate Color Cards game.
-- Offline/PWA app shell with versioned cache updates.
+Configure Vercel server-side variables `SUPABASE_URL` and `SUPABASE_SECRET_KEY`. Never place the Supabase secret in browser code or Git history. `/api/online/health` reports whether the production database connection is ready.
 
-## Private DaniLabs controls
+## PWA
 
-The existing local DaniLabs Control Center is preserved, including per-color legal dice-weighting controls, power-click timing and secret click rules. These private controls are not shown in the normal public match UI. The local credential barrier is convenience-level client-side protection, not server security.
+`sw.js` uses cache `ludo-danilabs-v40`. Navigation is network-first with an offline fallback. Static assets use cached responses with background refresh; `/api/*` is never service-worker cached.
 
 ## Project structure
 
 ```text
-.
-├── assets/icons/
-├── css/
-│   ├── style.css
-│   ├── upgrade.css
-│   ├── realistic.css
-│   ├── lobby.css
-│   └── game-room.css
-├── js/
-│   ├── app.js
-│   ├── host.js
-│   ├── game-room.js
-│   ├── cards.js
-│   ├── themes.js
-│   ├── realistic.js
-│   └── lobby.js
-├── index.html
-├── manifest.json
-├── sw.js
-└── vercel.json
+api/                    Vercel online API
+assets/icons/           PWA icons
+css/                    App and game-room styles
+js/                     Ludo, lobby, online and Color Cards clients
+supabase/migrations/    Production database migrations
+index.html              App shell
+manifest.json           PWA manifest
+sw.js                   Service worker
+vercel.json             Production headers/cache policy
 ```
 
-## Vercel
+## v40 audit
 
-Import the repository root into Vercel.
+v40 separates online/local lifecycle state, restores local names after online play, fixes online turn ownership messaging, preserves saved Game Options across reloads, improves service-worker failure handling, removes obsolete online configuration and adds browser-security headers. The server-side Ludo engine was stress-checked across randomized 2/3/4-player Classic, Quick and Rush matches.
 
-- Framework preset: **Other**
-- Build command: none
-- Output directory: none
-- Production branch: `main`
-
-`vercel.json` supplies static cache/security headers.
-
-## PWA / offline
-
-`sw.js` precaches the local app shell. Navigation uses network-first with an offline fallback; static assets use cache-first with background refresh. The cache version is bumped whenever cached deployable assets change.
-
-## Audit status
-
-The v38 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
-
-Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
-
-
-## Control Center v31
-
-The private Control Center now includes a read-only live match inspector, one-tap jump to the current player, selectable 1/3/5-click quick power presets, a four-color live status dashboard, master re-arm/off controls, and a local power-setup snapshot that can be saved and restored. Existing Easy Power Setup, advanced power controls, click rules and private activation behavior are preserved.
-
-
-## Fast Control Center v32
-
-The private Control Center now prioritizes the normal workflow in one compact mobile-first surface: select a player color, choose Lucky/Bad/Killer/Defender, choose 1/3/5 activation clicks, then Arm, Activate now, or Off. Live match inspection, four-color status, snapshots, fine tuning, click rules, and owner tools remain available through secondary sections so the primary controls require less scrolling. Touch-oriented primary controls use larger targets and the layout compacts further on narrow phones.
-
-
-## Fast Workflow v33
-
-The private dashboard now uses one primary workflow: choose a color, choose Lucky/Bad/Killer/Defender, then choose 1/3/5 clicks. Power and click selections automatically arm the selected setup, so the redundant Arm step is removed from the fast surface. Optional Follow Turn keeps the dashboard on the player whose turn is active; manually selecting another color pauses following. Activate Now and Off remain the only immediate fast actions.
-
-The older duplicate dashboard renderer and obsolete settings listener were removed. Fine Tune now contains only optional strength, click-target, multi-power and custom-dice controls instead of repeating the same basic setup. Match details, snapshots, click rules and owner tools remain progressively disclosed below the primary workflow.
-
-
-## Private match-hold shortcuts v34
-
-After a successful private Control Center login in the current browser session, token 1 and token 2 support match-scoped hold shortcuts. Holding token 1 for about 0.9 seconds toggles Bad Match for that token's color. Holding token 2 toggles Best Powers for that color. Best Powers intentionally combines Good Luck, Killer and Defender but not Bad Luck, avoiding contradictory good/bad weighting. Holding the same token again removes that match shortcut.
-
-The shortcut is stored only with the current match state, survives Continue Game, and clears naturally with a new/completed match. It has no public badge or popup. Pointer movement cancels an unfinished hold, a completed hold suppresses the following normal click so a pawn is not moved accidentally, and the private Control Center can clear all match holds at once.
-
-
-## Fast Control Center v35
-
-The private Control Center now opens on a small Fast Control surface only: color, power, click count, live status, Activate and Off. Fine Tune, click rules and Owner Tools are lazy-rendered only when requested instead of being rebuilt on every dashboard interaction.
-
-Live match details are also lazy. Their match inspector and four-color overview update only while the details section is open. Dashboard refreshes are scoped to the Control Center, coalesced with requestAnimationFrame, reduced to a 1.4 second fallback pulse, and paused when the page is hidden. The old v32-v34 dashboard override blocks were replaced with one v35 CSS block, and the two dashboard click listeners were consolidated into one delegated action path.
-
-Owner Tools now load on demand. Replay and stats-reset controls have working action paths. Existing private power logic, match-hold shortcuts, secret click rules and power-tap timing are preserved.
-
-
-## Private tactile state v36
-
-Private power state now has a tactile-only in-game confirmation on supported devices: activation uses two short pulses and deactivation uses one longer pulse. Secret click-rule activation no longer plays the public game sound. Match-hold shortcuts use the same ON/OFF haptic language and do not add a public badge.
-
-Bad Match now includes a no-win guard. While a color has the match-scoped Bad Match state, a move that would complete its final pawn is removed from its legal move choices. Chaos Wild Star is also suppressed for that color so it cannot bypass the guard. Other movement, captures and normal turn rules remain unchanged.
-
-
-## Settings cleanup v37
-
-Quick Settings now contains only device and feel controls: Sound, Music, Game vibration, Shake to Roll and one Dice animation preset. The old separate Instant Roll and Animation Speed controls were consolidated into the single Dice animation selector while preserving the same internal instant/speed behavior.
-
-Gameplay rules are no longer duplicated in Quick Settings. Paired-token safety lives only in Game rules & options with the other core Ludo rules. Restart current match appears only during an active match.
-
-Game rules & options are grouped into Core rules, Computer, Accessibility, Party features, Player helpers & names, and a collapsed Tools & privacy section. Stats, replay, backup and the local options PIN remain available without occupying the main rules surface.
-
-The v36 private power haptics, Bad Match no-win guard, long-press match shortcuts, secret click rules and power timing are preserved.
-
-
-## Online Play v39
-
-Online play now uses DaniLabs-native username/password accounts instead of Clerk.
-
-- Account creation and sign-in use a username plus a long password/passphrase.
-- Passwords are stored only as salted scrypt hashes; plaintext passwords are never stored.
-- Signed-in sessions use random server-side session tokens in Secure, HttpOnly, SameSite=Strict cookies. Session IDs are not stored in localStorage.
-- New accounts receive a one-time recovery code. The stored recovery value is hashed. A successful recovery rotates the recovery code and invalidates existing sessions.
-- Password changes require the current password and sign out other devices.
-- Login attempts are throttled by a hashed IP + username key.
-- Online data stays behind same-origin Vercel functions. The Supabase secret key remains server-only.
-- Create 2, 3 or 4 player invite-code rooms, join from another device, ready up, start as host, reconnect, and add friends by username.
-- Classic, Quick and Rush are supported online. Party cards/events remain outside the online ruleset.
-- Dice rolls and moves are processed by the server-side engine with turn ownership and optimistic version checks.
-- Local private-control mechanics cannot affect online game results.
-- There is no public text chat.
-
-### Backend setup
-
-1. Create/connect the Supabase project and apply:
-   - `supabase/migrations/20260930_online_v38.sql`
-   - `supabase/migrations/20260930_online_auth_v39.sql`
-2. Configure these Vercel Production environment variables:
-   - `SUPABASE_URL`
-   - `SUPABASE_SECRET_KEY` using a modern `sb_secret_...` key
-3. Redeploy the current `main` branch.
-
-The repository contains no Supabase secret. Until a database project is connected, the online UI can load but account creation/sign-in will report that the online database is not configured.
+Production online play still requires the two Supabase environment variables above.

@@ -24,10 +24,10 @@ const go=(n,bots)=>{Snd.play('tap');$('#sBots').checked=!!bots;startGame(n,!!bot
 document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>go(+b.dataset.play,false));
 document.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>go(+b.dataset.bot,true));
 /* mode cards: party toggles the visible party options in Game options */
-function setMode(m){m=['classic','quick','rush','party'].includes(m)?m:'classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
- const party=m==='party';$('#sVar').value=party?'classic':m;O.chaos=party?1:0;O.cards=party?1:0;O.events=party?1:0;saveO();Store.set('ldb_mode',m)}
+function setMode(m,apply=true){m=['classic','quick','rush','party'].includes(m)?m:'classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+ const party=m==='party';$('#sVar').value=party?'classic':m;if(apply){O.chaos=party?1:0;O.cards=party?1:0;O.events=party?1:0;saveO()}Store.set('ldb_mode',m)}
 document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.play('tap');setMode(b.dataset.mode)});
-setMode(Store.get('ldb_mode','classic'));
+setMode(Store.get('ldb_mode','classic'),false);
 $('#logo3').onclick=logoTap; /* private login: 5 taps on any logo */
 /* Collection */
 const SW={t:{classic:'linear-gradient(90deg,#e63946 25%,#2a9d5c 25% 50%,#f4b400 50% 75%,#2f6fed 75%)',vegas:'linear-gradient(90deg,#3b0a4d,#ffd23f,#ff2e9a)',beach:'linear-gradient(90deg,#21b5d6,#fff3d6)',snow:'linear-gradient(90deg,#6aa7e0,#f4fbff)',royal:'linear-gradient(90deg,#4a1d8a,#ffd24a)',neon:'linear-gradient(90deg,#19f0ff,#ff2ea6)',space:'linear-gradient(90deg,#050a24,#8b7bff)'},

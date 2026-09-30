@@ -1,7 +1,7 @@
 {
   "name": "Ludo by DaniLabs",
   "short_name": "Ludo",
-  "description": "Premium offline Ludo with a polished DaniLabs game room for 2-4 players.",
+  "description": "Play Ludo locally or online with friends. Includes 2–4 player matches, computer opponents and offline PWA support.",
   "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
@@ -9,11 +9,33 @@
   "orientation": "portrait",
   "background_color": "#1b1140",
   "theme_color": "#1b1140",
-  "categories": ["games"],
+  "categories": [
+    "games"
+  ],
   "icons": [
-    {"src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
-    {"src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }

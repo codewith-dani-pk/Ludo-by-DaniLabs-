@@ -9,7 +9,7 @@ const DEFAULT_NAME={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
 const humanName=c=>NAMES[c]!==DEFAULT_NAME[c]?NAMES[c]:(c==='red'?(prof().name||'Guest player'):(NAMES[c]+' player'));
 const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c),safeText=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const used=new Set(Object.values(G.uiAvatars));let changed=false;G.cols.forEach(c=>{if(c==='red'&&!isBot(c))return;if(!G.uiAvatars[c]){const choices=AV_POOL.filter(a=>!used.has(a)),a=(choices.length?choices:AV_POOL)[Math.floor(Math.random()*(choices.length||AV_POOL.length))];G.uiAvatars[c]=a;used.add(a);changed=true}});if(changed)saveG();return G.uiAvatars}
-const playerAvatar=c=>c==='red'&&!isBot(c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
+const playerAvatar=c=>c==='red'&&!isBot(c)&&(!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
 const POWER_ICON={shield:'🛡️',reroll:'🎲',freeze:'❄️'},POWER_NAME={shield:'Shield',reroll:'Re-roll',freeze:'Freeze'};
 function wildPickerHTML(c){
  const show=G&&!G.over&&c===cur()&&!isBot(c)&&phase==='pick'&&!busy;
@@ -40,10 +40,10 @@ function paintPlayerDice(n){
 }
 
 function playerHTML(c){
- const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0,wildChoice=active&&phase==='pick'&&!isBot(c),pct=done?100:progressPct(c);
+ const rank=G.ranks.indexOf(c),active=c===cur()&&!G.over,done=rank>=0,mine=!isBot(c)&&(!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c),wildChoice=active&&mine&&phase==='pick',pct=done?100:progressPct(c);
  const stat=done?'#'+(rank+1)+' FINISH':pct+'%';
  const progress='<div class="player-progress" aria-label="'+pct+' percent progress"><i style="width:'+pct+'%"></i><span>'+homeCount(c)+'/'+targetTokens()+' home</span></div>';
- return '<article class="room-player '+(active?'active ':'')+(done?'finished ':'')+(wildChoice?'choosing-wild':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
+ return '<article class="room-player '+(active?'active ':'')+(active&&mine?'mine-turn ':'')+(done?'finished ':'')+(wildChoice?'choosing-wild':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
  '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':G.online?'Online player':'Local player')+'</small>'+progress+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':'progress')+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
@@ -54,12 +54,14 @@ function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#player
  top.className='room-players room-players-top'+(a.length===1?' single-left':'');
  bottom.className='room-players room-players-bottom'+(b.length===1?' single-right':'');
 }
-function publicTurn(){if(!G)return['Ready','Roll to begin'];const name=displayName(cur());
+function publicTurn(){if(!G)return['Ready','Roll to begin'];const c=cur(),name=displayName(c),mine=!isBot(c)&&(!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c);
  if(G.over)return['Match complete','Final ranking'];
  if(busy||phase==='wait')return[name+' is moving','Pawn in motion'];
- if(phase==='pick')return[name+' rolled a wild star',isBot(cur())?'Computer is choosing':'Choose 1 to 6'];
- if(phase==='move')return[name+"'s turn",isBot(cur())?'Computer is choosing':'Choose a glowing pawn'];
- return[name+"'s turn",isBot(cur())?'Computer is rolling':(S.shake?'Tap dice or shake phone':'Roll the dice')];
+ if(isBot(c))return[name+"'s turn",phase==='pick'||phase==='move'?'Computer is choosing':'Computer is rolling'];
+ if(G.online&&!mine)return[name+"'s turn",'Waiting for '+name];
+ if(phase==='pick')return[name+' rolled a wild star','Choose 1 to 6'];
+ if(phase==='move')return[name+"'s turn",'Choose a glowing pawn'];
+ return[name+"'s turn",S.shake?'Tap dice or shake phone':'Roll the dice'];
 }
 function decorateTurn(){if(!G)return;const c=cur(),banner=$('#turnBanner'),[title,sub]=publicTurn();
  document.documentElement.style.setProperty('--turn',HEX[c]);if(banner)banner.style.setProperty('--pc',HEX[c]);

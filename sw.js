@@ -1,8 +1,8 @@
-const V='ludo-danilabs-v39',FILES=['./','index.html','manifest.json','css/style.css','css/upgrade.css','css/realistic.css','css/lobby.css','css/game-room.css','js/lobby.js','js/online.js','js/game-room.js','assets/icons/icon-maskable-512.png','js/app.js','js/themes.js','js/realistic.js','js/host.js','js/cards.js','assets/icons/icon.svg','assets/icons/icon-192.png','assets/icons/icon-512.png','assets/icons/apple-touch-icon.png'];
+const V='ludo-danilabs-v40',FILES=['./','index.html','manifest.json','css/style.css','css/upgrade.css','css/realistic.css','css/lobby.css','css/game-room.css','js/lobby.js','js/online.js','js/game-room.js','assets/icons/icon-maskable-512.png','js/app.js','js/themes.js','js/realistic.js','js/host.js','js/cards.js','assets/icons/icon.svg','assets/icons/icon-192.png','assets/icons/icon-512.png','assets/icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
   const q=e.request,u=new URL(q.url);if(q.method!=='GET'||u.origin!==location.origin)return;if(u.pathname.startsWith('/api/'))return;
-  if(q.mode==='navigate'){e.respondWith(fetch(q).then(n=>{const cp=n.clone();caches.open(V).then(c=>c.put('index.html',cp));return n}).catch(()=>caches.match('index.html')));return}
-  e.respondWith(caches.match(q).then(hit=>{const net=fetch(q).then(n=>{if(n.ok){const cp=n.clone();caches.open(V).then(c=>c.put(q,cp))}return n}).catch(()=>hit);return hit||net}));
+  if(q.mode==='navigate'){e.respondWith(fetch(q).then(n=>{if(n.ok){const cp=n.clone();caches.open(V).then(c=>c.put('index.html',cp))}return n}).catch(()=>caches.match('index.html')));return}
+  e.respondWith(caches.match(q).then(hit=>{const net=fetch(q).then(n=>{if(n.ok){const cp=n.clone();caches.open(V).then(c=>c.put(q,cp));return n}return hit||n}).catch(()=>hit);return hit||net}));
 });
