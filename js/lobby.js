@@ -5,7 +5,7 @@ const P=Object.assign({name:'Guest player',av:0},Store.get('ldb_prof',{})),AV=['
 const profileName=s=>String(s||'').replace(/[<>&"'\x60]/g,'').trim().slice(0,12);
 P.name=profileName(P.name)||'Guest player';P.av=Math.max(0,Math.min(AV.length-1,Math.floor(+P.av||0)));
 const save=()=>Store.set('ldb_prof',{name:P.name,av:P.av});
-function paint(){$('#pName').textContent=P.name;$('#avatar').textContent=AV[P.av%AV.length]}
+function paint(){const a=$('#avatar');$('#pName').textContent=P.name;if(a){a.textContent='';a.className='ludo-icon icon-avatar-'+((P.av%5)+1)+' royal-avatar'}}
 $('#avatar').onclick=e=>{e.stopPropagation();P.av=(P.av+1)%AV.length;save();paint();document.dispatchEvent(new Event('danilabs-profile'))};
 let editAv=P.av;
 function profileGrid(){const g=$('#profAvatars');if(!g)return;g.innerHTML='';AV.forEach((a,i)=>{const b=document.createElement('button');b.type='button';b.textContent=a;b.className=i===editAv?'on':'';b.setAttribute('aria-label','Avatar '+(i+1));b.onclick=()=>{editAv=i;$('#profPreview').textContent=AV[i];profileGrid()};g.appendChild(b)})}
@@ -17,6 +17,6 @@ document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>go(+b.dataset.
 document.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>go(+b.dataset.bot,true));
 function setMode(m){m=['classic','quick','rush'].includes(m)?m:'classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));$('#sVar').value=m;Store.set('ldb_mode',m)}
 document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.play('tap');setMode(b.dataset.mode)});
-setMode(Store.get('ldb_mode','classic'));
+setMode(Store.get('ldb_mode','classic'));\n['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
 const rh=refreshHome;refreshHome=function(){rh();paint()};paint();
 })();
