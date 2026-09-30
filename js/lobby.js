@@ -17,6 +17,7 @@ document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>go(+b.dataset.
 document.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>go(+b.dataset.bot,true));
 function setMode(m){m=['classic','quick','rush'].includes(m)?m:'classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));$('#sVar').value=m;Store.set('ldb_mode',m)}
 document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.play('tap');setMode(b.dataset.mode)});
-setMode(Store.get('ldb_mode','classic'));\n['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
+setMode(Store.get('ldb_mode','classic'));
+['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
 const rh=refreshHome;refreshHome=function(){rh();paint()};paint();
 })();
