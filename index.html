@@ -4,45 +4,58 @@
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="google-site-verification" content="dfl1sF2t12eNp_HY1hmmsu75NjE-HGMjLW-IT0lKFt4" />
 <meta name="description" content="Play Ludo and UNO locally or online with friends, by DaniLabs.">
 <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"></head><body>
-<main id="home" class="screen on home-screen">
- <div class="home-shell">
-  <header class="home-top">
-   <button class="brand-badge" id="logo" aria-label="DaniLabs home"><img src="assets/icons/icon.svg" alt=""></button>
-   <button class="home-profile" id="bProf" aria-label="Edit profile"><span class="avatar" id="avatar">🦊</span><span><b id="pName">Guest player</b><small><i></i> OFFLINE</small></span></button>
-   <button class="btn sm home-gear" id="bSet" aria-label="Settings">⚙</button>
+<main id="home" class="screen on home-screen royal-home">
+ <div class="royal-stage">
+  <header class="royal-topbar">
+   <button class="royal-profile" id="bProf" aria-label="Edit profile"><span class="ludo-icon icon-avatar-1 royal-avatar" id="avatar"></span><span><b id="pName">Guest player</b><small><i></i> PLAYER PROFILE</small></span></button>
+   <div class="royal-top-actions"><button class="round-royal" id="bOnlineTop" aria-label="Online rooms"><span class="ludo-icon icon-globe"></span></button><button class="round-royal" id="bSet" aria-label="Settings"><span class="ludo-icon icon-settings"></span></button></div>
   </header>
-  <section class="hero3" id="logo3" aria-label="Ludo by DaniLabs">
-   <h1 class="wordmark"><i style="--c:#e63946">L</i><i style="--c:#2a9d5c">U</i><i style="--c:#f4b400">D</i><i style="--c:#2f6fed">O</i></h1>
-   <p class="by">by <b>DaniLabs</b></p><p class="game-pair">LUDO + UNO · OFFLINE + ONLINE</p><span class="hero-die" aria-hidden="true">⚄</span>
+
+  <section class="royal-hero" aria-label="Ludo Royale by DaniLabs">
+   <img class="royal-logo" src="assets/royale/logo.webp" alt="Ludo Royale">
+   <img class="royal-board" src="assets/royale/hero-board.webp" alt="Ludo board with pawns and dice">
+   <p>LUDO + UNO · OFFLINE + ONLINE</p>
   </section>
-  <section class="home-section"><h2 class="sec">Local play</h2>
-   <div class="lp-grid">
-    <button class="lp c2" data-play="2"><b>2</b><span>Players</span></button>
-    <button class="lp c3" data-play="3"><b>3</b><span>Players</span></button>
-    <button class="lp c4" data-play="4"><b>4</b><span>Players</span></button>
-    <div class="lp cpu"><span>Vs Computer</span><div><button data-bot="2">1 bot</button><button data-bot="3">2 bots</button><button data-bot="4">3 bots</button></div></div>
-   </div>
-   <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+
+  <button class="royal-play" data-play="2"><span class="ludo-icon icon-play"></span><b>PLAY NOW</b></button>
+
+  <section class="royal-actions" aria-label="Play options">
+   <button class="royal-action quick" data-bot="2"><span class="ludo-icon icon-quick-match"></span><b>Quick Match</b><small>Vs computer</small></button>
+   <button class="royal-action online" id="bOnline"><span class="ludo-icon icon-globe"></span><b>Play Online</b><small>Ludo + UNO</small></button>
+   <button class="royal-action friends" id="bFriends"><span class="ludo-icon icon-friends"></span><b>Friends</b><small>Private lobby</small></button>
+   <button class="royal-action private" id="bPrivateRoom"><span class="ludo-icon icon-private-room"></span><b>Private Room</b><small>Create or join</small></button>
   </section>
-  <section class="home-section"><h2 class="sec">Ludo ruleset</h2>
-   <div class="mode-grid" id="modes">
-    <button data-mode="classic" class="on"><b>Classic</b><small>4 tokens</small></button>
-    <button data-mode="quick"><b>Quick</b><small>2 active tokens</small></button>
-    <button data-mode="rush"><b>Rush</b><small>Start on track</small></button>
-   </div>
-   <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
-  </section>
-  <section class="home-section uno-section"><h2 class="sec">UNO</h2>
-   <button id="bCards" class="uno-launch"><span class="uno-mark">UNO</span><span><b>Play UNO offline</b><small>2–4 players · pass & play or computer</small></span><i>›</i></button>
-  </section>
-  <section class="soon-row"><button id="bOnline" class="online-ready">🌐 Online <small>Ludo + UNO</small></button><button id="bFriends">♙ Friends <small>Private rooms</small></button></section>
-  <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
+
+  <button class="royal-banner" id="bOnlineBanner"><span><b>PRIVATE ONLINE ROOMS</b><small>Invite people to Ludo or UNO</small></span><i class="ludo-icon icon-arrow-right"></i></button>
  </div>
- <nav class="bottom-nav" aria-label="Home navigation">
-  <button class="nav-item active" aria-current="page"><span>⌂</span><small>Home</small></button>
-  <button class="nav-item" id="nOnline"><span>🌐</span><small>Online</small></button>
-  <button class="nav-item" id="nFriends"><span>♙</span><small>Friends</small></button>
-  <button class="nav-item" id="nSettings"><span>⚙</span><small>Settings</small></button>
+
+ <section class="royal-panel" id="localPanel">
+  <div class="panel-title"><span class="ludo-icon icon-crown"></span><span><b>Ludo</b><small>Choose your ruleset</small></span></div>
+  <div class="mode-grid" id="modes">
+   <button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic</b><small>4 tokens</small></button>
+   <button data-mode="quick"><span class="game-art art-quick"></span><b>Quick</b><small>2 active tokens</small></button>
+   <button data-mode="rush"><span class="ludo-icon icon-dice"></span><b>Rush</b><small>Start on track</small></button>
+  </div>
+  <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
+  <div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button></div>
+  <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+ </section>
+
+ <section class="royal-panel uno-panel">
+  <button id="bCards" class="uno-royal"><span class="game-art art-cards"></span><span><b>UNO</b><small>2–4 players · offline or private online rooms</small></span><i class="ludo-icon icon-arrow-right"></i></button>
+ </section>
+
+ <section class="royal-panel royal-friends">
+  <div class="panel-title"><span class="ludo-icon icon-friends"></span><span><b>Friends & private rooms</b><small>Open the online lobby to invite or join</small></span></div>
+  <div class="avatar-row" aria-hidden="true"><span class="ludo-icon icon-avatar-1"></span><span class="ludo-icon icon-avatar-2"></span><span class="ludo-icon icon-avatar-3"></span><span class="ludo-icon icon-avatar-4"></span><span class="ludo-icon icon-avatar-5"></span></div>
+ </section>
+
+ <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
+ <nav class="royal-nav" aria-label="Home navigation">
+  <button class="active" aria-current="page"><span class="ludo-icon icon-home"></span><small>Home</small></button>
+  <button id="nOnline"><span class="ludo-icon icon-globe"></span><small>Online</small></button>
+  <button id="nFriends"><span class="ludo-icon icon-social"></span><small>Friends</small></button>
+  <button id="nSettings"><span class="ludo-icon icon-settings"></span><small>Settings</small></button>
  </nav>
 </main>
 <main id="game" class="screen game-room">
