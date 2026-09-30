@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v37
+# Ludo by DaniLabs — v38
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v37`.
+- Service-worker cache is `ludo-danilabs-v38`.
 
 ## Cosmetics and local features
 
@@ -89,7 +89,7 @@ Import the repository root into Vercel.
 
 ## Audit status
 
-The v37 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
+The v38 static audit covers JavaScript/JSON syntax, duplicate HTML IDs, local asset references, service-worker cache paths, per-player dice/power/reaction integration, saved-state migration, Party power behavior, private power-click preservation, responsive power access, profile/reward state, PWA update flow and Vercel configuration.
 
 Real mobile/browser runtime QA on the deployed production build is still recommended because static checks cannot fully replace device testing.
 
@@ -143,3 +143,32 @@ Gameplay rules are no longer duplicated in Quick Settings. Paired-token safety l
 Game rules & options are grouped into Core rules, Computer, Accessibility, Party features, Player helpers & names, and a collapsed Tools & privacy section. Stats, replay, backup and the local options PIN remain available without occupying the main rules surface.
 
 The v36 private power haptics, Bad Match no-win guard, long-press match shortcuts, secret click rules and power timing are preserved.
+
+
+## Online Play v38
+
+The repository now contains the production architecture for cross-device online play.
+
+- Username + password authentication is handled by Clerk. Configure the Clerk application so Username and Password are enabled.
+- Online data is stored in Supabase, but the browser never receives the Supabase secret key. Browser requests go only to the same-origin Vercel functions under `/api/online/*`.
+- Create 2, 3 or 4 player invite-code rooms, join from another device, ready up, start as host, leave waiting rooms, and resume a live room from the same account.
+- Classic, Quick and Rush are supported online. Party cards/events are intentionally kept out of the first online ruleset.
+- Dice rolls and moves are processed by the server-side online engine. The browser cannot choose its own dice result.
+- Local DaniLabs Control Center powers, secret click rules, Bad Match and long-press power shortcuts are disabled from affecting online game results.
+- Friend requests use usernames only. There is no public text chat in v38.
+- Online GET API responses bypass the service-worker cache so live room state is never served from the PWA cache.
+
+### Backend setup
+
+1. Connect/provision a Supabase project and apply `supabase/migrations/20260930_online_v38.sql`.
+2. Create a Clerk application with Username + Password sign-up/sign-in enabled.
+3. Put the Clerk publishable key in `js/online-config.js`.
+4. Configure these Vercel environment variables:
+   - `SUPABASE_URL`
+   - `SUPABASE_SECRET_KEY`
+   - `CLERK_SECRET_KEY`
+   - `CLERK_ISSUER`
+   - optional `CLERK_JWKS_URL`
+5. Deploy the current `main` branch.
+
+Until those external services are connected, the Online screen intentionally shows a setup-needed state rather than pretending the game is online.
