@@ -1,5 +1,5 @@
 'use strict';
-/* DaniLabs Online v41 — same-origin sessions + server-authoritative Ludo and UNO. */
+/* DaniLabs Online v42 — same-origin sessions + server-authoritative Ludo and UNO. */
 (function(){
 const API='/api/online';
 let user=null,room=null,members=[],pollTimer=null,busyNet=false,lastVersion=-1,lastRoomStatus='',startedRoom='',authMode='login',recoveryShown='',serviceError='',savedNames=null;
