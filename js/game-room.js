@@ -18,7 +18,7 @@ function wildPickerHTML(c){
 }
 function playerToolsHTML(c){
  const wild=wildPickerHTML(c);if(wild)return wild;
- const a=(G&&G.cards&&G.cards[c])||[],active=c===cur()&&!G.over&&!isBot(c);
+ const mine=!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c,a=(G&&G.cards&&G.cards[c])||[],active=c===cur()&&!G.over&&!isBot(c)&&mine;
  const powers=a.map(t=>{const ok=active&&!busy&&(t==='reroll'?(G.roll!=null&&(phase==='move'||phase==='roll')):phase==='roll');return '<button type="button" class="player-power '+(ok?'ready':'')+'" data-player-card="'+c+'" data-card="'+t+'" '+(ok?'':'disabled')+' title="'+(POWER_NAME[t]||t)+'" aria-label="'+(POWER_NAME[t]||t)+' power"><span>'+(POWER_ICON[t]||'✨')+'</span><em>'+(POWER_NAME[t]||t)+'</em></button>'}).join('');
  return '<div class="player-tools"><div class="player-power-list">'+powers+'</div><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>';
 }
@@ -28,7 +28,7 @@ const progressPct=c=>{if(!G)return 0;const a=G.pos[c].slice(0,targetTokens()),ma
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
 const miniFace=n=>'<span class="mini-die-face">'+Array.from({length:9},(_,i)=>'<i'+(MINI_PIPS[n].includes(i)?' class="p"':'')+'></i>').join('')+'</span>';
 function playerDieHTML(c){
- const active=c===cur()&&!G.over,wild=active&&phase==='pick',canRoll=active&&phase==='roll'&&!busy&&!isBot(c),rolling=active&&busy&&phase==='roll',n=(active&&G.roll)||lastRoll[c]||1;
+ const mine=!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c,active=c===cur()&&!G.over,wild=active&&phase==='pick',canRoll=active&&mine&&phase==='roll'&&!busy&&!isBot(c),rolling=active&&busy&&phase==='roll',n=(active&&G.roll)||lastRoll[c]||1;
  const face=wild?'<span class="mini-die-face mini-wild-face"><b>★</b></span>':miniFace(n);
  return '<button type="button" class="player-die '+(active?'active ':'')+(wild?'wild-die ':'')+(canRoll?'can-roll ':'')+(rolling?'rolling ':'')+(isBot(c)?'bot-die':'')+'" data-player-die="'+c+'" aria-label="'+NAMES[c]+' dice'+(wild?' — Wild Star':canRoll?' — tap to roll':'')+'" '+(canRoll?'':'disabled')+'>'+face+'<small>'+(wild?'WILD':rolling?'ROLLING':canRoll?'ROLL':active&&isBot(c)?'BOT':'DICE')+'</small></button>';
 }
@@ -44,7 +44,7 @@ function playerHTML(c){
  const stat=done?'#'+(rank+1)+' FINISH':pct+'%';
  const progress='<div class="player-progress" aria-label="'+pct+' percent progress"><i style="width:'+pct+'%"></i><span>'+homeCount(c)+'/'+targetTokens()+' home</span></div>';
  return '<article class="room-player '+(active?'active ':'')+(done?'finished ':'')+(wildChoice?'choosing-wild':'')+'" style="--pc:'+HEX[c]+'" data-player="'+c+'">'+
- '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':'Local player')+'</small>'+progress+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':'progress')+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
+ '<div class="room-avatar" aria-hidden="true">'+playerAvatar(c)+'</div><div class="room-player-copy"><b>'+safeText(displayName(c))+'</b><small>'+(isBot(c)?'Computer':G.online?'Online player':'Local player')+'</small>'+progress+historyHTML(c)+'</div><div class="room-score"><b>'+stat+'</b><small>'+(active?'playing':done?'ranked':'progress')+'</small></div>'+playerToolsHTML(c)+playerDieHTML(c)+'</article>';
 }
 function placePanels(){if(!G)return;const top=$('#playersTop'),bottom=$('#playersBottom');if(!top||!bottom)return;
  const has=c=>G.cols.includes(c);let a=[],b=[];
@@ -64,7 +64,7 @@ function publicTurn(){if(!G)return['Ready','Roll to begin'];const name=displayNa
 function decorateTurn(){if(!G)return;const c=cur(),banner=$('#turnBanner'),[title,sub]=publicTurn();
  document.documentElement.style.setProperty('--turn',HEX[c]);if(banner)banner.style.setProperty('--pc',HEX[c]);
  if($('#turnTitle'))$('#turnTitle').textContent=title;if($('#turnSub'))$('#turnSub').textContent=sub;
- const savedMode=Store.get('ldb_mode',G.variant||'classic'),mode=savedMode==='party'&&G.variant==='classic'?'party':(G.variant||savedMode||'classic');if($('#roomMode'))$('#roomMode').textContent=String(mode).toUpperCase();
+ const savedMode=Store.get('ldb_mode',G.variant||'classic'),mode=G.online?(G.variant||'classic'):(savedMode==='party'&&G.variant==='classic'?'party':(G.variant||savedMode||'classic'));if($('#roomMode'))$('#roomMode').textContent=String(mode).toUpperCase();const meta=document.querySelector('.game-room-meta');if(meta){const a=meta.querySelector(':scope>span'),z=meta.querySelector(':scope>i');if(a)a.textContent=G.online?'ONLINE MATCH':'OFFLINE MATCH';if(z)z.textContent=G.online?'LIVE':'LOCAL'}
  const order=$('#turnOrder');if(order)order.innerHTML=G.cols.map(x=>'<i class="'+(x===c?'on':'')+(G.ranks.includes(x)?' done':'')+'" style="--oc:'+HEX[x]+'" title="'+NAMES[x]+'"></i>').join('<span>›</span>');
  const rb=$('#bRoll');if(rb){const sp=rb.querySelector('span'),sm=$('#rollHint');let main='Roll dice',hint='Tap to roll';
   if(isBot(c)){main='Bot turn';hint=busy?'Rolling…':'Thinking…'}else if(phase==='move'){main='Choose pawn';hint='Tap a glowing pawn'}else if(phase==='pick'){main='Choose value';hint='Use the buttons above'}else if(busy){main='Rolling…';hint='Dice in motion'}
