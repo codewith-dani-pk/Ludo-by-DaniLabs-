@@ -3,7 +3,7 @@
 
 create table if not exists public.online_profiles (
   user_id text primary key,
-  username text not null unique check (username ~ '^[a-z0-9_]{4,64}
+  username text not null unique check (char_length(username) between 4 and 64 and username !~ '[^a-z0-9_]'),
   display_name text not null default 'Player' check (char_length(display_name) between 1 and 24),
   last_seen timestamptz not null default now(),
   created_at timestamptz not null default now()
