@@ -6,7 +6,7 @@ Mobile-first Ludo and UNO-style card play built with plain HTML, CSS and vanilla
 
 - Ludo offline: 2, 3 or 4 players, pass-and-play or computer opponents.
 - Ludo online: private 2–4 player invite-code rooms with server-authoritative dice, moves and turn ownership.
-- Ludo variants: Classic, Quick and Rush. Dice are fair random rolls; hidden luck/bad-luck weighting, secret powers and party modifiers are not part of gameplay.
+- Ludo variants: Classic, Quick and Rush. Offline dice use cryptographically secure random rolls; online rolls and moves are validated by the server.
 - UNO offline: 2–4 players, pass-and-play or computer opponents.
 - UNO online: private 2–4 player rooms with server-authoritative hands, draws, legal plays and turn ownership.
 - UNO core rules use one-card draw, no Draw Two/Draw Four stacking, Skip, Reverse, Draw Two, Wild and Wild Draw Four. Wild Draw Four is rejected when the player still holds the current color.
@@ -54,6 +54,6 @@ sw.js                   Service worker
 vercel.json             Production headers/cache policy
 ```
 
-## v41 audit
+## v42 verified-game cleanup
 
-v41 removes the weighted-dice/private power system and visible party gameplay, keeps Ludo on one fair core ruleset, upgrades the card game to core UNO-style rules, adds server-authoritative online UNO, hides opponents' online UNO hands, fixes finished-room state delivery, and caches the reference home stylesheet for offline PWA use.
+v42 keeps the product surface centered on working Ludo and UNO features. The home screen now exposes local Ludo, local UNO, private online play, friends, profile and settings. Placeholder economies, roadmap buttons, unused cosmetic collection code and obsolete gameplay-control styling were removed. Online UNO keeps opponent hands private, and online Ludo/UNO actions remain server-authoritative.
