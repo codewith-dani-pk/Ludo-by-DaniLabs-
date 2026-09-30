@@ -1,4 +1,4 @@
-# Ludo by DaniLabs — v38
+# Ludo by DaniLabs — v39
 
 A mobile-first, offline-first Ludo game built with plain HTML, CSS and vanilla JavaScript. The repository is a static-root project designed for GitHub → Vercel deployment with no build step.
 
@@ -33,7 +33,7 @@ v28 keeps the v27 hardening pass and adds reference-inspired quality-of-life fea
 - Small-screen player power controls can scroll so every owned power remains accessible.
 - PWA updates automatically refresh an already controlled page when the new service worker takes control.
 - Dead Color Cards bot branches were removed.
-- Service-worker cache is `ludo-danilabs-v38`.
+- Service-worker cache is `ludo-danilabs-v39`.
 
 ## Cosmetics and local features
 
@@ -145,30 +145,31 @@ Game rules & options are grouped into Core rules, Computer, Accessibility, Party
 The v36 private power haptics, Bad Match no-win guard, long-press match shortcuts, secret click rules and power timing are preserved.
 
 
-## Online Play v38
+## Online Play v39
 
-The repository now contains the production architecture for cross-device online play.
+Online play now uses DaniLabs-native username/password accounts instead of Clerk.
 
-- Username + password authentication is handled by Clerk. Configure the Clerk application so Username and Password are enabled.
-- Online data is stored in Supabase, but the browser never receives the Supabase secret key. Browser requests go only to the same-origin Vercel functions under `/api/online/*`.
-- Create 2, 3 or 4 player invite-code rooms, join from another device, ready up, start as host, leave waiting rooms, and resume a live room from the same account.
-- Classic, Quick and Rush are supported online. Party cards/events are intentionally kept out of the first online ruleset.
-- Dice rolls and moves are processed by the server-side online engine. The browser cannot choose its own dice result.
-- Local DaniLabs Control Center powers, secret click rules, Bad Match and long-press power shortcuts are disabled from affecting online game results.
-- Friend requests use usernames only. There is no public text chat in v38.
-- Online GET API responses bypass the service-worker cache so live room state is never served from the PWA cache.
+- Account creation and sign-in use a username plus a long password/passphrase.
+- Passwords are stored only as salted scrypt hashes; plaintext passwords are never stored.
+- Signed-in sessions use random server-side session tokens in Secure, HttpOnly, SameSite=Strict cookies. Session IDs are not stored in localStorage.
+- New accounts receive a one-time recovery code. The stored recovery value is hashed. A successful recovery rotates the recovery code and invalidates existing sessions.
+- Password changes require the current password and sign out other devices.
+- Login attempts are throttled by a hashed IP + username key.
+- Online data stays behind same-origin Vercel functions. The Supabase secret key remains server-only.
+- Create 2, 3 or 4 player invite-code rooms, join from another device, ready up, start as host, reconnect, and add friends by username.
+- Classic, Quick and Rush are supported online. Party cards/events remain outside the online ruleset.
+- Dice rolls and moves are processed by the server-side engine with turn ownership and optimistic version checks.
+- Local private-control mechanics cannot affect online game results.
+- There is no public text chat.
 
 ### Backend setup
 
-1. Connect/provision a Supabase project and apply `supabase/migrations/20260930_online_v38.sql`.
-2. Create a Clerk application with Username + Password sign-up/sign-in enabled.
-3. Put the Clerk publishable key in `js/online-config.js`.
-4. Configure these Vercel environment variables:
+1. Create/connect the Supabase project and apply:
+   - `supabase/migrations/20260930_online_v38.sql`
+   - `supabase/migrations/20260930_online_auth_v39.sql`
+2. Configure these Vercel Production environment variables:
    - `SUPABASE_URL`
-   - `SUPABASE_SECRET_KEY`
-   - `CLERK_SECRET_KEY`
-   - `CLERK_ISSUER`
-   - optional `CLERK_JWKS_URL`
-5. Deploy the current `main` branch.
+   - `SUPABASE_SECRET_KEY` using a modern `sb_secret_...` key
+3. Redeploy the current `main` branch.
 
-Until those external services are connected, the Online screen intentionally shows a setup-needed state rather than pretending the game is online.
+The repository contains no Supabase secret. Until a database project is connected, the online UI can load but account creation/sign-in will report that the online database is not configured.
