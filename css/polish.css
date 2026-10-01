@@ -16,3 +16,5 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 @media(max-width:600px){.online-host-config{grid-template-columns:1fr}.connection-state{text-align:left}}
 
 .online-match-status{position:fixed;z-index:950;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:#07152ee8;border:1px solid #ffd24a88;color:#fff;padding:6px 12px;border-radius:999px;font-size:.75rem;font-weight:900;pointer-events:none}
+
+.account-sheet{max-width:760px;max-height:90vh;overflow:auto}.account-card{margin:12px 0;padding:14px;border:1px solid #8f78ff55;border-radius:18px;background:#091735cc}.account-card label{display:grid;gap:5px;margin:8px 0}.account-find,.account-row{display:flex;gap:8px;align-items:center;margin:8px 0}.account-row span{display:grid;flex:1}.account-row small{opacity:.75}.account-card details{margin:8px 0;padding:8px;border-radius:12px;background:#ffffff0b}@media(max-width:600px){.account-row,.account-find{align-items:stretch;flex-direction:column}.account-row span{width:100%}}
