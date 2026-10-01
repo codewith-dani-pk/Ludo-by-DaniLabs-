@@ -11,3 +11,6 @@ html[data-graphics=low] .royal-stage,html[data-graphics=low] .royal-panel{box-sh
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(max-width:560px){.reward-grid{grid-template-columns:repeat(2,1fr)}.royal-wallet{display:none}.future-grid{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.connection-state{display:block;margin-top:4px;text-align:right;color:#9fe8ff;font-weight:800;letter-spacing:.04em}.online-host-config{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin:12px 0}.online-host-config label{display:grid;gap:5px}.online-action-pending #game button:not([data-close]){pointer-events:none;opacity:.72}.online-member>i{width:34px;height:34px;flex:0 0 34px}.online-status.playing{box-shadow:0 0 0 2px #63e6be44}
+@media(max-width:600px){.online-host-config{grid-template-columns:1fr}.connection-state{text-align:left}}
