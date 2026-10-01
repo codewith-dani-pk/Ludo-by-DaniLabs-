@@ -63,3 +63,28 @@ begin
 end $$;
 revoke execute on function public.register_tournament(uuid,text),public.claim_tournament_reward(uuid,text,text,integer,text) from public,anon,authenticated;
 grant execute on function public.register_tournament(uuid,text),public.claim_tournament_reward(uuid,text,text,integer,text) to service_role;
+
+create table if not exists public.event_mission_progress(event_id uuid not null references public.live_events(id) on delete cascade,user_id text not null references public.online_accounts(user_id) on delete cascade,mission_key text not null,progress integer not null default 0 check(progress>=0),updated_at timestamptz not null default now(),primary key(event_id,user_id,mission_key));
+create table if not exists public.event_progress_keys(event_key text primary key,created_at timestamptz not null default now());
+create table if not exists public.event_reward_claims(event_id uuid not null references public.live_events(id) on delete cascade,user_id text not null references public.online_accounts(user_id) on delete cascade,coins integer not null default 0,badge_id text,claimed_at timestamptz not null default now(),primary key(event_id,user_id));
+create table if not exists public.reward_badges(user_id text not null references public.online_accounts(user_id) on delete cascade,badge_id text not null,source_key text not null,granted_at timestamptz not null default now(),primary key(user_id,badge_id,source_key));
+alter table public.event_mission_progress enable row level security;alter table public.event_progress_keys enable row level security;alter table public.event_reward_claims enable row level security;alter table public.reward_badges enable row level security;
+revoke all on table public.event_mission_progress,public.event_progress_keys,public.event_reward_claims,public.reward_badges from anon,authenticated;
+grant select,insert,update,delete on table public.event_mission_progress,public.event_progress_keys,public.event_reward_claims,public.reward_badges to service_role;
+create or replace function public.apply_event_progress(p_event uuid,p_user text,p_mission text,p_delta integer,p_event_key text) returns boolean language plpgsql security definer as $$
+begin
+ if p_delta<=0 then return false;end if;
+ insert into public.event_progress_keys(event_key) values(p_event_key) on conflict do nothing;if not found then return false;end if;
+ insert into public.event_mission_progress(event_id,user_id,mission_key,progress) values(p_event,p_user,p_mission,p_delta)
+ on conflict(event_id,user_id,mission_key) do update set progress=public.event_mission_progress.progress+excluded.progress,updated_at=now();return true;
+end $$;
+create or replace function public.claim_event_reward(p_event uuid,p_user text,p_coins integer,p_badge text) returns integer language plpgsql security definer as $$
+declare b integer;
+begin
+ insert into public.event_reward_claims(event_id,user_id,coins,badge_id) values(p_event,p_user,p_coins,nullif(p_badge,''));
+ select public.reward_credit(p_user,'event:'||p_event::text||':'||p_user,p_coins,'event',p_event::text) into b;
+ if coalesce(p_badge,'')<>'' then insert into public.reward_badges(user_id,badge_id,source_key) values(p_user,p_badge,'event:'||p_event::text) on conflict do nothing;end if;return b;
+exception when unique_violation then raise exception 'event reward already claimed';
+end $$;
+revoke execute on function public.apply_event_progress(uuid,text,text,integer,text),public.claim_event_reward(uuid,text,integer,text) from public,anon,authenticated;
+grant execute on function public.apply_event_progress(uuid,text,text,integer,text),public.claim_event_reward(uuid,text,integer,text) to service_role;
