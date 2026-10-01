@@ -1,7 +1,7 @@
 {
-  "name": "Ludo + UNO by DaniLabs",
-  "short_name": "Ludo + UNO",
-  "description": "Play Ludo and UNO offline or in private online rooms, with local multiplayer and computer opponents.",
+  "name": "Ludo + Color Cards by DaniLabs",
+  "short_name": "Ludo + Color Cards",
+  "description": "Play Ludo and Color Cards offline or in private online rooms, with local multiplayer and computer opponents.",
   "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
