@@ -33,7 +33,7 @@
   <div class="panel-title"><span class="ludo-icon icon-crown"></span><span><b>Ludo</b><small>Choose your ruleset</small></span></div>
   <div class="mode-grid" id="modes"><button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic Ludo</b><small>Official DaniLabs ruleset · 4 pawns</small></button></div>
 <select id="sVar" hidden><option value="classic">Classic</option></select><input type="checkbox" id="sBots" hidden>
-  <div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button><button data-mixed="3"><b>3</b><small>2 people + CPU</small></button><button data-mixed="4"><b>4</b><small>2 people + 2 CPU</small></button></div>
+  <label class="settings-select">Computer seats<select id="ludoBotCount"><option value="0">All local humans</option><option value="1">1 computer</option><option value="2">2 computers</option><option value="3">3 computers</option></select></label><div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button><button data-mixed="3"><b>3</b><small>2 people + CPU</small></button><button data-mixed="4"><b>4</b><small>2 people + 2 CPU</small></button></div>
   <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
  </section>
 
