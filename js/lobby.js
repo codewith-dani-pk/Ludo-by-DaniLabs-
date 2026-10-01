@@ -26,7 +26,7 @@ document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>toast(b.datase
 document.querySelectorAll('[data-dev]').forEach(b=>b.onclick=()=>toast(b.dataset.dev+' is unavailable until its rules are implemented and tested.'));
 const nGames=$('#nGames');if(nGames)nGames.onclick=()=>{document.querySelector('.color-cards-panel')?.scrollIntoView({behavior:S.reduced?'auto':'smooth'})};
 const nRewards=$('#nRewards');if(nRewards)nRewards.onclick=()=>{document.querySelector('.reward-grid')?.scrollIntoView({behavior:S.reduced?'auto':'smooth'})};
-const nProfile=$('#nProfile');if(nProfile)nProfile.onclick=()=>$('#bProf').click();
+const nProfile=$('#nProfile');if(nProfile)nProfile.onclick=()=>window.DaniAccountUI?DaniAccountUI.open():$('#bProf').click();
 const nFriends=$('#nFriends');if(nFriends)nFriends.onclick=()=>$('#bOnline').click();
 const bNotify=$('#bNotify');if(bNotify)bNotify.onclick=()=>{modal('#mSet');setTimeout(()=>$('#sNotify')?.focus(),0)};
 const rh=refreshHome;refreshHome=function(){rh();paint()};paint();
