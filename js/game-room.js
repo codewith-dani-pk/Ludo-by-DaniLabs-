@@ -12,7 +12,7 @@ function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const us
 const playerAvatar=c=>c==='red'&&!isBot(c)&&(!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
 function playerToolsHTML(c){return '<div class="player-tools"><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>'}
 const targetTokens=()=>4;
-const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===56).length:0;
+const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===57).length:0;
 const progressPct=c=>{if(!G)return 0;const a=G.pos[c].slice(0,targetTokens()),max=57*a.length,done=a.reduce((n,p)=>n+(p<0?0:Math.min(57,p+1)),0);return max?Math.round(done/max*100):0};
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
 const miniFace=n=>'<span class="mini-die-face">'+Array.from({length:9},(_,i)=>'<i'+(MINI_PIPS[n].includes(i)?' class="p"':'')+'></i>').join('')+'</span>';
@@ -59,7 +59,7 @@ function decorateTurn(){if(!G)return;const c=cur(),banner=$('#turnBanner'),[titl
  if(lastTurn&&lastTurn!==c&&banner){banner.classList.remove('turn-change');void banner.offsetWidth;banner.classList.add('turn-change');setTimeout(()=>banner.classList.remove('turn-change'),420)}lastTurn=c;
 }
 function animatePositions(){if(!G)return;const fresh=G!==lastGame;if(fresh){lastGame=G;lastPos={};lastRoll={};rollHistory={};G.cols.forEach(c=>G.pos[c].forEach((p,i)=>lastPos[c+i]=p));return}
- G.cols.forEach(c=>G.pos[c].forEach((p,i)=>{const k=c+i,prev=lastPos[k],t=T[k];if(t&&prev!==undefined&&prev!==p){t.classList.remove('room-hop','room-finish');void t.offsetWidth;t.classList.add(p===56?'room-finish':'room-hop');if(p===56){buzz(55);setTimeout(()=>t.classList.remove('room-finish'),560)}else setTimeout(()=>t.classList.remove('room-hop'),260)}lastPos[k]=p}))
+ G.cols.forEach(c=>G.pos[c].forEach((p,i)=>{const k=c+i,prev=lastPos[k],t=T[k];if(t&&prev!==undefined&&prev!==p){t.classList.remove('room-hop','room-finish');void t.offsetWidth;t.classList.add(p===57?'room-finish':'room-hop');if(p===57){buzz(55);setTimeout(()=>t.classList.remove('room-finish'),560)}else setTimeout(()=>t.classList.remove('room-hop'),260)}lastPos[k]=p}))
 }
 function roomPaint(){if(!G)return;placePanels();decorateTurn();animatePositions();const legacy=$('#cards');if(legacy)legacy.innerHTML='';const oldReact=$('#reactionTray');if(oldReact)oldReact.hidden=true}
 const baseFace=face;face=function(n,dim){const out=baseFace(n,dim);if(G&&n>0)paintPlayerDice(n);return out};
