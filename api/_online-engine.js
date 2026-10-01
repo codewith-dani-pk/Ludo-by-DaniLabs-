@@ -4,7 +4,8 @@ import '../js/rules/color-cards-engine.js';
 const L=globalThis.LudoRules,C=globalThis.ColorCardsRules;
 const secureRand=()=>crypto.randomInt(0,0x100000000)/0x100000000;
 const colors=n=>L.colorsFor(n);
-const wrap=(game,message='')=>({game,phase:game.phase,message,meta:{recentActionIds:[]}});
+const TURN_MS=45000;const stamp=st=>{st.meta=st.meta||{};st.meta.turnDeadline=new Date(Date.now()+TURN_MS).toISOString();st.meta.turnSeconds=45;st.meta.reconnectGraceSeconds=60;return st};
+const wrap=(game,message='')=>stamp({game,phase:game.phase,message,meta:{recentActionIds:[]}});
 export function newOnlineState(n,variant='classic'){
  const ids=colors(n).map(id=>({id,name:id,type:'online'}));
  return variant==='color-cards'||variant==='uno'?wrap(C.newGame(n,ids,secureRand,'round'),'Color Cards ready'):wrap(L.newGame(n,ids),'Ludo ready');
@@ -31,10 +32,27 @@ function cardsAction(st,color,kind,payload){
 }
 export function applyAction(state,color,kind,payload={}){
  const st=structuredClone(state);if(!st?.game)throw Error('Match state is missing');
- return st.game.kind==='color-cards'?cardsAction(st,color,kind,payload):ludoAction(st,color,kind,payload);
+ const out=st.game.kind==='color-cards'?cardsAction(st,color,kind,payload):ludoAction(st,color,kind,payload);return stamp(out);
 }
 export function rememberAction(state,id){if(!id)return state;state.meta=state.meta||{};const a=state.meta.recentActionIds=Array.isArray(state.meta.recentActionIds)?state.meta.recentActionIds:[];if(!a.includes(id))a.push(id);if(a.length>100)a.splice(0,a.length-100);return state}
 export const hasAction=(state,id)=>!!id&&!!state?.meta?.recentActionIds?.includes(id);
 export function publicState(state,viewer){
  const st=structuredClone(state);if(st?.game?.kind==='color-cards')st.game=C.publicView(st.game,viewer);return st
 }
+
+export function applyTimeout(state){
+ const st=structuredClone(state),g=st.game;if(!g||g.winner)return st;
+ if(g.kind==='color-cards'){
+  if(g.phase==='turn'){const p=C.current(g);C.draw(g,p.id,secureRand);if(g.phase==='turn'&&g.drawnCardId&&C.current(g).id===p.id)C.pass(g,p.id)}
+  else if(g.phase==='color')C.resolvePending(g,'red',secureRand);
+  else if(g.phase==='challenge')C.resolvePending(g,'accept',secureRand);
+  st.phase=g.phase;st.message='Turn timer expired — server applied the safe fallback';
+ }else{
+  const p=L.current(g);
+  if(g.phase==='roll')L.roll(g,crypto.randomInt(1,7));
+  if(g.phase==='move'){const ids=L.legalMoves(g);if(ids.length)L.move(g,ids[0])}
+  st.phase=g.phase;st.message='Turn timer expired — server completed the turn';
+ }
+ return stamp(st)
+}
+export const isTimedOut=state=>!!state?.meta?.turnDeadline&&Date.parse(state.meta.turnDeadline)<=Date.now();
