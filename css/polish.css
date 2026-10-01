@@ -14,3 +14,5 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 
 .connection-state{display:block;margin-top:4px;text-align:right;color:#9fe8ff;font-weight:800;letter-spacing:.04em}.online-host-config{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin:12px 0}.online-host-config label{display:grid;gap:5px}.online-action-pending #game button:not([data-close]){pointer-events:none;opacity:.72}.online-member>i{width:34px;height:34px;flex:0 0 34px}.online-status.playing{box-shadow:0 0 0 2px #63e6be44}
 @media(max-width:600px){.online-host-config{grid-template-columns:1fr}.connection-state{text-align:left}}
+
+.online-match-status{position:fixed;z-index:950;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:#07152ee8;border:1px solid #ffd24a88;color:#fff;padding:6px 12px;border-radius:999px;font-size:.75rem;font-weight:900;pointer-events:none}
