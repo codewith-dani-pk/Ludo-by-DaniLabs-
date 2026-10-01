@@ -29,7 +29,7 @@ const opt=(k,vals,v)=>'<select data-o="'+k+'">'+vals.map(([a,t])=>'<option value
 function renderHost(){
  const B=$('#hostbody');
  B.innerHTML='<div class="host-intro"><b>Ludo game options</b><small>These settings change presentation or computer strategy only. Dice odds and core rules stay fixed.</small></div>'+
- '<div class="card host-core" style="--c:#ffd24a"><h3>Verified core rules</h3><p class="hint">Roll 6 to leave the yard · exact roll to finish · three 6s loses the turn · capture and reaching home give another turn · friendly pawns may share/pass and do not form blockades.</p></div>'+
+ '<div class="card" style="--c:#8d72ff"><h3>Start Classic Ludo</h3><label>Seat types<select id="hostSeats"><option value="human">All local humans</option><option value="cpu">One human + computers</option><option value="mixed">Mixed · two humans, remaining computers</option></select></label><div class="row"><button class="btn" data-h="start2">2 players</button><button class="btn" data-h="start3">3 players</button><button class="btn" data-h="start4">4 players</button></div><p class="hint">2-player matches use opposite red and yellow seats. Player colors are fixed by board seat so routes and safe squares remain correct.</p></div><div class="card host-core" style="--c:#ffd24a"><h3>Verified core rules</h3><p class="hint">Roll 6 to leave the yard · exact roll to finish · three 6s loses the turn · capture and reaching home give another turn · friendly pawns may share/pass and do not form blockades.</p></div>'+
  '<div class="host-two"><div class="card" style="--c:#7dffb0"><h3>Computer</h3><label>Difficulty'+opt('diff',[['easy','Easy · mostly advances'],['normal','Normal · balances safety/captures'],['hard','Hard · prioritizes finish/capture/threat escape']],O.diff)+'</label><p class="hint">Bots receive only legal moves. Difficulty changes move selection, never dice results.</p></div><div class="card" style="--c:#f4b400"><h3>Accessibility</h3><label class="sw">Colorblind-friendly colors<input type="checkbox" data-o="pal"'+(O.pal?' checked':'')+'></label></div></div>'+
  '<details class="host-section"><summary>Player names</summary><div class="host-detail-body"><div class="host-names">'+COLORS.map(c=>'<label>'+DEFN[c]+' name<input data-o="name.'+c+'" maxlength="12" value="'+(O.names[c]||'')+'" placeholder="'+DEFN[c]+'"></label>').join('')+'</div></div></details>'+
  '<details class="host-section host-tools"><summary>Stats & replay</summary><div class="host-detail-body"><p class="hint" id="hst"></p><div class="row"><button class="btn" data-h="replay">Watch last game</button><button class="btn ghost" data-h="statsreset">Reset stats</button></div></div></details>';
@@ -46,6 +46,7 @@ $('#hostbody').addEventListener('change',e=>{
 });
 $('#hostbody').addEventListener('click',e=>{
  const b=e.target.closest('[data-h]');if(!b)return;
- if(b.dataset.h==='replay')replayLast();
+ if(/^start[234]$/.test(b.dataset.h)){const n=+b.dataset.h.slice(-1),mode=$('#hostSeats')?.value||'human',cols=LudoRules.colorsFor(n),bots=mode==='cpu'?cols.slice(1):mode==='mixed'?cols.slice(2):[];modal('#mHost',false);startGame(n,bots)}
+ else if(b.dataset.h==='replay')replayLast();
  else if(b.dataset.h==='statsreset'&&confirm('Reset all Ludo win statistics?')){Store.del('ldb_stats');renderHost()}
 });
