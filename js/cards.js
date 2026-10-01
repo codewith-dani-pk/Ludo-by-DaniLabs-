@@ -48,7 +48,7 @@ $('#cgDraw').onclick=()=>{if(!CG||CG.cover||!ccMine())return;ccAct(CG.game.drawn
 $('#cgUno').onclick=()=>{if(!CG||!ccMine())return;cgDeclare=!cgDeclare;toast(cgDeclare?'UNO declaration armed for this play':'UNO declaration cancelled');cgRender()};
 $('#cgCatch').onclick=()=>{if(!CG||!CG.game.unoWindow)return;ccAct('catch',{playerId:CG.online?CG.myColor:ccPlayer().id})};
 function cgBot(){
- if(!CG||CG.online||CG.game.phase!=='turn')return;const g=CG.game,p=ccPlayer();if(p.type!=='bot')return;
+ if(!CG||CG.online||CG.game.phase!=='turn')return;const g=CG.game,p=ccPlayer();if(p.type!=='bot')return;if(g.unoWindow&&g.unoWindow.offender!==p.id){ccAct('catch',{playerId:p.id});return}
  const legal=p.hand.filter(c=>(!g.drawnCardId||g.drawnCardId===c.id)&&CCR.canPlay(g,p,c));
  if(!legal.length){ccAct(g.drawnCardId?'pass':'draw');return}
  const counts=Object.fromEntries(CCR.COLORS.map(c=>[c,p.hand.filter(x=>x.color===c).length]));
