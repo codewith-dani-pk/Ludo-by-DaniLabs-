@@ -3,16 +3,16 @@
 const CCR=globalThis.ColorCardsRules,CCHEX={red:'#e63946',yellow:'#f4b400',green:'#2a9d5c',blue:'#2f6fed'},CCSYM={skip:'⊘',reverse:'⇄',draw2:'+2',wild:'★',wild4:'+4'};
 let CG=null,cgModalFn=null,cgOnlineWinnerShown='',cgDeclare=false,cgPassNeeded=false;
 const ccRand=()=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296};
-const ccSave=()=>{if(CG&&!CG.online)Store.set('ldb_color_cards',{game:CG.game,humans:CG.humans});else if(!CG)Store.del('ldb_color_cards')};
+const ccSave=()=>{if(CG&&!CG.online)Store.set('ldb_color_cards',{game:CG.game,humans:CG.humans,diff:CG.diff,sort:CG.sort});else if(!CG)Store.del('ldb_color_cards')};
 const ccPlayer=()=>CCR.current(CG.game),ccMine=()=>!CG.online||ccPlayer().id===CG.myColor,ccName=p=>(p.name||NAMES[p.id]||p.id)+(p.type==='bot'?' 🤖':'');
 const ccCount=p=>Number.isFinite(+p.handCount)?+p.handCount:p.hand.length;
 function cgStart(n){
  if(window.OnlinePlay&&OnlinePlay.prepareLocal)OnlinePlay.prepareLocal();Snd.ac();
- const bots=$('#cgBots').checked,mode=$('#cgMode')?.value||'round',ids=LudoRules.colorsFor(n);
+ const bots=$('#cgBots').checked,mode=$('#cgMode')?.value||'round',diff=$('#cgDifficulty')?.value||'normal',sort=$('#cgSort')?.value||'color',ids=LudoRules.colorsFor(n);
  const players=ids.map((id,i)=>({id,name:NAMES[id],type:bots&&i>0?'bot':'human'}));
- CG={online:false,game:CCR.newGame(n,players,ccRand,mode),humans:bots?1:n,busy:false,cover:false};cgDeclare=false;ccSave();show('cg');modal('#mCg',false);cgTurn(true)
+ CG={online:false,game:CCR.newGame(n,players,ccRand,mode),humans:bots?1:n,diff,sort,busy:false,cover:false};cgDeclare=false;ccSave();show('cg');modal('#mCg',false);cgTurn(true)
 }
-function cgResume(){const s=Store.get('ldb_color_cards',null);if(!s?.game)return false;CG={online:false,game:s.game,humans:s.humans||s.game.players.filter(p=>p.type!=='bot').length,busy:false,cover:false};show('cg');cgTurn(true);return true}
+function cgResume(){const s=Store.get('ldb_color_cards',null);if(!s?.game)return false;try{CCR.validate(s.game)}catch(e){Store.del('ldb_color_cards');toast('Saved Color Cards game was incompatible and was removed; settings were kept.');return false}CG={online:false,game:s.game,humans:s.humans||s.game.players.filter(p=>p.type!=='bot').length,diff:s.diff||'normal',sort:s.sort||'color',busy:false,cover:false};show('cg');cgTurn(true);return true}
 function cgTurn(){
  if(!CG)return;const g=CG.game;if(g.phase==='over'||g.phase==='round-over')return cgEnd();
  if(g.phase==='color')return chooseColor(col=>ccAct('color',{color:col}));
@@ -32,7 +32,7 @@ function cgRender(){
  const t=CCR.top(g);if(t){$('#cgTop').className='ucard '+(t.color==='wild'?'w':t.color);$('#cgTop').innerHTML='<span>'+(CCSYM[t.value]||t.value)+'</span>'}
  $('#cgCol').style.background=CCHEX[g.activeColor]||'#5b3ba8';$('#cgCol').textContent=(g.direction>0?'↻ ':'↺ ')+(g.activeColor||'');
  const dr=$('#cgDraw');dr.textContent=g.drawnCardId&&ccMine()?'Pass':'Draw';dr.disabled=CG.cover||g.phase!=='turn'||!ccMine()||p.type==='bot';
- const v=viewer(),hand=v?.hand||[];$('#cgHand').innerHTML=CG.cover?'<p class="hint">Hand hidden</p>':hand.map(card=>{const can=v===p&&ccMine()&&(!g.drawnCardId||g.drawnCardId===card.id)&&CCR.legalPlay(g,v,card);return cardEl(card,can?'ok':'no')}).join('');
+ const v=viewer(),hand=(v?.hand||[]).slice();if(CG.sort==='value')hand.sort((a,b)=>String(a.value).localeCompare(String(b.value))||String(a.color).localeCompare(String(b.color)));else hand.sort((a,b)=>String(a.color).localeCompare(String(b.color))||String(a.value).localeCompare(String(b.value)));$('#cgHand').innerHTML=CG.cover?'<p class="hint">Hand hidden</p>':hand.map(card=>{const can=v===p&&ccMine()&&(!g.drawnCardId||g.drawnCardId===card.id)&&CCR.legalPlay(g,v,card);return cardEl(card,can?'ok':'no')}).join('');
  const h=$('#cgHistory');if(h)h.innerHTML=(g.history||[]).slice(-6).reverse().map(x=>'<small>'+({play:(x.player||'Player')+' played '+(CCSYM[x.card?.value]||x.card?.value||'a card'),draw:(x.player||'Player')+' drew a card',catch:(x.by||'Player')+' caught '+(x.offender||'player'),score:(x.winner||'Player')+' scored '+x.points,penalty:(x.player||'Player')+' drew '+x.count}[x.type]||x.type)+'</small>').join('');$('#cgUno').disabled=CG.cover||!ccMine()||g.phase!=='turn'||p.hand.length!==2;$('#cgUno').classList.toggle('on',cgDeclare);$('#cgCatch').disabled=!g.unoWindow||g.unoWindow.offender===CG.myColor
 }
 function chooseColor(done){modalCg('<h2>Choose active color</h2><div class="row">'+CCR.COLORS.map(k=>'<button class="btn" data-col="'+k+'" style="background:'+CCHEX[k]+';color:#fff">'+k+'</button>').join('')+'</div>',done)}
@@ -53,11 +53,13 @@ function cgBot(){
  if(!legal.length){ccAct(g.drawnCardId?'pass':'draw');return}
  const counts=Object.fromEntries(CCR.COLORS.map(c=>[c,p.hand.filter(x=>x.color===c).length]));
  legal.sort((a,b)=>{const val=x=>(x.value==='wild4'?7:x.value==='wild'?5:['draw2','skip','reverse'].includes(x.value)?4:0)+(x.color==='wild'?0:counts[x.color]);return val(b)-val(a)});
- const card=legal[0],color=card.color==='wild'?CCR.COLORS.slice().sort((a,b)=>counts[b]-counts[a])[0]:null;ccAct('play',{cardId:card.id,color,calledUno:p.hand.length===2})
+ if(CG.diff==='easy'&&legal.length>1)legal.sort(()=>Math.random()-.5);else if(CG.diff==='hard')legal.sort((a,b)=>{const danger=x=>x.value==='wild4'?9:x.value==='draw2'?7:x.value==='skip'||x.value==='reverse'?6:x.value==='wild'?4:0;return danger(b)-danger(a)});const card=legal[0],color=card.color==='wild'?CCR.COLORS.slice().sort((a,b)=>counts[b]-counts[a])[0]:null;ccAct('play',{cardId:card.id,color,calledUno:p.hand.length===2})
 }
 function cgEnd(){cgRender();const g=CG.game;if(!CG.online&&g.phase==='over')Store.del('ldb_color_cards'),w=g.players.find(p=>p.id===(g.winner||g.roundWinner));if(!w)return;const scores=g.players.map(p=>ccName(p)+': '+p.score).join(' · ');if(g.phase==='round-over')modalCg('<h2>'+ccName(w)+' wins the round</h2><p>'+scores+'</p><button class="btn" id="cgNext">Next round</button>');else modalCg('<h2>'+ccName(w)+' wins Color Cards!</h2><p>'+scores+'</p><div class="row"><button class="btn" id="cgAgain">Play again</button><button class="btn ghost" id="cgHomeB">Home</button></div>')}
-function cgApplyOnline(st,room,members,mine,send){if(!st?.game||st.game.kind!=='color-cards')return;CG={online:true,myColor:mine,send,roomId:room.id,game:st.game,humans:st.game.players.length,busy:false,cover:false};show('cg');modal('#mOnline',false);cgRender();cgHint();if(CG.game.phase==='color'&&ccMine())chooseColor(col=>ccAct('color',{color:col}));else if(CG.game.phase==='challenge')cgChallenge();if(CG.game.winner&&cgOnlineWinnerShown!==room.id+':'+CG.game.winner){cgOnlineWinnerShown=room.id+':'+CG.game.winner;cgEnd()}}
+function cgApplyOnline(st,room,members,mine,send){if(!st?.game||st.game.kind!=='color-cards')return;CG={online:true,myColor:mine,send,roomId:room.id,game:st.game,humans:st.game.players.length,diff:'server',sort:Store.get('ldb_cc_sort','color'),busy:false,cover:false};show('cg');modal('#mOnline',false);cgRender();cgHint();if(CG.game.phase==='color'&&ccMine())chooseColor(col=>ccAct('color',{color:col}));else if(CG.game.phase==='challenge')cgChallenge();if(CG.game.winner&&cgOnlineWinnerShown!==room.id+':'+CG.game.winner){cgOnlineWinnerShown=room.id+':'+CG.game.winner;cgEnd()}}
 const Stats2={get:()=>Object.assign({games:0,wins:{}},Store.get('ldb_cgstats',{}))};
 function cgStatsLine(){const s=Stats2.get();$('#cgStats').textContent=s.games?s.games+' Color Cards games':'';$('#cgContinue').hidden=!Store.get('ldb_color_cards',null)}
 $('#bCards').onclick=()=>{Snd.play('tap');cgStatsLine();show('cgHome')};$('#cgContinue').onclick=()=>cgResume();$('#cgBack').onclick=()=>{refreshHome();show('home')};document.querySelectorAll('[data-cn]').forEach(b=>b.onclick=()=>cgStart(+b.dataset.cn));$('#cgMenu').onclick=()=>{ccSave();refreshHome();show('home')};
 window.OnlineCards={applyState:cgApplyOnline,isActive:()=>!!(CG&&CG.online&&!CG.game.winner),currentColor:()=>CG?.online?CCR.current(CG.game)?.id:null,clear:()=>{if(CG?.online)CG=null},resume:cgResume};
+
+$('#cgSort')&&($('#cgSort').onchange=e=>{Store.set('ldb_cc_sort',e.target.value);if(CG&&!CG.online){CG.sort=e.target.value;ccSave();cgRender()}});
