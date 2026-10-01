@@ -1,8 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ludo + UNO by DaniLabs</title><meta name="theme-color" content="#1b1140">
+<title>Ludo + Color Cards by DaniLabs</title><meta name="theme-color" content="#1b1140">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="google-site-verification" content="dfl1sF2t12eNp_HY1hmmsu75NjE-HGMjLW-IT0lKFt4" />
-<meta name="description" content="Play Ludo and UNO locally or online with friends, by DaniLabs.">
+<meta name="description" content="Play Ludo and Color Cards locally or online with friends, by DaniLabs.">
 <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"></head><body>
 <main id="home" class="screen on home-screen royal-home">
  <div class="royal-stage">
@@ -14,35 +14,31 @@
   <section class="royal-hero" aria-label="Ludo Royale by DaniLabs">
    <img class="royal-logo" src="assets/royale/logo.webp" alt="Ludo Royale">
    <img class="royal-board" src="assets/royale/hero-board.webp" alt="Ludo board with pawns and dice">
-   <p>LUDO + UNO · OFFLINE + ONLINE</p>
+   <p>LUDO + COLOR CARDS · OFFLINE + ONLINE</p>
   </section>
 
   <button class="royal-play" data-play="2"><span class="ludo-icon icon-play"></span><b>PLAY NOW</b></button>
 
   <section class="royal-actions" aria-label="Play options">
    <button class="royal-action quick" data-bot="2"><span class="ludo-icon icon-quick-match"></span><b>Quick Match</b><small>Vs computer</small></button>
-   <button class="royal-action online" id="bOnline"><span class="ludo-icon icon-globe"></span><b>Play Online</b><small>Ludo + UNO</small></button>
+   <button class="royal-action online" id="bOnline"><span class="ludo-icon icon-globe"></span><b>Play Online</b><small>Ludo + Color Cards</small></button>
    <button class="royal-action friends" id="bFriends"><span class="ludo-icon icon-friends"></span><b>Friends</b><small>Private lobby</small></button>
    <button class="royal-action private" id="bPrivateRoom"><span class="ludo-icon icon-private-room"></span><b>Private Room</b><small>Create or join</small></button>
   </section>
 
-  <button class="royal-banner" id="bOnlineBanner"><span><b>PRIVATE ONLINE ROOMS</b><small>Invite people to Ludo or UNO</small></span><i class="ludo-icon icon-arrow-right"></i></button>
+  <button class="royal-banner" id="bOnlineBanner"><span><b>PRIVATE ONLINE ROOMS</b><small>Invite people to Ludo or Color Cards</small></span><i class="ludo-icon icon-arrow-right"></i></button>
  </div>
 
  <section class="royal-panel" id="localPanel">
   <div class="panel-title"><span class="ludo-icon icon-crown"></span><span><b>Ludo</b><small>Choose your ruleset</small></span></div>
-  <div class="mode-grid" id="modes">
-   <button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic</b><small>4 tokens</small></button>
-   <button data-mode="quick"><span class="game-art art-quick"></span><b>Quick</b><small>2 active tokens</small></button>
-   <button data-mode="rush"><span class="ludo-icon icon-dice"></span><b>Rush</b><small>Start on track</small></button>
-  </div>
-  <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
+  <div class="mode-grid" id="modes"><button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic Ludo</b><small>Official DaniLabs ruleset · 4 pawns</small></button></div>
+<select id="sVar" hidden><option value="classic">Classic</option></select><input type="checkbox" id="sBots" hidden>
   <div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button></div>
   <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
  </section>
 
- <section class="royal-panel uno-panel">
-  <button id="bCards" class="uno-royal"><span class="game-art art-cards"></span><span><b>UNO</b><small>2–4 players · offline or private online rooms</small></span><i class="ludo-icon icon-arrow-right"></i></button>
+ <section class="royal-panel color cards-panel">
+  <button id="bCards" class="color cards-royal"><span class="game-art art-cards"></span><span><b>Color Cards</b><small>2–4 players · offline or private online rooms</small></span><i class="ludo-icon icon-arrow-right"></i></button>
  </section>
 
  <section class="royal-panel royal-friends">
@@ -80,28 +76,26 @@
  </section>
 </main>
 <main id="cgHome" class="screen">
- <div class="logo" style="cursor:default"><b>UNO</b><small>by DaniLabs</small></div>
+ <div class="logo" style="cursor:default"><b>Color Cards</b><small>by DaniLabs</small></div>
  <div class="menu">
   <p class="lbl">Match color or number. Draw one when you cannot play. First to empty their hand wins.</p>
   <div class="row3"><button class="btn big" data-cn="2">2 Players</button><button class="btn big" data-cn="3">3 Players</button><button class="btn big" data-cn="4">4 Players</button></div>
-  <label class="sw bots"><span>Play against the computer<small>You are Red; otherwise pass the device</small></span><input type="checkbox" id="cgBots"></label>
-  <p class="hint">Core UNO rules: ⊘ skips, ⇄ reverses, +2 draws two, ★ changes color, and +4 changes color and draws four. Draw cards do not stack.</p>
+  <label class="sw bots"><span>Play against the computer<small>Otherwise use pass-and-play</small></span><input type="checkbox" id="cgBots"></label>
+<label class="settings-select">Match format<select id="cgMode"><option value="round">Single round</option><option value="500">Points match to 500</option></select></label>
+  <p class="hint">Core Color Cards rules: ⊘ skips, ⇄ reverses, +2 draws two, ★ changes color, and +4 changes color and draws four. Draw cards do not stack.</p>
   <button class="btn ghost" id="cgBack">Back</button><p id="cgStats" class="hint" style="text-align:center"></p>
  </div>
 </main>
 <main id="cg" class="screen">
- <header><button class="btn sm" id="cgMenu" aria-label="Menu">☰</button><div class="logo mini"><b>UNO</b><small>by DaniLabs</small></div><span style="width:44px"></span></header>
+ <header><button class="btn sm" id="cgMenu" aria-label="Menu">☰</button><div class="logo mini"><b>Color Cards</b><small>by DaniLabs</small></div><span style="width:44px"></span></header>
  <div id="cgOpp"></div>
- <div id="cgTable"><button class="btn ucard back" id="cgDraw">Draw</button><button class="ucard" id="cgTop" tabindex="-1"></button><div id="cgCol"></div></div>
+ <div id="cgTable"><button class="btn ucard back" id="cgDraw">Draw</button><button class="ucard" id="cgTop" tabindex="-1"></button><div id="cgCol"></div></div><div class="row cg-actions"><button class="btn sm" id="cgUno">UNO!</button><button class="btn sm ghost" id="cgCatch">Catch</button></div>
  <div id="cgMsg" aria-live="polite"></div>
  <div id="cgHand"></div>
 </main>
 <div class="modal" id="mCg"><div class="box" id="mCgBody"></div></div>
 <div id="confetti" aria-hidden="true"></div><div id="toast" role="status" aria-live="polite"></div>
-<div class="modal" id="mRules"><div class="box"><h2>How to play</h2>
-<p>Roll a 6 to bring a token out. Move tokens clockwise around the board and up your home column. You need the exact roll to reach the center.</p>
-<p>Land on an opponent (not on a ★ safe cell) to send them home. Two tokens of the same color on one track cell form a protected block. A 6, a capture, or reaching the center gives another turn. Three 6s in a row lose the turn.</p>
-<p>Glowing tokens with a ▲ can move. Tap one to move it. First to finish all four tokens wins.</p><p>Ludo styles: Classic, Quick (2 tokens each) and Rush (all tokens start on the track). There is also a separate card game on the home screen.</p><p>UNO is available from Home for offline play, and from Online Play for private online rooms.</p><button class="btn" data-close>Close</button></div></div>
+<div class="modal" id="mRules"><div class="box"><h2>Classic Ludo rules</h2><p>All four pawns start in the yard. Roll 6 to enter a pawn on your colored start square, or move a pawn already in play by six. Entering consumes the roll.</p><p>Move around the 52-square outer track, then through your five-square home lane. An exact roll is required to finish. The eight ★ squares are safe: track positions 0, 8, 13, 21, 26, 34, 39 and 47. Pawns cannot be captured there.</p><p>Friendly pawns may share and pass through a square; they never form a blockade. A 6, capture, or finish gives one extra roll. A third consecutive 6 is cancelled and ends the turn. First player to finish all four pawns wins.</p><hr><h2>Color Cards rules</h2><p>The 108-card deck has red, yellow, green and blue number/action cards plus Wild and Wild Draw Four. Seven cards are dealt each. Setup always chooses a numeric opening discard; rejected action/Wild cards are returned and reshuffled.</p><p>Match color, number or action, or play a Wild. Draw exactly one card; only that newly drawn card may then be played. Draw Two and Wild Draw Four never stack. Wild Draw Four may be challenged and is legal only when the player held no card matching the active color.</p><p>With one card left, press UNO! when playing. If it was not declared, an opponent may Catch before the next player begins an action; a valid catch draws two. Single-round and 500-point matches are supported.</p><button class="btn" data-close>Close</button></div></div>
 <div class="modal" id="mProfile"><div class="box profile-box"><span class="eyebrow">DANILABS PLAYER</span><h2>Edit profile</h2><div class="profile-preview"><span class="avatar" id="profPreview">🦊</span><div><b id="profPreviewName">Guest player</b><small>Saved on this device</small></div></div><label>Player name<input id="profName" maxlength="12" autocomplete="nickname" placeholder="Player name"></label><div class="avatar-grid" id="profAvatars" aria-label="Choose avatar"></div><div class="row"><button class="btn" id="bProfSave">Save profile</button><button class="btn ghost" data-close>Cancel</button></div></div></div>
 <div class="modal" id="mSet"><div class="box settings-box"><div class="settings-head"><div><span class="eyebrow">QUICK SETTINGS</span><h2>Settings</h2></div><button class="btn sm" data-close aria-label="Close settings">✕</button></div>
 <section class="settings-group"><h3>Sound & feel</h3><div class="settings-grid"><label class="sw">Sound <input type="checkbox" id="sSound"></label><label class="sw">Music <input type="checkbox" id="sMusic"></label><label class="sw">Game vibration <input type="checkbox" id="sVib"></label></div></section>
@@ -110,5 +104,5 @@
 <p class="settings-note">Gameplay rules are kept in Game rules & options so they are not duplicated here.</p></div></div>
 <div class="modal full" id="mHost"><div class="box wide"><div class="row sp"><h2>Game options</h2><button class="btn sm" data-close>✕</button></div><div id="hostbody"></div></div></div>
 <div class="modal" id="mOver"><div class="box victory-box"><div class="victory-crown">♛</div><span class="eyebrow">MATCH COMPLETE</span><h2 id="victoryTitle">Game over</h2><p id="victorySub">Final ranking</p><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
-<div class="modal full" id="mOnline"><div class="box wide online-box"><div class="row sp online-head"><div><span class="eyebrow">DANILABS ONLINE</span><h2>Online Play</h2></div><button class="btn sm" data-close aria-label="Close online play">✕</button></div><p id="onlineMsg" class="online-msg" aria-live="polite"></p><div id="onlineBody"></div><p class="online-safety">Ludo and UNO private rooms use invite codes. There is no public chat; friends are added by username.</p></div></div>
-<script src="js/app.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
+<div class="modal full" id="mOnline"><div class="box wide online-box"><div class="row sp online-head"><div><span class="eyebrow">DANILABS ONLINE</span><h2>Online Play</h2></div><button class="btn sm" data-close aria-label="Close online play">✕</button></div><p id="onlineMsg" class="online-msg" aria-live="polite"></p><div id="onlineBody"></div><p class="online-safety">Ludo and Color Cards private rooms use invite codes. There is no public chat; friends are added by username.</p></div></div>
+<script src="js/rules/ludo-engine.js"></script><script src="js/rules/color-cards-engine.js"></script><script src="js/app.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
