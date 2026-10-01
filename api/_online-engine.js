@@ -2,57 +2,21 @@ import crypto from 'node:crypto';
 import '../js/rules/ludo-engine.js';
 import '../js/rules/color-cards-engine.js';
 const L=globalThis.LudoRules,C=globalThis.ColorCardsRules;
+export const TURN_MS=45000,RECONNECT_GRACE_MS=60000;
 const secureRand=()=>crypto.randomInt(0,0x100000000)/0x100000000;
 const colors=n=>L.colorsFor(n);
-const TURN_MS=45000;const stamp=st=>{st.meta=st.meta||{};st.meta.turnDeadline=new Date(Date.now()+TURN_MS).toISOString();st.meta.turnSeconds=45;st.meta.reconnectGraceSeconds=60;return st};
-const wrap=(game,message='')=>stamp({game,phase:game.phase,message,meta:{recentActionIds:[]}});
-export function newOnlineState(n,variant='classic'){
- const ids=colors(n).map(id=>({id,name:id,type:'online'}));
- return variant==='color-cards'||variant==='uno'?wrap(C.newGame(n,ids,secureRand,'round'),'Color Cards ready'):wrap(L.newGame(n,ids),'Ludo ready');
-}
+const deadline=()=>new Date(Date.now()+TURN_MS).toISOString();
+const wrap=(game,message='')=>({game,phase:game.phase,message,meta:{recentActionIds:[],deadlineAt:deadline(),turnMs:TURN_MS,reconnectGraceMs:RECONNECT_GRACE_MS}});
+export function newOnlineState(n,variant='classic'){const ids=colors(n).map(id=>({id,name:id,type:'online'}));return variant==='color-cards'?wrap(C.newGame(n,ids,secureRand,'round'),'Color Cards ready'):wrap(L.newGame(n,ids),'Ludo ready')}
 export const currentColor=state=>{const g=state?.game;if(!g)return null;return g.kind==='color-cards'?C.current(g)?.id:L.current(g)?.id};
-function ludoAction(st,color,kind,payload){
- const g=st.game;if(L.current(g).id!==color)throw Error('Wait for your turn');
- if(kind==='roll'){const value=crypto.randomInt(1,7);L.roll(g,value)}
- else if(kind==='move'){const p=L.current(g).pawns[Number(payload.token)];if(!p)throw Error('Unknown pawn');L.move(g,p.id)}
- else throw Error('Unsupported Ludo action');
- st.phase=g.phase;st.message=g.winner?g.winner+' wins':g.phase==='move'?color+' rolled '+g.roll+' - choose a pawn':L.current(g).id+' to roll';return st
-}
-function cardsAction(st,color,kind,payload){
- const g=st.game,p=C.current(g);if(['play','draw','pass'].includes(kind)&&p.id!==color)throw Error('Wait for your turn');
- if(kind==='play'){const card=p.hand[Number(payload.card)];if(!card)throw Error('Unknown card');C.play(g,color,card.id,payload.color,payload.calledUno,secureRand)}
- else if(kind==='draw')C.draw(g,color,secureRand);
- else if(kind==='pass')C.pass(g,color);
- else if(kind==='color')C.resolvePending(g,payload.color,secureRand);
- else if(kind==='challenge')C.resolvePending(g,payload.choice,secureRand);
- else if(kind==='uno')C.callUno(g,color);
- else if(kind==='catch')C.catchUno(g,color,secureRand);
- else throw Error('Unsupported Color Cards action');
- st.phase=g.phase;st.message=g.winner?g.winner+' wins':g.phase==='challenge'?'Wild Draw Four: accept or challenge':g.phase==='color'?'Choose the active color':(C.current(g)?.id||'')+' to play';return st
-}
-export function applyAction(state,color,kind,payload={}){
- const st=structuredClone(state);if(!st?.game)throw Error('Match state is missing');
- const out=st.game.kind==='color-cards'?cardsAction(st,color,kind,payload):ludoAction(st,color,kind,payload);return stamp(out);
-}
+function touch(st){st.phase=st.game.phase;st.meta=st.meta||{};st.meta.deadlineAt=deadline();st.meta.turnMs=TURN_MS;st.meta.reconnectGraceMs=RECONNECT_GRACE_MS;return st}
+function ludoAction(st,color,kind,payload){const g=st.game;if(L.current(g).id!==color)throw Error('Wait for your turn');if(kind==='roll'){const value=crypto.randomInt(1,7);L.roll(g,value)}else if(kind==='move'){const p=L.current(g).pawns[Number(payload.token)];if(!p)throw Error('Unknown pawn');L.move(g,p.id)}else throw Error('Unsupported Ludo action');st.message=g.winner?g.winner+' wins':g.phase==='move'?color+' rolled '+g.roll+' - choose a pawn':L.current(g).id+' to roll';return touch(st)}
+function cardsAction(st,color,kind,payload){const g=st.game,p=C.current(g);if(['play','draw','pass'].includes(kind)&&p.id!==color)throw Error('Wait for your turn');if(kind==='play'){const card=p.hand[Number(payload.card)];if(!card)throw Error('Unknown card');C.play(g,color,card.id,payload.color,!!payload.calledUno,secureRand)}else if(kind==='draw')C.draw(g,color,secureRand);else if(kind==='pass')C.pass(g,color);else if(kind==='color'){if(g.pending?.player!==color)throw Error('Only the Wild player chooses the color');C.resolvePending(g,payload.color,secureRand)}else if(kind==='challenge'){if(C.current(g)?.id!==color)throw Error('Only the affected player may decide');C.resolvePending(g,payload.choice,secureRand)}else if(kind==='catch')C.catchUno(g,color,secureRand);else throw Error('Unsupported Color Cards action');st.message=g.winner?g.winner+' wins':g.phase==='challenge'?'Wild Draw Four: accept or challenge':g.phase==='color'?'Choose the active color':(C.current(g)?.id||'')+' to play';return touch(st)}
+function ludoTimeout(st){const g=st.game;if(g.phase==='roll'){const r=crypto.randomInt(1,7),out=L.roll(g,r);if(out.legal?.length===1)L.move(g,out.legal[0]);else if(out.legal?.length>1){const pl=L.current(g),best=out.legal.map(id=>pl.pawns.find(p=>p.id===id)).sort((a,b)=>b.progress-a.progress)[0];L.move(g,best.id)}}else if(g.phase==='move'){const ids=L.legalMoves(g);if(ids.length){const pl=L.current(g),best=ids.map(id=>pl.pawns.find(p=>p.id===id)).sort((a,b)=>b.progress-a.progress)[0];L.move(g,best.id)}}st.message='Turn timer expired; the server used a legal fallback.';return touch(st)}
+function bestColor(hand){const n=Object.fromEntries(C.COLORS.map(x=>[x,0]));for(const c of hand)if(n[c.color]!=null)n[c.color]++;return C.COLORS.sort((a,b)=>n[b]-n[a])[0]}
+function cardsTimeout(st){const g=st.game,p=C.current(g);if(g.phase==='color'){const offender=g.players.find(x=>x.id===g.pending?.player);C.resolvePending(g,bestColor(offender?.hand||[]),secureRand)}else if(g.phase==='challenge')C.resolvePending(g,'accept',secureRand);else if(g.phase==='turn'){const c=C.draw(g,p.id,secureRand);if(g.phase==='turn'&&g.drawnCardId)C.pass(g,p.id)}st.message='Turn timer expired; the server safely drew/passed or resolved the pending choice.';return touch(st)}
+export function timeoutAction(state){const st=structuredClone(state);if(!st?.game)throw Error('Match state is missing');const due=Date.parse(st.meta?.deadlineAt||0);if(!Number.isFinite(due)||Date.now()<due)throw Error('Turn timer has not expired');return st.game.kind==='color-cards'?cardsTimeout(st):ludoTimeout(st)}
+export function applyAction(state,color,kind,payload={}){const st=structuredClone(state);if(!st?.game)throw Error('Match state is missing');return st.game.kind==='color-cards'?cardsAction(st,color,kind,payload):ludoAction(st,color,kind,payload)}
 export function rememberAction(state,id){if(!id)return state;state.meta=state.meta||{};const a=state.meta.recentActionIds=Array.isArray(state.meta.recentActionIds)?state.meta.recentActionIds:[];if(!a.includes(id))a.push(id);if(a.length>100)a.splice(0,a.length-100);return state}
 export const hasAction=(state,id)=>!!id&&!!state?.meta?.recentActionIds?.includes(id);
-export function publicState(state,viewer){
- const st=structuredClone(state);if(st?.game?.kind==='color-cards')st.game=C.publicView(st.game,viewer);return st
-}
-
-export function applyTimeout(state){
- const st=structuredClone(state),g=st.game;if(!g||g.winner)return st;
- if(g.kind==='color-cards'){
-  if(g.phase==='turn'){const p=C.current(g);C.draw(g,p.id,secureRand);if(g.phase==='turn'&&g.drawnCardId&&C.current(g).id===p.id)C.pass(g,p.id)}
-  else if(g.phase==='color')C.resolvePending(g,'red',secureRand);
-  else if(g.phase==='challenge')C.resolvePending(g,'accept',secureRand);
-  st.phase=g.phase;st.message='Turn timer expired — server applied the safe fallback';
- }else{
-  const p=L.current(g);
-  if(g.phase==='roll')L.roll(g,crypto.randomInt(1,7));
-  if(g.phase==='move'){const ids=L.legalMoves(g);if(ids.length)L.move(g,ids[0])}
-  st.phase=g.phase;st.message='Turn timer expired — server completed the turn';
- }
- return stamp(st)
-}
-export const isTimedOut=state=>!!state?.meta?.turnDeadline&&Date.parse(state.meta.turnDeadline)<=Date.now();
+export function publicState(state,viewer){const st=structuredClone(state);if(st?.game?.kind==='color-cards')st.game=C.publicView(st.game,viewer);return st}
