@@ -47,7 +47,7 @@ function applyState(r){
  if(st.game.kind==='color-cards'){
   G=null;Snd.ac();Snd.music(1);st.message=friendlyMessage(st.message);
   if(window.OnlineCards)OnlineCards.applyState(st,r,members,myColor(),sendAction);
-  if(st.game.over)stopPoll();
+  if(st.game.winner)stopPoll();
   return
  }
  window.OnlineCards&&OnlineCards.clear();G=st.game;G.online=1;G.onlineRoom=r.id;G.bots=[];phase=st.phase||'roll';busy=false;
@@ -55,8 +55,8 @@ function applyState(r){
  say(friendlyMessage(st.message)||NAMES[cur()]+' to play');render();if(G.over)showOnlineOver()
 }
 function showOnlineOver(){if(!G||!G.over)return;stopPoll();Snd.music(0);q('#ranks').innerHTML=G.ranks.map((c,i)=>'<li style="--c:'+HEX[c]+'"><span>'+(['🥇','🥈','🥉','4️⃣'][i]||'')+'</span><b>'+esc(NAMES[c])+'</b></li>').join('');if(q('#victoryTitle'))q('#victoryTitle').textContent=NAMES[G.ranks[0]]+' wins!';if(q('#victorySub'))q('#victorySub').textContent='Online match complete';if(q('#bRematch'))q('#bRematch').hidden=true;modal('#mOver')}
-function onlineTurnColor(){const g=room&&room.state&&room.state.game;if(!g)return null;return g.kind==='color-cards'?(g.players[g.turn]&&g.players[g.turn].col):(G?cur():null)}
-async function sendAction(kind,payload={}){if(!activeGame()){toast('Online match is not ready');return false}if(myColor()!==onlineTurnColor()){toast('Wait for your turn');return false}if(busyNet)return false;busyNet=true;try{const d=await call('/action',{method:'POST',body:JSON.stringify({code:room.code,kind,payload,version:room.version,actionId:(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'_'+Math.random().toString(36).slice(2))})});if(d.room){room=d.room;members=d.members||members;applyState(room);lastVersion=room.version}return true}catch(e){toast(e.message||'Online action failed');await refreshRoom();return false}finally{busyNet=false}}
+function onlineTurnColor(){const g=room&&room.state&&room.state.game;if(!g)return null;return g.kind==='color-cards'?(g.players[g.turn]&&g.players[g.turn].id):(G?cur():null)}
+async function sendAction(kind,payload={}){if(!activeGame()){toast('Online match is not ready');return false}if(kind!=='catch'&&myColor()!==onlineTurnColor()){toast('Wait for your turn');return false}if(busyNet)return false;busyNet=true;try{const d=await call('/action',{method:'POST',body:JSON.stringify({code:room.code,kind,payload,version:room.version,actionId:(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'_'+Math.random().toString(36).slice(2))})});if(d.room){room=d.room;members=d.members||members;applyState(room);lastVersion=room.version}return true}catch(e){toast(e.message||'Online action failed');await refreshRoom();return false}finally{busyNet=false}}
 async function loadFriends(){const box=q('#onFriendList');if(!box)return;try{const d=await call('/friends');const a=d.friends||[];box.innerHTML=a.length?a.map(f=>'<div class="online-friend"><span><b>@'+esc(f.username)+'</b><small>'+esc(f.status)+'</small></span>'+(f.direction==='received'&&f.status==='pending'?'<button class="btn ghost sm" data-on="friend-accept" data-user="'+esc(f.user_id)+'">Accept</button>':'')+'</div>').join(''):'<p class="hint">No friends yet. Add someone by username.</p>'}catch(e){box.innerHTML='<p class="hint">Friends unavailable.</p>'}}
 async function addFriend(){const name=(q('#onFriend')?.value||'').trim();if(!name)return;try{await call('/friends',{method:'POST',body:JSON.stringify({username:name})});q('#onFriend').value='';notice('Friend request updated');await loadFriends()}catch(e){notice(e.message,true)}}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-on]');if(!b)return;const a=b.dataset.on;
