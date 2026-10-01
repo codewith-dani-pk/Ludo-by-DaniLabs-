@@ -2,7 +2,7 @@
 window.DaniRewards=(()=>{
  const q=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])),localKey='ldb_cosmetics';
  async function api(path,opts={}){const r=await fetch('/api/online'+path,{credentials:'same-origin',...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Request failed');return d}
- function apply(load){if(!load)return;localStorage.setItem(localKey,JSON.stringify(load));const e=document.documentElement;e.dataset.boardTheme=load.board||'board-royal';e.dataset.pawnTheme=load.pawn||'pawn-classic';e.dataset.cardBack=load.card_back||'cards-royal';e.dataset.profileFrame=load.frame||'frame-none'}
+ function apply(load){if(!load)return;localStorage.setItem(localKey,JSON.stringify(load));const e=document.documentElement;e.dataset.avatarTheme=load.avatar||'avatar-1';e.dataset.boardTheme=load.board||'board-royal';e.dataset.pawnTheme=load.pawn||'pawn-classic';e.dataset.cardBack=load.card_back||'cards-royal';e.dataset.profileFrame=load.frame||'frame-none'}
  function cached(){try{apply(JSON.parse(localStorage.getItem(localKey)||'null'))}catch(e){}}
  function wallet(n){const b=q('#coinBalance');if(b)b.textContent=String(n??0)}
  async function open(tab='daily'){modal('#mRewards');await refresh(tab)}
