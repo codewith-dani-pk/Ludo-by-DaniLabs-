@@ -17,5 +17,5 @@ export const MISSIONS=Object.freeze([
 ]);
 export const utcDay=(now=new Date())=>now.toISOString().slice(0,10);
 export function periodKey(period,now=new Date()){if(period==='daily')return utcDay(now);const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())),day=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-day);return d.toISOString().slice(0,10)}
-export function nextStreak(lastDate,lastStreak,now=new Date()){const today=utcDay(now);if(lastDate===today)return null;const d=new Date(now);d.setUTCDate(d.getUTCDate()-1);return lastDate===utcDay(d)?Math.min(7,Number(lastStreak||0)+1):1}
+export function nextStreak(lastDate,lastStreak,now=new Date()){const today=utcDay(now);if(lastDate===today)return null;const d=new Date(now);d.setUTCDate(d.getUTCDate()-1);return lastDate===utcDay(d)?Number(lastStreak||0)>=7?1:Number(lastStreak||0)+1:1}
 export const leaderboardEligible=r=>r?.status==='completed'&&['classic','color-cards'].includes(r.game);
