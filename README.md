@@ -36,7 +36,7 @@ Online authority:
 - `api/_online-engine.js` imports the same rule engines.
 - The server generates dice, shuffles/deals cards, validates actions and redacts Color Cards private state.
 - Requests carry room state versions and unique action IDs. The API rejects stale/out-of-turn actions and remembers recent IDs for deduplication.
-- Online state exposes a 45-second turn deadline and 60-second reconnection grace policy. On expiry, a server-validated timeout action uses a legal Ludo fallback or safely draws/passes/resolves a pending Color Cards choice.
+- Online state defaults to a 45-second turn deadline and 60-second reconnection grace policy. Configure them with `ONLINE_TURN_SECONDS` and `ONLINE_RECONNECT_GRACE_SECONDS`. On expiry, a server-validated timeout action uses a legal Ludo fallback or safely draws/passes/resolves a pending Color Cards choice.
 - Reopening Online reconnects to the live room. Leaving the screen never silently converts a live online match into a separate offline match.
 - The browser currently uses frequent versioned room refreshes as the realtime-equivalent transport; authoritative state remains on the server.
 
@@ -56,7 +56,7 @@ The service worker cache is `ludo-danilabs-v45` and includes the app shell, both
 2. Apply the Supabase migrations in order:
    - `supabase/migrations/20260930_online_v38.sql`
    - `supabase/migrations/20260930_online_auth_v39.sql`
-   - `supabase/migrations/20260930_ludo_uno_v41.sql` (now permits `color-cards`; legacy values remain accepted)
+   - `supabase/migrations/20260930_ludo_uno_v41.sql`\n   - `supabase/migrations/20261001_ludo_color_cards_v44.sql` (canonical `classic`/`color-cards` variants, room options and reconnect heartbeat)
 3. Configure server-only `SUPABASE_URL` and `SUPABASE_SECRET_KEY` in Vercel.
 4. Deploy the repository. Do not expose the Supabase secret in browser code.
 5. Open the site online once on each device to install/cache offline assets.
