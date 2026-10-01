@@ -1,57 +1,79 @@
-# LudoByDaniLabs — Classic Ludo + Color Cards v44
+# LudoByDaniLabs — Classic Ludo + Color Cards
 
-LudoByDaniLabs contains two complete games with original DaniLabs presentation: **Classic Ludo** and the UNO-style, independently branded **Color Cards**. Both offline and online controllers use the same rules files in `js/rules/`; UI, bots and API handlers do not own alternate rule implementations.
+Royal blue/purple/gold mobile-first web games built with plain HTML, CSS and JavaScript. Gameplay rules are isolated in shared engines under `js/rules/`; offline UI, computer players and the online API call those same engines rather than duplicating rules.
 
-## Classic Ludo
+## Completed games
 
-The engine defines the 15×15 board as data: 52 explicit outer-track coordinates, start offsets (red 0, green 13, yellow 26, blue 39), home-entry points, five-cell colored home lanes and eight safe track positions (0, 8, 13, 21, 26, 34, 39, 47). Each player has four uniquely identified pawns with yard/track/home/finished state and owner-relative progress.
+### Classic Ludo
+- Accurate 15×15 logical board map with 52 explicit outer-track coordinates, color offsets, five-cell home lanes and central finish.
+- 2–4 players; two-player games use opposite red/yellow seats; four pawns each.
+- Yard entry only on 6, exact finish, eight explicit safe track cells (0, 8, 13, 21, 26, 34, 39, 47), unsafe captures, friendly sharing without blockades.
+- One bonus roll for a 6, capture or finish; a third consecutive 6 is cancelled and ends the turn.
+- Pass-and-play, human vs computer and mixed-seat presets. Computer strategy selects only legal moves and never controls dice.
+- Save/resume, restart, pause, sound, reduced motion and optional auto-move when exactly one pawn is legal.
 
-Implemented rules: all pawns start in the yard; a six may enter a pawn or move one already in play; entry consumes the roll; exact finish is required; unsafe landings capture opponents; safe squares cannot be captured; friendly pawns may share/pass and never form blockades; six/capture/finish grants one bonus roll; a third consecutive six is cancelled; and the first player to finish all four pawns wins. Two-player games use red/yellow (opposite colors).
+### Color Cards
+Original DaniLabs branding with a classic 108-card color-matching ruleset.
+- Red/yellow/green/blue: one 0, two 1–9, two Skip, two Reverse and two Draw Two per color; four Wild and four Wild Draw Four.
+- Seven-card deal. Setup deliberately rejects action/Wild opening cards until a numeric opening discard is selected, then returns/re-shuffles rejected cards.
+- Play by color/value/action match or Wild; draw exactly one; after drawing, only that card may be played.
+- Skip, Reverse (Reverse acts as Skip with two players), Draw Two, Wild and Wild Draw Four. No stacking, jump-in or seven-zero house rules.
+- Wild Draw Four legality is captured privately before the play. The affected player may accept or challenge; successful and failed challenges follow the documented 4/6-card outcomes without revealing the offender's hand.
+- Explicit UNO declaration and opponent Catch window. A valid catch adds two cards; the window closes when the next player starts a draw/play action.
+- Draw-pile recycling keeps the top discard and shuffles the rest. No cards are invented when no draw is possible.
+- Single-round and 500-point modes with 20-point action cards and 50-point Wild cards.
+- Pass-device privacy screen, computer opponents and complete local match persistence including pending decisions.
 
-Offline supports 2–4 pass-and-play players, human-vs-computer/mixed seats, localStorage resume, restart, pause, rules, sound, auto-move for a single legal pawn and reduced motion. Computer players receive only legal moves and never influence dice generation.
+## Shared architecture
 
-## Color Cards
+`js/rules/ludo-engine.js` and `js/rules/color-cards-engine.js` contain gameplay state transitions. They do not render UI, perform network requests or choose computer strategy.
 
-Color Cards uses the classic 108-card structure: four colors, one 0 per color, two 1–9 per color, two Skip/Reverse/Draw Two per color, four Wild and four Wild Draw Four cards. Every card has a unique ID. Seven cards are dealt to each of 2–4 players. Setup deliberately chooses a numeric opening discard; action/Wild candidates are returned to the draw pile and reshuffled.
+Offline controllers:
+- `js/app.js` — Ludo UI, local persistence, dice animation and computer strategy.
+- `js/cards.js` — Color Cards UI, pass-device flow, local persistence and computer strategy.
 
-Turns allow one legal play or one-card draw. A player may draw even when another play exists; after drawing, only that card may be played, otherwise it is kept and the turn ends. Empty draw piles recycle all but the top discard. Draw penalties never stack. Two-player Reverse acts as Skip.
+Online authority:
+- `api/_online-engine.js` imports the same rule engines.
+- The server generates dice, shuffles/deals cards, validates actions and redacts Color Cards private state.
+- Requests carry room state versions and unique action IDs. The API rejects stale/out-of-turn actions and remembers recent IDs for deduplication.
+- Online state exposes a 45-second turn deadline and 60-second reconnection grace policy. On expiry, a server-validated timeout action uses a legal Ludo fallback or safely draws/passes/resolves a pending Color Cards choice.
+- Reopening Online reconnects to the live room. Leaving the screen never silently converts a live online match into a separate offline match.
+- The browser currently uses frequent versioned room refreshes as the realtime-equivalent transport; authoritative state remains on the server.
 
-Wild Draw Four records server/private pre-play legality evidence. The affected player may Accept or Challenge. A successful challenge makes the offender draw four and lets the challenger continue; a failed challenge makes the challenger draw six and lose the turn. The evidence is never sent to opponents.
+## Online privacy
 
-An **UNO!** declaration can be armed before a play that leaves one card. If omitted, an opponent can Catch until the next player begins a draw/play action; a valid catch draws two. Final Draw Two/Wild Draw Four effects resolve before scoring. Single-round and 500-point modes use 20 points for Skip/Reverse/Draw Two, 50 for Wild/Wild Draw Four, and face value for number cards.
+Each Color Cards player receives their own hand plus public match information. Opponent hands are replaced by counts and draw-pile order is removed. Wild Draw Four challenge legality is also removed from public views.
 
-Offline Color Cards supports pass-and-play privacy screens, computer players, localStorage resume including pending color/challenge/catch state, and strategic color selection without reading hidden hands or draw order.
+Private rooms support 2–4 players, six-character join codes, lobby readiness, capacity checks and account-based reconnection.
 
-## Online architecture
+## Offline/PWA
 
-Private online rooms use authenticated DaniLabs accounts, six-character join codes, readiness, 2–4 player limits, reconnectable membership and an approximately realtime polling transport. The database is authoritative. The server shuffles/deals Color Cards, generates Ludo dice, validates membership/turns/actions, increments room versions, rejects stale writes and keeps the latest 100 action IDs to deduplicate retries.
+The service worker cache is `ludo-danilabs-v45` and includes the app shell, both rule engines, controllers, CSS and required local art. The **first visit requires connectivity** so those files can be downloaded and cached. After a successful first load/cache, offline Ludo and Color Cards work without internet. API requests are never cached.
 
-Color Cards responses contain the viewer's own hand, opponent hand counts, public discard/history and draw count only. Draw-pile order, opponent hands, Wild Draw Four challenge evidence and retry metadata stay private.
+## Production setup
 
-Online turns have a 45-second server deadline and 60-second reconnect-grace metadata. Color Cards timeout fallback draws one card and ends safely (or accepts a pending Wild Draw Four challenge); Ludo timeout fallback rolls server-side and makes the first legal move when a move is required. A disconnected match remains an online match; the UI never silently converts it to offline play.
+1. Use Node 22+.
+2. Apply the Supabase migrations in order:
+   - `supabase/migrations/20260930_online_v38.sql`
+   - `supabase/migrations/20260930_online_auth_v39.sql`
+   - `supabase/migrations/20260930_ludo_uno_v41.sql` (now permits `color-cards`; legacy values remain accepted)
+3. Configure server-only `SUPABASE_URL` and `SUPABASE_SECRET_KEY` in Vercel.
+4. Deploy the repository. Do not expose the Supabase secret in browser code.
+5. Open the site online once on each device to install/cache offline assets.
 
-## Setup
+## Verification
 
-1. Deploy the repository on Vercel or another Node 22-compatible host.
-2. Configure the existing Supabase/backend environment variables used by `api/_db.js` and `api/_auth.js`.
-3. Apply the existing auth/room migrations in order, then apply `supabase/migrations/20261001_ludo_color_cards_v44.sql`.
-4. Run `npm test` with Node 22+.
-5. Visit the deployed site once while connected. The service worker caches the application, both shared rules engines and required local royal assets. After that successful cache load, offline games work without a network connection.
+Run:
 
-## Important source files
+`npm test`
 
-- `js/rules/ludo-engine.js` — sole Classic Ludo rules/board engine.
-- `js/rules/color-cards-engine.js` — sole Color Cards deck/turn/challenge/scoring engine.
-- `js/app.js` — Ludo offline controller/renderer/bots.
-- `js/cards.js` — Color Cards offline/online controller and renderer.
-- `api/_online-engine.js` — server adapter importing the exact same two rules engines.
-- `api/online/action.js` — authoritative version/action-ID validation.
-- `api/online/room.js` — room lifecycle, readiness, reconnect heartbeat and timer enforcement.
-- `tests/online-engine.test.js` — board, route, dice, card, challenge, privacy and retry tests.
-- `sw.js` — offline cache v44.
+Coverage includes:
+- Ludo track length/offsets/home entry, exact finish, safe/unsafe capture behavior, third consecutive six, no-move turns, bonus rolls and friendly sharing.
+- Color Cards 108-card composition, numeric opening discard, matching, two-player Reverse, Draw Two no-stacking behavior, both Wild Draw Four challenge outcomes, UNO catch timing, draw-pile recycling, final Draw Two scoring and 500-point score carry-over.
+- Online private-hand isolation, reconnect view regeneration, action-ID deduplication, authoritative Ludo actions and turn-timeout validation.
 
-## Verification focus
+## Rule choices
 
-Tests cover Ludo board offsets/routes/safe squares, exact finish, capture behavior, third-six cancellation and no-move bonus behavior; Color Cards deck composition, numeric opening discard, matching, two-player Reverse, Draw Two behavior, both Wild Draw Four challenge outcomes, catch timing, draw recycling, final action scoring, private-hand isolation, retry deduplication and reconnect-view regeneration.
+Ludo has regional variations. This project intentionally uses the exact rules displayed in the in-game Rules screen: friendly pawns do not create blockades, all eight safe cells prevent captures, and 6/capture/finish each qualify for at most one bonus roll after a move.
 
-The project intentionally does not simulate public online opponents. Online players are authenticated room members; computer players are labeled computer players and are used only in offline matches.
+Color Cards intentionally uses a numeric-only opening discard and does not include optional house rules by default.
