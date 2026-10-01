@@ -20,4 +20,4 @@ export function timeoutAction(state){const st=structuredClone(state);if(!st?.gam
 export function applyAction(state,color,kind,payload={}){const st=structuredClone(state);if(!st?.game)throw Error('Match state is missing');return st.game.kind==='color-cards'?cardsAction(st,color,kind,payload):ludoAction(st,color,kind,payload)}
 export function rememberAction(state,id){if(!id)return state;state.meta=state.meta||{};const a=state.meta.recentActionIds=Array.isArray(state.meta.recentActionIds)?state.meta.recentActionIds:[];if(!a.includes(id))a.push(id);if(a.length>100)a.splice(0,a.length-100);return state}
 export const hasAction=(state,id)=>!!id&&!!state?.meta?.recentActionIds?.includes(id);
-export function publicState(state,viewer){const st=structuredClone(state);if(st?.game?.kind==='color-cards')st.game=C.publicView(st.game,viewer);if(st?.meta)delete st.meta.recentActionIds;return st}
+export function publicState(state,viewer){const st=structuredClone(state);if(st?.game?.kind==='color-cards')st.game=C.publicView(st.game,viewer);if(st?.meta){delete st.meta.recentActionIds;delete st.meta.rewardMetrics;}return st}
