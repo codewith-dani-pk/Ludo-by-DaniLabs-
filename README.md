@@ -183,7 +183,7 @@ Pairings and progression:
 
 Rewards:
 - Tournament reward configuration is displayed before registration.
-- Champion/runner-up earned coins use the existing server-controlled ledger with transaction key `tournament:<tournament-id>:<user-id>`. Replays therefore do not duplicate grants.
+- Champion earned coins are granted to a valid final winner; runner-up rewards require a normally completed final, so a final no-show/forfeit loser is not an eligible finisher. Champion/runner-up earned coins use the existing server-controlled ledger with transaction key `tournament:<tournament-id>:<user-id>`. Replays therefore do not duplicate grants.
 - Optional tournament badges are persistent cosmetic achievements. Rewards have no cash value.
 
 Limited-time events:
