@@ -25,7 +25,7 @@ const ccCat=$('#bCardsCatalog');if(ccCat)ccCat.onclick=()=>$('#bCards').click();
 document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>toast(b.dataset.demo+' is a clearly labeled preview; no real rewards, currency or purchases are active.'));
 document.querySelectorAll('[data-dev]').forEach(b=>b.onclick=()=>toast(b.dataset.dev+' is unavailable until its rules are implemented and tested.'));
 const nGames=$('#nGames');if(nGames)nGames.onclick=()=>{document.querySelector('.color-cards-panel')?.scrollIntoView({behavior:S.reduced?'auto':'smooth'})};
-const nRewards=$('#nRewards');if(nRewards)nRewards.onclick=()=>{document.querySelector('.reward-grid')?.scrollIntoView({behavior:S.reduced?'auto':'smooth'})};
+const nRewards=$('#nRewards');if(nRewards)nRewards.onclick=()=>window.DaniRewards?.open('daily');document.querySelectorAll('[data-reward-open]').forEach(b=>b.onclick=()=>window.DaniRewards?.open(b.dataset.rewardOpen));
 const nProfile=$('#nProfile');if(nProfile)nProfile.onclick=()=>window.DaniAccountUI?DaniAccountUI.open():$('#bProf').click();
 const nFriends=$('#nFriends');if(nFriends)nFriends.onclick=()=>$('#bOnline').click();
 const bNotify=$('#bNotify');if(bNotify)bNotify.onclick=()=>{modal('#mSet');setTimeout(()=>$('#sNotify')?.focus(),0)};
