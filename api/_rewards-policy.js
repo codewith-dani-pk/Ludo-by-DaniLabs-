@@ -1,7 +1,7 @@
 export const RESET_TZ='UTC';
 export const DAILY_COINS=[50,60,75,90,110,140,200];
 export const COSMETICS=Object.freeze([
-{id:'avatar-royal-fox',type:'avatar',name:'Royal Fox',price:300},
+{id:'avatar-royal',type:'avatar',name:'Royal Avatar',price:300},
 {id:'frame-gold',type:'frame',name:'Gold Frame',price:250},
 {id:'board-midnight',type:'board',name:'Midnight Board',price:500},
 {id:'pawn-gem',type:'pawn',name:'Gem Pawns',price:400},
