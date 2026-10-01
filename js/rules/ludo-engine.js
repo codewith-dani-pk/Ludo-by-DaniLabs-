@@ -6,7 +6,7 @@ const SAFE=[0,8,13,21,26,34,39,47];
 const HOME_ENTRY={red:50,green:11,yellow:24,blue:37};
 const TRACK=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
 const HOME={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,13],[7,12],[7,11],[7,10],[7,9]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
-const OUTER_LAST=51,HOME_FIRST=52,HOME_LAST=56,FINISH=57;
+const OUTER_LAST=50,HOME_FIRST=51,HOME_LAST=55,FINISH=56;
 const colorsFor=n=>n===2?['red','yellow']:n===3?['red','green','yellow']:COLORS.slice();
 const clone=x=>JSON.parse(JSON.stringify(x));
 function pawn(owner,index){return{id:owner+'-'+(index+1),owner,state:'yard',progress:-1}}
@@ -16,7 +16,7 @@ function newGame(n=2,players=[]){if(![2,3,4].includes(n))throw Error('Ludo suppo
 const current=g=>g.players[g.turn];
 const globalCell=(color,progress)=>progress>=0&&progress<=OUTER_LAST?(START[color]+progress)%52:null;
 function destination(p,roll){if(!p||p.state==='finished')return null;if(p.state==='yard')return roll===6?0:null;const d=p.progress+roll;return d<=FINISH?d:null}
-function noMoveReason(g,roll){const ps=current(g).pawns;if(ps.every(p=>p.state==='yard')&&roll!==6)return 'A 6 is required to leave the yard';if(ps.some(p=>p.state!=='yard'&&p.state!=='finished'&&p.progress+roll>56))return 'An exact roll is required to finish';return 'No pawn can use this roll'}
+function noMoveReason(g,roll){const ps=current(g).pawns;if(ps.every(p=>p.state==='yard')&&roll!==6)return 'A 6 is required to leave the yard';if(ps.some(p=>p.state!=='yard'&&p.state!=='finished'&&p.progress+roll>FINISH))return 'An exact roll is required to finish';return 'No pawn can use this roll'}
 function legalMoves(g,roll=g.roll){if(!roll||g.winner||g.paused)return[];return current(g).pawns.filter(p=>destination(p,roll)!==null).map(p=>p.id)}
 function capturesAt(g,mover,dest){const cell=globalCell(mover.color,dest);if(cell==null||SAFE.includes(cell))return[];const out=[];for(const pl of g.players)if(pl.color!==mover.color)for(const p of pl.pawns)if(globalCell(pl.color,p.progress)===cell)out.push(p);return out}
 function endTurn(g){g.roll=null;g.consecutiveSixes=0;g.turn=(g.turn+1)%g.players.length;g.phase='roll'}
