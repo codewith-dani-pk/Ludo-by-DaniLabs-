@@ -47,3 +47,5 @@ export async function requireUser(req){const u=await optionalUser(req);if(!u)thr
 export async function getProfile(id){const a=await db('online_accounts?user_id=eq.'+enc(id)+'&select=user_id,username,display_name&limit=1'),u=a&&a[0];return u?{id:u.user_id,username:u.username,display_name:u.display_name}:null}
 export function recoveryCode(){return crypto.randomBytes(24).toString('base64url')}
 export function userPublic(u){return u?{id:u.id||u.user_id,username:u.username,display_name:u.display_name}:null}
+
+export async function requireAdmin(req){const u=await requireUser(req),rows=await db('online_admins?user_id=eq.'+enc(u.id)+'&select=role&limit=1');if(!rows?.[0])throw Object.assign(new Error('Administrator access required'),{status:403});return u}
