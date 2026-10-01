@@ -11,7 +11,7 @@ const displayName=c=>isBot(c)?NAMES[c]+' Bot':humanName(c),safeText=v=>String(v?
 function ensureRoomAvatars(){if(!G)return{};G.uiAvatars=G.uiAvatars||{};const used=new Set(Object.values(G.uiAvatars));let changed=false;G.cols.forEach(c=>{if(c==='red'&&!isBot(c))return;if(!G.uiAvatars[c]){const choices=AV_POOL.filter(a=>!used.has(a)),a=(choices.length?choices:AV_POOL)[Math.floor(Math.random()*(choices.length||AV_POOL.length))];G.uiAvatars[c]=a;used.add(a);changed=true}});if(changed)saveG();return G.uiAvatars}
 const playerAvatar=c=>c==='red'&&!isBot(c)&&(!G.online||!window.OnlinePlay||OnlinePlay.myColor()===c)?AV[(prof().av||0)%AV.length]:(ensureRoomAvatars()[c]||'🎮');
 function playerToolsHTML(c){return '<div class="player-tools"><div class="player-react-wrap"><button type="button" class="player-react-btn" data-player-react="'+c+'" aria-label="'+NAMES[c]+' reactions">☺</button><div class="player-reaction-tray" data-player-reaction-tray="'+c+'" hidden><button type="button" aria-label="Thumbs up">👍</button><button type="button" aria-label="Laugh">😂</button><button type="button" aria-label="Celebrate">🎉</button><button type="button" aria-label="Surprised">😮</button><button type="button" aria-label="Applause">👏</button></div></div></div><div class="player-reaction-pop" data-player-reaction-pop="'+c+'" aria-live="polite"></div>'}
-const targetTokens=()=>G&&G.variant==='quick'?2:4;
+const targetTokens=()=>4;
 const homeCount=c=>G?G.pos[c].slice(0,targetTokens()).filter(p=>p===56).length:0;
 const progressPct=c=>{if(!G)return 0;const a=G.pos[c].slice(0,targetTokens()),max=57*a.length,done=a.reduce((n,p)=>n+(p<0?0:Math.min(57,p+1)),0);return max?Math.round(done/max*100):0};
 const MINI_PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
