@@ -87,7 +87,7 @@ Color Cards setup adds computer difficulty and hand sorting. Ludo setup document
 
 ## Homepage feature truthfulness
 
-The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Cards and private online rooms are available. Quick Match and Team Up are intentionally disabled until separate rules are implemented and tested. Carrom, Chess and Snakes & Ladders are Coming Soon with no invented release dates. Daily Rewards, Missions, Lucky Spin, Shop and Tournament surfaces are labeled demonstrations/previews; there are no real purchases or redeemable currencies.
+The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Cards and private online rooms are available. Quick Match and Team Up are intentionally disabled until separate rules are implemented and tested. Carrom, Chess and Snakes & Ladders are Coming Soon with no invented release dates. Daily Rewards, Missions, earned-coin Cosmetics and verified Leaderboards are implemented for signed-in online accounts. Lucky Spin and Tournament remain clearly labeled previews. Coins have no cash value and there are no real-money purchases, wagering or cash-out.
 
 Public room discovery is not implemented yet. Online room creation therefore exposes Private as the supported visibility and labels Public unavailable rather than simulating it.
 
@@ -142,3 +142,20 @@ History:
 - Supported result statuses are completed, abandoned and forfeited. This phase records normal completed matches; abandoned/forfeited policy is reserved for a later explicit match-abandonment feature.
 
 Apply `supabase/migrations/20261001_accounts_social_history_v49.sql` after v48. No additional secrets are required beyond the documented v48 environment variables.
+
+
+## Rewards, missions, cosmetics and leaderboards (v50)
+
+This economy is deterministic and server controlled. Earned coins have no cash value and cannot be bought, wagered or cashed out.
+
+Daily rewards use server UTC. The daily reset is 00:00 UTC and is displayed in the UI. One fixed reward may be claimed per UTC date. Consecutive claims advance Day 1 through Day 7, Day 7 cycles to Day 1 on the next consecutive day, and missing a UTC day resets the next claim to Day 1. A database primary key plus a transactional server-only RPC prevents concurrent duplicate claims.
+
+Currency changes are written to `reward_ledger` with unique transaction keys. PostgreSQL row locking prevents negative balances and makes claim/purchase operations atomic. Reward amounts and cosmetic prices come only from server policy; clients submit identifiers, never balances or prices. Reward RPC execution is revoked from browser roles.
+
+Daily/weekly missions currently cover verified completed matches, verified wins, Ludo pawn finishes and Color Cards action-card plays. Ludo finishes and card actions are counted inside the authoritative online engine. Result/mission/player event keys make progress idempotent. Offline, abandoned and forfeited matches do not qualify.
+
+The cosmetic catalog currently contains an avatar treatment, profile frame, Ludo board theme, pawn treatment and Color Cards card back. Purchases use earned coins only. Equipped cosmetics are visual only and do not affect rules. The last verified loadout is cached locally so its already-available styling can display offline; offline actions never grant ownership or alter the server wallet.
+
+Ludo and Color Cards leaderboards are separate. Eligibility is at least one verified normally completed online match of that game. Ranking is wins descending, then win rate, then games played, with public player ID as a deterministic final tie break. Abandoned/forfeited/offline matches are excluded.
+
+Apply `supabase/migrations/20261001_rewards_inventory_v50.sql` after v49. No new environment secrets are required.
