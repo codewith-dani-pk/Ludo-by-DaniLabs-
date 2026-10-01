@@ -12,10 +12,10 @@ function profileGrid(){const g=$('#profAvatars');if(!g)return;g.innerHTML='';AV.
 $('#bProf').onclick=()=>{editAv=P.av;$('#profName').value=P.name;$('#profPreview').textContent=AV[editAv%AV.length];$('#profPreviewName').textContent=P.name;profileGrid();modal('#mProfile')};
 $('#profName').addEventListener('input',e=>{$('#profPreviewName').textContent=e.target.value.trim().slice(0,12)||'Guest player'});
 $('#bProfSave').onclick=()=>{P.name=profileName($('#profName').value)||'Guest player';P.av=editAv;save();paint();modal('#mProfile',false);document.dispatchEvent(new Event('danilabs-profile'));Snd.play('tap')};
-const go=(n,bots)=>{Snd.play('tap');$('#sBots').checked=!!bots;startGame(n,!!bots,$('#sVar').value)};
+const go=(n,bots)=>{Snd.play('tap');$('#sBots').checked=!!bots;startGame(n,bots)};
 document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>go(+b.dataset.play,false));
-document.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>go(+b.dataset.bot,true));
-function setMode(m){m=['classic','quick','rush'].includes(m)?m:'classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));$('#sVar').value=m;Store.set('ldb_mode',m)}
+document.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>go(+b.dataset.bot,true));\ndocument.querySelectorAll('[data-mixed]').forEach(b=>b.onclick=()=>{const n=+b.dataset.mixed,cols=LudoRules.colorsFor(n);go(n,n===3?[cols[2]]:[cols[2],cols[3]])});
+function setMode(m){m='classic';document.querySelectorAll('#modes [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));$('#sVar').value=m;Store.set('ldb_mode',m)}
 document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.play('tap');setMode(b.dataset.mode)});
 setMode(Store.get('ldb_mode','classic'));
 ['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
