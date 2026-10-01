@@ -20,7 +20,7 @@ function setMode(m){m='classic';document.querySelectorAll('#modes [data-mode]').
 document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.play('tap');setMode(b.dataset.mode)});
 setMode(Store.get('ldb_mode','classic'));
 ['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
-const setup=$('#bSetup');if(setup)setup.onclick=()=>{Snd.play('tap');modal('#mSet')};
+const setup=$('#bSetup');if(setup)setup.onclick=()=>{Snd.play('tap');openHost()};
 const ccCat=$('#bCardsCatalog');if(ccCat)ccCat.onclick=()=>$('#bCards').click();
 document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>toast(b.dataset.demo+' is a clearly labeled preview; no real rewards, currency or purchases are active.'));
 document.querySelectorAll('[data-dev]').forEach(b=>b.onclick=()=>toast(b.dataset.dev+' is unavailable until its rules are implemented and tested.'));
