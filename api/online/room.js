@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import {requireUser,requireSameOrigin} from '../_auth.js';
 import {db,enc} from '../_db.js';
-import {newOnlineState,publicState} from '../_online-engine.js';
+import {newOnlineState,publicState,applyTimeout,isTimedOut} from '../_online-engine.js';
 const send=(res,status,data)=>res.status(status).json(data);
 const code=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>a[crypto.randomInt(0,a.length)]).join('')};
 const colorFor=(seat,max)=>seat===0?'red':seat===1?(max===2?'yellow':'green'):seat===2?'yellow':'blue';
@@ -9,7 +9,8 @@ async function profile(user){const p={id:user.id,username:user.username,display_
 async function roomByCode(c){const a=await db('online_rooms?code=eq.'+enc(c)+'&select=*&limit=1');return a&&a[0]}
 async function roomById(id){const a=await db('online_rooms?id=eq.'+enc(id)+'&select=*&limit=1');return a&&a[0]}
 async function memberList(id){return await db('online_members?room_id=eq.'+enc(id)+'&select=*&order=seat.asc')||[]}
-async function payload(r,user){if(!r)return{room:null,members:[]};const ms=await memberList(r.id);if(!ms.some(m=>m.user_id===user.id))throw Object.assign(new Error('You are not in this room'),{status:403});const me=ms.find(m=>m.user_id===user.id);return{room:{...r,state:r.state?publicState(r.state,me&&me.color):r.state},members:ms}}
+async function enforceTimer(r){if(!r||r.status!=='playing'||!r.state||!isTimedOut(r.state))return r;const state=applyTimeout(r.state),version=(r.version||0)+1,status=state.game.winner?'finished':'playing';const out=await db('online_rooms?id=eq.'+enc(r.id)+'&version=eq.'+enc(r.version),{method:'PATCH',body:{state,version,status,updated_at:new Date().toISOString()}});return out&&out[0]||await roomById(r.id)}
+async function payload(r,user){if(!r)return{room:null,members:[]};r=await enforceTimer(r);const ms=await memberList(r.id);if(!ms.some(m=>m.user_id===user.id))throw Object.assign(new Error('You are not in this room'),{status:403});const me=ms.find(m=>m.user_id===user.id);return{room:{...r,state:r.state?publicState(r.state,me&&me.color):r.state},members:ms}}
 export default async function handler(req,res){try{const user=await requireUser(req);if(req.method==='GET'){if(req.query.mine==='1'){const ms=await db('online_members?user_id=eq.'+enc(user.id)+'&select=room_id,joined_at&order=joined_at.desc&limit=8')||[];for(const m of ms){const r=await roomById(m.room_id);if(r&&r.status!=='finished')return send(res,200,await payload(r,user))}return send(res,200,{room:null,members:[]})}const c=String(req.query.code||'').toUpperCase();const r=await roomByCode(c);if(!r)return send(res,404,{error:'Room not found'});return send(res,200,await payload(r,user))}
  if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});requireSameOrigin(req);const body=req.body||{},action=body.action;
  if(action==='create'){const p=await profile(user),max=[2,3,4].includes(+body.players)?+body.players:2,variant=['classic','color-cards'].includes(body.variant)?body.variant:'classic';let r=null;for(let i=0;i<6&&!r;i++){try{const out=await db('online_rooms',{method:'POST',body:{code:code(),host_id:user.id,status:'waiting',max_players:max,variant,state:null,version:0}});r=out&&out[0]}catch(e){if(e.status!==409)throw e}}if(!r)throw new Error('Could not create room');await db('online_members',{method:'POST',body:{room_id:r.id,user_id:user.id,seat:0,color:'red',ready:true,username:p.username,display_name:p.display_name}});return send(res,200,await payload(r,user))}
