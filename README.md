@@ -118,3 +118,27 @@ Environment:
 Apply `supabase/migrations/20261001_realtime_online_v48.sql` after the existing online migrations. Supabase Realtime must be enabled for the project. The application sends Broadcast messages through the server; it does not expose database rows through Postgres Changes.
 
 Hosting must support the existing Node 22 server API and outbound HTTPS to Supabase. The persistent socket is between each browser and Supabase Realtime, so the web host itself does not need to hold WebSocket connections open.
+
+
+## Persistent accounts, friends, invitations and verified history (v49)
+
+Guest/offline play remains available without an account. Online identity uses the existing server-side DaniLabs account/session system: password hashes and recovery hashes stay in server-only tables and are never returned by public APIs. New accounts receive a stable public `DL-…` player ID.
+
+Profiles:
+- Authenticated players may edit only their own display name and supplied avatar choice.
+- The local guest profile stays separate. The Profile screen offers an explicit “Use my guest profile” migration; signup/login never silently overwrites account profile data.
+- Verified online statistics are computed only from authoritative recorded online results. Local/offline results remain separate.
+
+Social:
+- Friends are found by public player ID, not private account identifiers.
+- Requests support send, accept, decline and cancel; accepted friends can be removed.
+- Blocking removes an existing relationship and prevents new friend requests and room invitations in either direction.
+- Invitations are server validated on send and accept, expire, and re-check room status/capacity and block state before membership is created.
+- Presence shown in live rooms comes from the realtime connection/presence heartbeat; history/friends pages do not invent activity.
+
+History:
+- Completed authoritative online matches are inserted into `online_match_results` with a unique `room_id`, preventing duplicate result records.
+- Participant snapshots, winner and Color Cards scores are stored separately and exposed only to authenticated participants through `/api/online/history`.
+- Supported result statuses are completed, abandoned and forfeited. This phase records normal completed matches; abandoned/forfeited policy is reserved for a later explicit match-abandonment feature.
+
+Apply `supabase/migrations/20261001_accounts_social_history_v49.sql` after v48. No additional secrets are required beyond the documented v48 environment variables.
