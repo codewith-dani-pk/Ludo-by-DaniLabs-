@@ -55,3 +55,9 @@ begin
  if not found then raise exception 'mission already claimed';end if;
  select public.reward_credit(p_user,'mission:'||p_user||':'||p_mission||':'||p_period,p_coins,'mission',p_mission) into b;return b;
 end $$;
+
+revoke execute on function public.reward_credit(text,text,integer,text,text) from public,anon,authenticated;
+revoke execute on function public.claim_daily_reward(text,date,smallint,integer) from public,anon,authenticated;
+revoke execute on function public.purchase_cosmetic(text,text,integer) from public,anon,authenticated;
+revoke execute on function public.claim_mission_reward(text,text,text,integer,integer) from public,anon,authenticated;
+grant execute on function public.reward_credit(text,text,integer,text,text),public.claim_daily_reward(text,date,smallint,integer),public.purchase_cosmetic(text,text,integer),public.claim_mission_reward(text,text,text,integer,integer) to service_role;
