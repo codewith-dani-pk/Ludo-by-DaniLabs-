@@ -3,10 +3,10 @@
 const COLORS=['red','green','yellow','blue'];
 const START={red:0,green:13,yellow:26,blue:39};
 const SAFE=[0,8,13,21,26,34,39,47];
-const HOME_ENTRY={red:50,green:11,yellow:24,blue:37};
+const HOME_ENTRY={red:51,green:12,yellow:25,blue:38};
 const TRACK=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
 const HOME={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,13],[7,12],[7,11],[7,10],[7,9]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
-const OUTER_LAST=50,HOME_FIRST=51,HOME_LAST=55,FINISH=56;
+const OUTER_LAST=51,HOME_FIRST=52,HOME_LAST=56,FINISH=57;
 const colorsFor=n=>n===2?['red','yellow']:n===3?['red','green','yellow']:COLORS.slice();
 const clone=x=>JSON.parse(JSON.stringify(x));
 function pawn(owner,index){return{id:owner+'-'+(index+1),owner,state:'yard',progress:-1}}
@@ -24,7 +24,7 @@ function roll(g,value){if(g.winner)throw Error('Match is finished');if(g.paused)
 function move(g,pawnId){if(g.winner)throw Error('Match is finished');if(g.paused)throw Error('Match is paused');if(g.phase!=='move'||!g.roll)throw Error('Roll before moving');const pl=current(g),p=pl.pawns.find(x=>x.id===pawnId);if(!p)throw Error('Select one of your pawns');if(!legalMoves(g).includes(pawnId))throw Error('That pawn has no legal move');const r=g.roll,d=destination(p,r),from=p.progress;p.progress=d;syncPawn(p);const captured=capturesAt(g,pl,d);captured.forEach(x=>{x.progress=-1;syncPawn(x)});const finished=d===FINISH;if(pl.pawns.every(x=>x.state==='finished'))g.winner=pl.id;g.history.push({type:'move',player:pl.id,pawn:p.id,from,to:d,roll:r,captured:captured.map(x=>x.id),finished});g.roll=null;if(g.winner){g.phase='over';syncCompat(g);return{event:'win',winner:g.winner,bonus:false,captured:captured.map(x=>x.id),finished}}const bonus=r===6||captured.length>0||finished;if(bonus)g.phase='roll';else endTurn(g);syncCompat(g);return{event:'moved',bonus,captured:captured.map(x=>x.id),finished}}
 function apply(state,action){const g=clone(state);if(action.type==='roll')roll(g,action.value);else if(action.type==='move')move(g,action.pawnId);else if(action.type==='pause')g.paused=!!action.value;else throw Error('Unknown Ludo action');return g}
 function view(g){return clone(g)}
-function route(color){return Array.from({length:57},(_,progress)=>({progress,state:progress<=50?'track':progress<=55?'home':'finished',coord:coord(color,progress)}))}
+function route(color){return Array.from({length:58},(_,progress)=>({progress,state:progress<=51?'track':progress<=56?'home':'finished',coord:coord(color,progress)}))}
 function coord(color,progress){if(progress<0||progress>FINISH)return null;if(progress<=OUTER_LAST)return TRACK[(START[color]+progress)%52];if(progress<=HOME_LAST)return HOME[color][progress-HOME_FIRST];return[7,7]}
 function validate(g){if(!g||g.kind!=='ludo'||![2,3,4].includes(g.players?.length))throw Error('Invalid Ludo state');for(const pl of g.players){if(!COLORS.includes(pl.color)||pl.pawns?.length!==4)throw Error('Invalid Ludo player');for(const p of pl.pawns){if(!Number.isInteger(p.progress)||p.progress < -1||p.progress>FINISH)throw Error('Invalid pawn progress');syncPawn(p)}}return syncCompat(g)}
 root.LudoRules=Object.freeze({COLORS,START,SAFE,HOME_ENTRY,TRACK,HOME,OUTER_LAST,HOME_FIRST,HOME_LAST,FINISH,colorsFor,newGame,current,globalCell,destination,noMoveReason,legalMoves,capturesAt,roll,move,apply,view,coord,route,validate,syncPawn,syncCompat});
