@@ -1,0 +1,13 @@
+/* Final shared polish layer for LudoByDaniLabs */
+:root{--ui-scale:1}
+html[data-text-size=small]{--ui-scale:.92}html[data-text-size=large]{--ui-scale:1.12}body{font-size:calc(16px * var(--ui-scale))}
+html.high-contrast{filter:contrast(1.18)}html.high-contrast .hint,html.high-contrast small{color:#fff!important}
+html[data-graphics=low] .royal-stage,html[data-graphics=low] .royal-panel{box-shadow:none!important;backdrop-filter:none!important}html[data-graphics=low] .royal-stage::before{display:none}
+.royal-wallet{display:flex;gap:7px;font-size:.78rem}.royal-wallet span{padding:6px 8px;border-radius:999px;background:#081633cc;border:1px solid #ffd24a66}
+.network-state{position:fixed;z-index:1000;left:50%;top:max(5px,env(safe-area-inset-top));transform:translateX(-50%);padding:5px 11px;border-radius:999px;background:#10254cdd;color:#fff;font-size:.72rem;pointer-events:none;opacity:0;transition:opacity .2s}.network-state.on{opacity:1}.network-state.offline{background:#6c2d35}
+.future-grid button:disabled,.reward-grid button:disabled{opacity:.7}.future-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.reward-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.reward-grid button{min-width:0;border:1px solid #ffffff24;background:#111f49;color:#fff;border-radius:18px;padding:12px 6px}.reward-grid .ludo-icon{--icon-size:48px}.reward-grid b,.reward-grid small{display:block}.reward-grid small{color:#f4d879;margin-top:4px}.demo-banner{margin-top:12px}
+.settings-group input[type=range]{width:100%;accent-color:#ffd24a}.settings-group>label{display:grid;gap:6px;margin:10px 0}
+.ucard.ok{outline:3px solid #fff;box-shadow:0 0 0 5px #ffd24a88}.ucard.no{opacity:.72}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:560px){.reward-grid{grid-template-columns:repeat(2,1fr)}.royal-wallet{display:none}.future-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}

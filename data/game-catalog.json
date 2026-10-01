@@ -1,0 +1,16 @@
+{
+  "brand":"LudoByDaniLabs",
+  "note":"Runtime catalog. Availability reflects implemented and tested gameplay only.",
+  "games":[
+    {"id":"ludo","title":"Classic Ludo","art":"classic","status":"available","modes":[
+      {"id":"classic","title":"Classic","art":"classic","status":"available"},
+      {"id":"quick","title":"Quick Match","art":"quick","status":"disabled"},
+      {"id":"team","title":"Team Up","art":"team","status":"disabled"},
+      {"id":"private","title":"Private Room","art":"private","status":"available"}
+    ]},
+    {"id":"color-cards","title":"Color Cards","art":"cards","status":"available","modes":["local","computer","private-online"]},
+    {"id":"carrom","title":"Carrom","art":"carrom","status":"coming_soon","releaseAt":null},
+    {"id":"chess","title":"Chess","art":"chess","status":"coming_soon","releaseAt":null},
+    {"id":"snakes-ladders","title":"Snakes & Ladders","art":"snakes-ladders","status":"coming_soon","releaseAt":null}
+  ]
+}

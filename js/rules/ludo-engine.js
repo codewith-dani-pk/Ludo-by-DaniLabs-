@@ -1,0 +1,31 @@
+(function(root){
+'use strict';
+const COLORS=['red','green','yellow','blue'];
+const START={red:0,green:13,yellow:26,blue:39};
+const SAFE=[0,8,13,21,26,34,39,47];
+const HOME_ENTRY={red:51,green:12,yellow:25,blue:38};
+const TRACK=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
+const HOME={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,13],[7,12],[7,11],[7,10],[7,9]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
+const OUTER_LAST=51,HOME_FIRST=52,HOME_LAST=56,FINISH=57;
+const colorsFor=n=>n===2?['red','yellow']:n===3?['red','green','yellow']:COLORS.slice();
+const clone=x=>JSON.parse(JSON.stringify(x));
+function pawn(owner,index){return{id:owner+'-'+(index+1),owner,state:'yard',progress:-1}}
+function syncPawn(p){p.state=p.progress<0?'yard':p.progress<=OUTER_LAST?'track':p.progress<=HOME_LAST?'home':p.progress===FINISH?'finished':'yard';return p}
+function syncCompat(g){g.cols=g.colors.slice();g.pos=Object.fromEntries(COLORS.map(c=>[c,(g.players.find(p=>p.color===c)?.pawns||[0,1,2,3].map(k=>pawn(c,k))).map(p=>p.progress)]));g.sixes=g.consecutiveSixes;g.ranks=g.winner?[g.players.find(p=>p.id===g.winner)?.color||g.winner]:[];g.bots=g.players.filter(p=>p.type==='bot').map(p=>p.color);g.variant='classic';g.over=!!g.winner;return g}
+function newGame(n=2,players=[]){if(![2,3,4].includes(n))throw Error('Ludo supports 2-4 players');const colors=colorsFor(n);return syncCompat({kind:'ludo',rulesVersion:2,colors,players:colors.map((color,i)=>({id:players[i]?.id||color,name:players[i]?.name||color,color,type:players[i]?.type||'human',pawns:[0,1,2,3].map(k=>pawn(color,k))})),turn:0,phase:'roll',roll:null,consecutiveSixes:0,winner:null,history:[],paused:false})}
+const current=g=>g.players[g.turn];
+const globalCell=(color,progress)=>progress>=0&&progress<=OUTER_LAST?(START[color]+progress)%52:null;
+function destination(p,roll){if(!p||p.state==='finished')return null;if(p.state==='yard')return roll===6?0:null;const d=p.progress+roll;return d<=FINISH?d:null}
+function noMoveReason(g,roll){const ps=current(g).pawns;if(ps.every(p=>p.state==='yard')&&roll!==6)return 'A 6 is required to leave the yard';if(ps.some(p=>p.state!=='yard'&&p.state!=='finished'&&p.progress+roll>FINISH))return 'An exact roll is required to finish';return 'No pawn can use this roll'}
+function legalMoves(g,roll=g.roll){if(!roll||g.winner||g.paused)return[];return current(g).pawns.filter(p=>destination(p,roll)!==null).map(p=>p.id)}
+function capturesAt(g,mover,dest){const cell=globalCell(mover.color,dest);if(cell==null||SAFE.includes(cell))return[];const out=[];for(const pl of g.players)if(pl.color!==mover.color)for(const p of pl.pawns)if(globalCell(pl.color,p.progress)===cell)out.push(p);return out}
+function endTurn(g){g.roll=null;g.consecutiveSixes=0;g.turn=(g.turn+1)%g.players.length;g.phase='roll'}
+function roll(g,value){if(g.winner)throw Error('Match is finished');if(g.paused)throw Error('Match is paused');if(g.phase!=='roll'||g.roll!=null)throw Error('You cannot roll now');if(!Number.isInteger(value)||value<1||value>6)throw Error('Invalid dice result');g.roll=value;g.consecutiveSixes=value===6?g.consecutiveSixes+1:0;g.history.push({type:'roll',player:current(g).id,value});if(g.consecutiveSixes===3){g.history.push({type:'turn-end',reason:'third-six'});endTurn(g);syncCompat(g);return{event:'third-six',legal:[]}}const legal=legalMoves(g,value);if(!legal.length){const reason=noMoveReason(g,value);g.history.push({type:'no-move',player:current(g).id,value,reason});if(value===6){g.roll=null;g.phase='roll'}else endTurn(g);syncCompat(g);return{event:'no-move',legal:[],reason}}g.phase='move';syncCompat(g);return{event:'rolled',legal}}
+function move(g,pawnId){if(g.winner)throw Error('Match is finished');if(g.paused)throw Error('Match is paused');if(g.phase!=='move'||!g.roll)throw Error('Roll before moving');const pl=current(g),p=pl.pawns.find(x=>x.id===pawnId);if(!p)throw Error('Select one of your pawns');if(!legalMoves(g).includes(pawnId))throw Error('That pawn has no legal move');const r=g.roll,d=destination(p,r),from=p.progress;p.progress=d;syncPawn(p);const captured=capturesAt(g,pl,d);captured.forEach(x=>{x.progress=-1;syncPawn(x)});const finished=d===FINISH;if(pl.pawns.every(x=>x.state==='finished'))g.winner=pl.id;g.history.push({type:'move',player:pl.id,pawn:p.id,from,to:d,roll:r,captured:captured.map(x=>x.id),finished});g.roll=null;if(g.winner){g.phase='over';syncCompat(g);return{event:'win',winner:g.winner,bonus:false,captured:captured.map(x=>x.id),finished}}const bonus=r===6||captured.length>0||finished;if(bonus)g.phase='roll';else endTurn(g);syncCompat(g);return{event:'moved',bonus,captured:captured.map(x=>x.id),finished}}
+function apply(state,action){const g=clone(state);if(action.type==='roll')roll(g,action.value);else if(action.type==='move')move(g,action.pawnId);else if(action.type==='pause')g.paused=!!action.value;else throw Error('Unknown Ludo action');return g}
+function view(g){return clone(g)}
+function route(color){return Array.from({length:58},(_,progress)=>({progress,state:progress<=51?'track':progress<=56?'home':'finished',coord:coord(color,progress)}))}
+function coord(color,progress){if(progress<0||progress>FINISH)return null;if(progress<=OUTER_LAST)return TRACK[(START[color]+progress)%52];if(progress<=HOME_LAST)return HOME[color][progress-HOME_FIRST];return[7,7]}
+function validate(g){if(!g||g.kind!=='ludo'||![2,3,4].includes(g.players?.length))throw Error('Invalid Ludo state');for(const pl of g.players){if(!COLORS.includes(pl.color)||pl.pawns?.length!==4)throw Error('Invalid Ludo player');for(const p of pl.pawns){if(!Number.isInteger(p.progress)||p.progress < -1||p.progress>FINISH)throw Error('Invalid pawn progress');syncPawn(p)}}return syncCompat(g)}
+root.LudoRules=Object.freeze({COLORS,START,SAFE,HOME_ENTRY,TRACK,HOME,OUTER_LAST,HOME_FIRST,HOME_LAST,FINISH,colorsFor,newGame,current,globalCell,destination,noMoveReason,legalMoves,capturesAt,roll,move,apply,view,coord,route,validate,syncPawn,syncCompat});
+})(globalThis);

@@ -1,54 +1,59 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ludo by DaniLabs</title><meta name="theme-color" content="#1b1140">
+<title>LudoByDaniLabs — Ludo + Color Cards</title><meta name="theme-color" content="#1b1140">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="google-site-verification" content="dfl1sF2t12eNp_HY1hmmsu75NjE-HGMjLW-IT0lKFt4" />
-<meta name="description" content="Play Ludo locally or online with friends, by DaniLabs.">
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"></head><body>
-<main id="home" class="screen on home-screen">
- <div class="home-shell">
-  <header class="home-top">
-   <button class="brand-badge" id="logo" aria-label="DaniLabs home"><img src="assets/icons/icon.svg" alt=""></button>
-   <button class="home-profile" id="bProf" aria-label="Edit profile"><span class="avatar" id="avatar">🦊</span><span><b id="pName">Guest player</b><small><i></i> OFFLINE</small></span></button>
-   <span class="coin-pill" aria-label="Coins"><span class="coin">◎</span><b id="coins">0</b></span>
-   <button class="btn sm home-gear" id="bSet" aria-label="Settings">⚙</button>
+<meta name="description" content="LudoByDaniLabs — play Classic Ludo and Color Cards locally or in private online rooms.">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"><link rel="stylesheet" href="css/polish.css"></head><body>
+<div id="networkState" class="network-state" role="status" aria-live="polite"></div><main id="home" class="screen on home-screen royal-home">
+ <div class="royal-stage">
+  <header class="royal-topbar">
+   <button class="royal-profile" id="bProf" aria-label="Edit local profile"><span class="ludo-icon icon-avatar-1 royal-avatar" id="avatar"></span><span><b id="pName">Guest player</b><small><i></i> LV. 1 · LOCAL PROFILE</small></span></button><div class="royal-wallet" aria-label="Demo currency"><span>🪙 <b>0</b></span><span>💎 <b>0</b></span></div>
+   <div class="royal-top-actions"><button class="round-royal" id="bNotify" aria-label="Notifications"><span class="ludo-icon icon-bell"></span></button><button class="round-royal" id="bOnlineTop" aria-label="Online rooms"><span class="ludo-icon icon-globe"></span></button><button class="round-royal" id="bSet" aria-label="Settings"><span class="ludo-icon icon-settings"></span></button></div>
   </header>
-  <section class="hero3" id="logo3" aria-label="Ludo by DaniLabs">
-   <h1 class="wordmark"><i style="--c:#e63946">L</i><i style="--c:#2a9d5c">U</i><i style="--c:#f4b400">D</i><i style="--c:#2f6fed">O</i></h1>
-   <p class="by">by <b>DaniLabs</b></p><span class="hero-die" aria-hidden="true">⚄</span>
+
+  <section class="royal-hero" aria-label="Ludo Royale by DaniLabs">
+   <img class="royal-logo" src="assets/royale/logo.webp" alt="LudoByDaniLabs">
+   <img class="royal-board" src="assets/royale/hero-board.webp" alt="Ludo board with pawns and dice">
+   <p>LUDO + COLOR CARDS · OFFLINE + ONLINE</p>
   </section>
-  <button class="daily" id="bDaily"><span>🎁</span><b id="dailyT">Daily reward</b><small id="dailyS"></small></button>
-  <section class="home-section"><h2 class="sec">Local play</h2>
-   <div class="lp-grid">
-    <button class="lp c2" data-play="2"><b>2</b><span>Players</span></button>
-    <button class="lp c3" data-play="3"><b>3</b><span>Players</span></button>
-    <button class="lp c4" data-play="4"><b>4</b><span>Players</span></button>
-    <div class="lp cpu"><span>Vs Computer</span><div><button data-bot="2">1 bot</button><button data-bot="3">2 bots</button><button data-bot="4">3 bots</button></div></div>
-   </div>
-   <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+
+  <button class="royal-play" id="bSetup"><span class="ludo-icon icon-play"></span><b>PLAY CLASSIC LUDO</b></button>
+
+  <section class="royal-actions" aria-label="Play options">
+   <button class="royal-action quick" data-dev="Quick Match" disabled><span class="ludo-icon icon-quick-match"></span><b>Quick Match</b><small>In development</small></button>
+   <button class="royal-action online" id="bOnline"><span class="ludo-icon icon-globe"></span><b>Play Online</b><small>Ludo + Color Cards</small></button>
+   <button class="royal-action friends" data-dev="Team Up" disabled><span class="ludo-icon icon-friends"></span><b>Team Up</b><small>In development</small></button>
+   <button class="royal-action private" id="bPrivateRoom"><span class="ludo-icon icon-private-room"></span><b>Private Room</b><small>Create or join</small></button>
   </section>
-  <section class="home-section"><h2 class="sec">Game modes</h2>
-   <div class="mode-grid" id="modes">
-    <button data-mode="classic" class="on"><b>Classic</b><small>4 tokens</small></button>
-    <button data-mode="quick"><b>Quick</b><small>2 tokens</small></button>
-    <button data-mode="rush"><b>Rush</b><small>Start on track</small></button>
-    <button data-mode="party"><b>Party</b><small>Stars, cards, events</small></button>
-    <button id="bCards" class="cc"><b>Color Cards</b><small>Card game ›</small></button>
-   </div>
-   <select id="sVar" hidden><option value="classic">c</option><option value="quick">q</option><option value="rush">r</option></select><input type="checkbox" id="sBots" hidden>
-  </section>
-  <section class="soon-row"><button id="bOnline" class="online-ready">🌐 Online <small>Play</small></button><button id="bFriends">♙ Friends <small>Online</small></button><button data-coming="Events">▣ Events <small>Soon</small></button></section>
-  <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
+
+  <button class="royal-banner" id="bOnlineBanner"><span><b>PRIVATE ONLINE ROOMS</b><small>Invite people to Ludo or Color Cards</small></span><i class="ludo-icon icon-arrow-right"></i></button>
  </div>
- <nav class="bottom-nav" aria-label="Home navigation">
-  <button class="nav-item active" aria-current="page"><span>⌂</span><small>Home</small></button>
-  <button class="nav-item" id="nDaily"><span>🎁</span><small>Rewards</small></button>
-  <button class="nav-item" id="nColl"><span>✦</span><small>Collection</small></button>
-  <button class="nav-item" id="nFriends"><span>♙</span><small>Friends</small></button>
-  <button class="nav-item" data-coming="Store"><span>◇</span><small>Store</small></button>
- </nav>
+
+ <section class="royal-panel" id="localPanel">
+  <div class="panel-title"><span class="ludo-icon icon-crown"></span><span><b>Ludo</b><small>Choose your ruleset</small></span></div>
+  <div class="mode-grid" id="modes"><button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic Ludo</b><small>Official DaniLabs ruleset · 4 pawns</small></button></div>
+<select id="sVar" hidden><option value="classic">Classic</option></select><input type="checkbox" id="sBots" hidden>
+  <label class="settings-select">Computer seats<select id="ludoBotCount"><option value="0">All local humans</option><option value="1">1 computer</option><option value="2">2 computers</option><option value="3">3 computers</option></select></label><div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button><button data-mixed="3"><b>3</b><small>2 people + CPU</small></button><button data-mixed="4"><b>4</b><small>2 people + 2 CPU</small></button></div>
+  <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+ </section>
+
+ <section class="royal-panel color-cards-panel">
+  <button id="bCards" class="color-cards-royal"><span class="game-art art-cards"></span><span><b>Color Cards</b><small>2–4 players · offline or private online rooms</small></span><i class="ludo-icon icon-arrow-right"></i></button>
+ </section>
+
+ <section class="royal-panel"><div class="panel-title"><span class="ludo-icon icon-season-medal"></span><span><b>New modes & events</b><small>Only tested modes are playable</small></span></div><div class="mode-grid future-grid"><button disabled><span class="game-art art-quick"></span><b>Quick Match</b><small>In development</small></button><button disabled><span class="game-art art-team"></span><b>Team Up</b><small>In development</small></button><button disabled><span class="game-art art-new-mode"></span><b>Events</b><small>Coming Soon</small></button></div></section>
+ <section class="royal-panel"><div class="panel-title"><span class="ludo-icon icon-trophy"></span><span><b>Games</b><small>Built from the central catalog</small></span></div><div class="mode-grid future-grid"><button id="bCardsCatalog" data-catalog="color-cards"><span class="game-art art-cards"></span><b>Color Cards</b><small>Available</small></button><button disabled data-catalog="carrom"><span class="game-art art-carrom"></span><b>Carrom</b><small>Coming Soon</small></button><button disabled data-catalog="chess"><span class="game-art art-chess"></span><b>Chess</b><small>Coming Soon</small></button><button disabled data-catalog="snakes-ladders"><span class="game-art art-snakes-ladders"></span><b>Snakes &amp; Ladders</b><small>Coming Soon</small></button></div></section>
+ <section class="royal-panel"><div class="panel-title"><span class="ludo-icon icon-gift-blue"></span><span><b>Rewards & shop</b><small>Preview only · no purchases or redeemable currency</small></span></div><div class="reward-grid"><button data-demo="Daily Rewards"><span class="ludo-icon icon-daily-rewards"></span><b>Daily Rewards</b><small>Demo</small></button><button data-demo="Missions"><span class="ludo-icon icon-mission"></span><b>Missions</b><small>Demo</small></button><button data-demo="Lucky Spin"><span class="ludo-icon icon-wheel"></span><b>Lucky Spin</b><small>Preview only</small></button><button data-demo="Shop"><span class="ludo-icon icon-shop"></span><b>Shop</b><small>Demo · no purchases</small></button></div><button class="royal-banner demo-banner" data-demo="Tournament"><span><b>TOURNAMENTS</b><small>Preview · competitive events are not live</small></span><i class="ludo-icon icon-arrow-right"></i></button></section>
+ <section class="royal-panel royal-friends">
+  <div class="panel-title"><span class="ludo-icon icon-friends"></span><span><b>Friends & private rooms</b><small>Open the online lobby to invite or join</small></span></div>
+  <div class="avatar-row" aria-hidden="true"><span class="ludo-icon icon-avatar-1"></span><span class="ludo-icon icon-avatar-2"></span><span class="ludo-icon icon-avatar-3"></span><span class="ludo-icon icon-avatar-4"></span><span class="ludo-icon icon-avatar-5"></span></div>
+ </section>
+
+ <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
+ <nav class="royal-nav" aria-label="Main navigation"><button class="active" aria-current="page"><span class="ludo-icon icon-home"></span><small>Home</small></button><button id="nGames"><span class="ludo-icon icon-crown"></span><small>Games</small></button><button id="nFriends"><span class="ludo-icon icon-social"></span><small>Friends</small></button><button id="nRewards"><span class="ludo-icon icon-rewards"></span><small>Rewards</small></button><button id="nProfile"><span class="ludo-icon icon-profile"></span><small>Profile</small></button></nav>
 </main>
 <main id="game" class="screen game-room">
- <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bUndo" aria-label="Undo last move" hidden>↶</button><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
+ <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
  <div class="game-room-meta"><span>OFFLINE MATCH</span><b id="roomMode">CLASSIC</b><div class="turn-order" id="turnOrder" aria-label="Turn order"></div><i>LOCAL</i></div>
  <div id="bar" aria-hidden="true"></div>
  <section class="game-stage" aria-label="Ludo table">
@@ -69,42 +74,34 @@
  </section>
 </main>
 <main id="cgHome" class="screen">
- <div class="logo" style="cursor:default"><b>CARDS</b><small>by DaniLabs</small></div>
+ <div class="logo" style="cursor:default"><b>Color Cards</b><small>by DaniLabs</small></div>
  <div class="menu">
-  <p class="lbl">Match color or number. First to empty their hand wins.</p>
+  <p class="lbl">Match color or number. Draw one when you cannot play. First to empty their hand wins.</p>
   <div class="row3"><button class="btn big" data-cn="2">2 Players</button><button class="btn big" data-cn="3">3 Players</button><button class="btn big" data-cn="4">4 Players</button></div>
-  <label class="sw bots"><span>Play against the computer<small>You are Red; otherwise pass the device</small></span><input type="checkbox" id="cgBots"></label>
-  <label class="sw">Stack +2 / +4 cards <input type="checkbox" id="cgStack"></label>
-  <label class="sw">7 swaps hands, 0 passes hands <input type="checkbox" id="cgSwap"></label>
-  <label class="sw">Draw until you can play <input type="checkbox" id="cgDp"></label>
-  <p class="hint">Special cards: ⊘ skips the next player, ⇄ reverses direction, +2 makes the next player draw two, ★ picks a color, +4 picks a color and makes the next player draw four.</p>
-  <button class="btn ghost" id="cgBack">Back</button><p id="cgStats" class="hint" style="text-align:center"></p>
+  <label class="sw bots"><span>Play against the computer<small>Otherwise use pass-and-play</small></span><input type="checkbox" id="cgBots"></label>
+<label class="settings-select">Match format<select id="cgMode"><option value="round">Single round</option><option value="500">Points match to 500</option></select></label><label class="settings-select">Computer difficulty<select id="cgDifficulty"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label><label class="settings-select">Sort hand<select id="cgSort"><option value="color">Color</option><option value="value">Value</option></select></label>
+  <p class="hint">Core Color Cards rules: ⊘ skips, ⇄ reverses, +2 draws two, ★ changes color, and +4 changes color and draws four. Draw cards do not stack.</p>
+  <button class="btn" id="cgContinue" hidden>Continue saved Color Cards match</button><button class="btn ghost" id="cgBack">Back</button><p id="cgStats" class="hint" style="text-align:center"></p>
  </div>
 </main>
 <main id="cg" class="screen">
- <header><button class="btn sm" id="cgMenu" aria-label="Menu">☰</button><div class="logo mini"><b>CARDS</b><small>by DaniLabs</small></div><span style="width:44px"></span></header>
+ <header><button class="btn sm" id="cgMenu" aria-label="Menu">☰</button><div class="logo mini"><b>Color Cards</b><small>by DaniLabs</small></div><span style="width:44px"></span></header>
  <div id="cgOpp"></div>
- <div id="cgTable"><button class="btn ucard back" id="cgDraw">Draw</button><button class="ucard" id="cgTop" tabindex="-1"></button><div id="cgCol"></div></div>
- <div id="cgMsg" aria-live="polite"></div>
+ <div id="cgTable"><button class="btn ucard back" id="cgDraw">Draw</button><button class="ucard" id="cgTop" tabindex="-1"></button><div id="cgCol"></div></div><div class="row cg-actions"><button class="btn sm" id="cgUno">UNO!</button><button class="btn sm ghost" id="cgCatch">Catch</button></div>
+ <div id="cgMsg" aria-live="polite"></div><div id="cgHistory" class="cc-history" aria-label="Recent moves"></div>
  <div id="cgHand"></div>
 </main>
 <div class="modal" id="mCg"><div class="box" id="mCgBody"></div></div>
 <div id="confetti" aria-hidden="true"></div><div id="toast" role="status" aria-live="polite"></div>
-<div class="modal" id="mRules"><div class="box"><h2>How to play</h2>
-<p>Roll a 6 to bring a token out. Move tokens clockwise around the board and up your home column. You need the exact roll to reach the center.</p>
-<p>Land on an opponent (not on a ★ safe cell) to send them home. Two of your tokens on one cell are a block and cannot be captured (you can turn this off in Settings). A 6, a capture, or reaching the center gives another turn. Three 6s in a row lose the turn.</p>
-<p>Glowing tokens with a ▲ can move. Tap one to move it. First to finish all four tokens wins.</p><p>Ludo styles: Classic, Quick (2 tokens each) and Rush (all tokens start on the track). There is also a separate card game on the home screen.</p><p>Optional party modes (Settings, Game options) add wild star dice, power cards, party events and helper re-rolls. Every active mode is announced when a game starts.</p><button class="btn" data-close>Close</button></div></div>
+<div class="modal" id="mRules"><div class="box"><h2>Classic Ludo rules</h2><p>All four pawns start in the yard. Roll 6 to enter a pawn on your colored start square, or move a pawn already in play by six. Entering consumes the roll.</p><p>Move around the 52-square outer track, then through your five-square home lane. An exact roll is required to finish. The eight ★ squares are safe: track positions 0, 8, 13, 21, 26, 34, 39 and 47. Pawns cannot be captured there.</p><p>Friendly pawns may share and pass through a square; they never form a blockade. A 6, capture, or finish gives one extra roll. A third consecutive 6 is cancelled and ends the turn. First player to finish all four pawns wins. Friendly pawns may share and pass through one another; they do not form blockades.</p><hr><h2>Color Cards rules</h2><p>The 108-card deck has red, yellow, green and blue number/action cards plus Wild and Wild Draw Four. Seven cards are dealt each. Setup always chooses a numeric opening discard; rejected action/Wild cards are returned and reshuffled.</p><p>Match color, number or action, or play a Wild. Draw exactly one card; only that newly drawn card may then be played. Draw Two and Wild Draw Four never stack. Wild Draw Four may be challenged and is legal only when the player held no card matching the active color.</p><p>With one card left, press UNO! when playing. If it was not declared, an opponent may Catch before the next player begins an action; a valid catch draws two. Single-round and 500-point matches are supported.</p><p>Offline play works after the app has been loaded and cached successfully once; the first visit requires an internet connection. Online turns use a 45-second server timer and a 60-second reconnection grace period. A disconnected online match is never converted into an offline match.</p><p><b>Offline:</b> the first visit needs an internet connection so the service worker can cache the app and local assets. After that successful load, offline Ludo and Color Cards can run without a network.</p><button class="btn" data-close>Close</button></div></div>
 <div class="modal" id="mProfile"><div class="box profile-box"><span class="eyebrow">DANILABS PLAYER</span><h2>Edit profile</h2><div class="profile-preview"><span class="avatar" id="profPreview">🦊</span><div><b id="profPreviewName">Guest player</b><small>Saved on this device</small></div></div><label>Player name<input id="profName" maxlength="12" autocomplete="nickname" placeholder="Player name"></label><div class="avatar-grid" id="profAvatars" aria-label="Choose avatar"></div><div class="row"><button class="btn" id="bProfSave">Save profile</button><button class="btn ghost" data-close>Cancel</button></div></div></div>
-<div class="modal" id="mSet"><div class="box settings-box"><div class="settings-head"><div><span class="eyebrow">QUICK SETTINGS</span><h2>Settings</h2></div><button class="btn sm" data-close aria-label="Close settings">✕</button></div>
-<section class="settings-group"><h3>Sound & feel</h3><div class="settings-grid"><label class="sw">Sound <input type="checkbox" id="sSound"></label><label class="sw">Music <input type="checkbox" id="sMusic"></label><label class="sw">Game vibration <input type="checkbox" id="sVib"></label></div></section>
-<section class="settings-group"><h3>Dice controls</h3><label class="sw">Shake to roll <input type="checkbox" id="sShake"></label><p class="hint" id="shakeHint">Uses your device motion sensor only while a match is open.</p><label class="settings-select">Dice animation<select id="sDiceAnim"><option value="instant">Instant</option><option value="fast">Fast</option><option value="normal">Normal</option><option value="relaxed">Relaxed</option></select></label></section>
-<div class="settings-actions"><button class="btn ghost" id="bHost">Game rules & options</button><button class="btn ghost danger-lite" id="bRestart" hidden>Restart current match</button></div>
-<p class="settings-note">Gameplay rules are kept in Game rules & options so they are not duplicated here.</p></div></div>
+<div class="modal" id="mSet"><div class="box settings-box"><div class="settings-head"><div><span class="eyebrow">LUDOBYDANILABS</span><h2>Settings</h2></div><button class="btn sm" data-close aria-label="Close settings">✕</button></div>
+<section class="settings-group"><h3>Audio</h3><label>Music volume <input id="sMusicVol" type="range" min="0" max="100" step="5"></label><label>Sound-effects volume <input id="sFxVol" type="range" min="0" max="100" step="5"></label><label class="sw">Mute all audio <input type="checkbox" id="sMute"></label></section>
+<section class="settings-group"><h3>Motion & graphics</h3><label class="settings-select">Animation level<select id="sAnimation"><option value="off">Off</option><option value="reduced">Reduced</option><option value="full">Full</option></select></label><label class="sw">Reduced motion <input type="checkbox" id="sReduced"></label><label class="settings-select">Graphics quality<select id="sGraphics"><option value="low">Low</option><option value="balanced">Balanced</option><option value="high">High</option></select></label><label class="sw">Vibration <input type="checkbox" id="sVib"></label></section>
+<section class="settings-group"><h3>Accessibility</h3><label class="settings-select">Text size<select id="sTextSize"><option value="small">Small</option><option value="normal">Normal</option><option value="large">Large</option></select></label><label class="sw">High contrast <input type="checkbox" id="sContrast"></label><p class="hint">Interface language: English. Additional translations will appear here only after they are implemented.</p></section>
+<section class="settings-group"><h3>Device & gameplay</h3><label class="sw">Auto-move when only one Ludo pawn is legal <input type="checkbox" id="sAuto"></label><label class="settings-select">Movement speed<select id="sMoveSpeed"><option value="0.5">Fast</option><option value="1">Normal</option><option value="1.6">Relaxed</option></select></label><label class="sw">Local turn notifications <input type="checkbox" id="sNotify"></label><div class="row"><button class="btn ghost" id="bFullscreen">Toggle fullscreen</button><button class="btn ghost" id="bRestoreSettings">Restore defaults</button></div></section>
+<div class="settings-actions"><button class="btn ghost" id="bPause">Pause / resume current Ludo match</button><button class="btn ghost" id="bHost">Ludo setup & options</button><button class="btn ghost danger-lite" id="bRestart" hidden>Restart current match</button></div><p class="settings-note" id="settingsSupport"></p></div></div>
 <div class="modal full" id="mHost"><div class="box wide"><div class="row sp"><h2>Game options</h2><button class="btn sm" data-close>✕</button></div><div id="hostbody"></div></div></div>
-<div class="modal" id="mLogin"><div class="box"><h2 id="loginTitle">DaniLabs access</h2><p id="loginHint" class="hint">Private local control center</p><input id="lu" placeholder="Username" autocomplete="off"><input id="lp" type="password" placeholder="Password" autocomplete="off"><p id="lerr" class="err"></p><div class="row"><button class="btn" id="bLogin">Login</button><button class="btn ghost" data-close>Cancel</button></div></div></div>
-<div class="modal" id="mOver"><div class="box victory-box"><div class="victory-crown">♛</div><span class="eyebrow">MATCH COMPLETE</span><h2 id="victoryTitle">Game over</h2><p id="victorySub">Final ranking</p><div class="victory-reward"><span>◎</span><b>+25</b><small>finish reward</small></div><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
-<div class="modal full" id="mColl"><div class="box wide"><div class="row sp"><h2>Collection</h2><button class="btn sm" data-close>✕</button></div><div class="tabs" id="cTabs"><button data-t="t" class="on">Boards</button><button data-t="d">Dice</button><button data-t="p">Pawns</button></div><div class="coll-grid" id="cGrid"></div><p class="hint">Cosmetics only. They never change rules or odds.</p></div></div>
-<div class="modal full" id="mOnline"><div class="box wide online-box"><div class="row sp online-head"><div><span class="eyebrow">DANILABS ONLINE</span><h2>Online Play</h2></div><button class="btn sm" data-close aria-label="Close online play">✕</button></div><p id="onlineMsg" class="online-msg" aria-live="polite"></p><div id="onlineBody"></div><p class="online-safety">Private rooms use invite codes. There is no public chat; friends are added by username.</p></div></div>
-<div class="modal" id="mSoon"><div class="box soon-box"><div class="soon-mark">✦</div><span class="eyebrow">DANILABS ROADMAP</span><h2 id="soonTitle">Coming soon</h2><p id="soonText">We’re working on this feature. It will appear here in a future update.</p><button class="btn" data-close>Got it</button></div></div>
-<div class="modal full" id="mCP"><div class="box wide"><div class="row sp"><h2>DaniLabs Control Center</h2><button class="btn sm" data-close>✕</button></div><div id="cpbody"></div></div></div>
-<script src="js/app.js"></script><script src="js/themes.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
+<div class="modal" id="mOver"><div class="box victory-box"><div class="victory-crown">♛</div><span class="eyebrow">MATCH COMPLETE</span><h2 id="victoryTitle">Game over</h2><p id="victorySub">Final ranking</p><ol id="ranks"></ol><div class="row"><button class="btn" id="bRematch">Rematch</button><button class="btn ghost" id="bHome">Home</button></div></div></div>
+<div class="modal full" id="mOnline"><div class="box wide online-box"><div class="row sp online-head"><div><span class="eyebrow">DANILABS ONLINE</span><h2>Online Play</h2></div><button class="btn sm" data-close aria-label="Close online play">✕</button></div><p id="onlineMsg" class="online-msg" aria-live="polite"></p><div id="onlineBody"></div><p class="online-safety">Ludo and Color Cards private rooms use invite codes. There is no public chat; friends are added by username.</p></div></div>
+<script src="js/catalog.js"></script><script src="js/rules/ludo-engine.js"></script><script src="js/rules/color-cards-engine.js"></script><script src="js/app.js"></script><script src="js/realistic.js"></script><script src="js/host.js"></script><script src="js/game-room.js"></script><script src="js/cards.js"></script><script src="js/lobby.js"></script><script src="js/online.js"></script></body></html>
