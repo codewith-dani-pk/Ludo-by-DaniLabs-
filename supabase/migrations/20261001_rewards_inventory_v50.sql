@@ -61,3 +61,9 @@ revoke execute on function public.claim_daily_reward(text,date,smallint,integer)
 revoke execute on function public.purchase_cosmetic(text,text,integer) from public,anon,authenticated;
 revoke execute on function public.claim_mission_reward(text,text,text,integer,integer) from public,anon,authenticated;
 grant execute on function public.reward_credit(text,text,integer,text,text),public.claim_daily_reward(text,date,smallint,integer),public.purchase_cosmetic(text,text,integer),public.claim_mission_reward(text,text,text,integer,integer) to service_role;
+
+revoke execute on function public.reward_credit(text,text,integer,text,text) from public,anon,authenticated;
+revoke execute on function public.claim_daily_reward(text,date,smallint,integer) from public,anon,authenticated;
+revoke execute on function public.purchase_cosmetic(text,text,integer) from public,anon,authenticated;
+revoke execute on function public.claim_mission_reward(text,text,text,integer,integer) from public,anon,authenticated;
+grant execute on function public.reward_credit(text,text,integer,text,text),public.claim_daily_reward(text,date,smallint,integer),public.purchase_cosmetic(text,text,integer),public.claim_mission_reward(text,text,text,integer,integer) to service_role;
