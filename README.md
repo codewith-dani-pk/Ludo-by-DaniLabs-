@@ -77,3 +77,18 @@ Coverage includes:
 Ludo has regional variations. This project intentionally uses the exact rules displayed in the in-game Rules screen: friendly pawns do not create blockades, all eight safe cells prevent captures, and 6/capture/finish each qualify for at most one bonus roll after a move.
 
 Color Cards intentionally uses a numeric-only opening discard and does not include optional house rules by default.
+
+
+## Polished website settings
+
+Global preferences are stored under `ldb_set` and apply immediately: separate music/effects volume, mute, animation level, reduced motion, graphics quality, supported-device vibration, text size, high contrast, fullscreen, local turn notifications, Ludo auto-move and movement speed. Restore Defaults changes only these preferences and does not erase profiles, statistics or saved matches. English is the only implemented interface language, so the UI does not pretend other translations are available.
+
+Color Cards setup adds computer difficulty and hand sorting. Ludo setup documents bot differences: Easy is deliberately less selective, Normal balances progress/safety/captures, and Hard weights finishing, captures and escaping threats more strongly. No difficulty changes dice results or permits illegal moves.
+
+## Homepage feature truthfulness
+
+The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Cards and private online rooms are available. Quick Match and Team Up are intentionally disabled until separate rules are implemented and tested. Carrom, Chess and Snakes & Ladders are Coming Soon with no invented release dates. Daily Rewards, Missions, Lucky Spin, Shop and Tournament surfaces are labeled demonstrations/previews; there are no real purchases or redeemable currencies.
+
+Public room discovery is not implemented yet. Online room creation therefore exposes Private as the supported visibility and labels Public unavailable rather than simulating it.
+
+See `docs/CLEANUP.md` for the recoverable checkpoint, replacements and retained files.
