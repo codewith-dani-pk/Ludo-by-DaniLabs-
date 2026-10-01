@@ -7,7 +7,7 @@ const secureRand=()=>crypto.randomInt(0,0x100000000)/0x100000000;
 const colors=n=>L.colorsFor(n);
 const deadline=()=>new Date(Date.now()+TURN_MS).toISOString();
 const wrap=(game,message='')=>({game,phase:game.phase,message,meta:{recentActionIds:[],deadlineAt:deadline(),turnMs:TURN_MS,reconnectGraceMs:RECONNECT_GRACE_MS}});
-export function newOnlineState(n,variant='classic'){const ids=colors(n).map(id=>({id,name:id,type:'online'}));return variant==='color-cards'?wrap(C.newGame(n,ids,secureRand,'round'),'Color Cards ready'):wrap(L.newGame(n,ids),'Ludo ready')}
+export function newOnlineState(n,variant='classic',mode='round'){const ids=colors(n).map(id=>({id,name:id,type:'online'}));return variant==='color-cards'?wrap(C.newGame(n,ids,secureRand,mode),'Color Cards ready'):wrap(L.newGame(n,ids),'Ludo ready')}
 export const currentColor=state=>{const g=state?.game;if(!g)return null;return g.kind==='color-cards'?C.current(g)?.id:L.current(g)?.id};
 function touch(st){st.phase=st.game.phase;st.meta=st.meta||{};st.meta.deadlineAt=deadline();st.meta.turnMs=TURN_MS;st.meta.reconnectGraceMs=RECONNECT_GRACE_MS;return st}
 function ludoAction(st,color,kind,payload){const g=st.game;if(L.current(g).id!==color)throw Error('Wait for your turn');if(kind==='roll'){const value=crypto.randomInt(1,7);L.roll(g,value)}else if(kind==='move'){const p=L.current(g).pawns[Number(payload.token)];if(!p)throw Error('Unknown pawn');L.move(g,p.id)}else throw Error('Unsupported Ludo action');st.message=g.winner?g.winner+' wins':g.phase==='move'?color+' rolled '+g.roll+' - choose a pawn':L.current(g).id+' to roll';return touch(st)}
