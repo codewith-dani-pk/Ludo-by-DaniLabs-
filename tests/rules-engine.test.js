@@ -83,3 +83,8 @@ test('final Draw Two penalty resolves before round scoring',()=>{
 test('500-point mode preserves scores into the next round',()=>{
  const g=C.newGame(2,[{id:'a',score:490},{id:'b',score:0}],fixed,'500');g.phase='round-over';g.players[0].score=495;const n=C.nextRound(g,fixed);assert.equal(n.mode,'500');assert.equal(n.players[0].score,495);
 });
+
+test('Color Cards unresolved challenge and catch windows survive JSON save/restore',()=>{
+ const g=C.newGame(2,[],fixed),a=g.players[0];a.hand=[{id:'w4save',color:'wild',value:'wild4'},{id:'redsave',color:'red',value:'2'}];g.discard=[{id:'topsave',color:'red',value:'7'}];g.activeColor='red';C.play(g,a.id,'w4save','blue',false,fixed);const restored=JSON.parse(JSON.stringify(g));assert.equal(restored.phase,'challenge');assert.equal(restored.pending.type,'wild4');assert.equal(restored.pending.legal,false);
+ const h=C.newGame(2,[],fixed),p=h.players[0];p.hand=[{id:'onesave',color:'red',value:'5'},{id:'leftsave',color:'blue',value:'2'}];h.discard=[{id:'top2save',color:'red',value:'9'}];h.activeColor='red';C.play(h,p.id,'onesave',null,false,fixed);const restoredCatch=JSON.parse(JSON.stringify(h));assert.equal(restoredCatch.unoWindow.offender,p.id);assert.equal(restoredCatch.players[0].hand.length,1);
+});
