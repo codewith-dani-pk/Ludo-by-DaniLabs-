@@ -20,8 +20,8 @@ test('Ludo exact finish rejects overshoot and accepts exact roll',()=>{
 });
 
 test('Ludo captures on unsafe squares but never on safe squares',()=>{
- const g=game(),r=g.players[0],y=g.players[1];r.pawns[0].progress=6;y.pawns[0].progress=32;L.syncPawn(r.pawns[0]);L.syncPawn(y.pawns[0]);L.roll(g,1);L.move(g,r.pawns[0].id);assert.equal(y.pawns[0].progress,-1);
- const h=game(),r2=h.players[0],y2=h.players[1];r2.pawns[0].progress=7;y2.pawns[0].progress=33;L.syncPawn(r2.pawns[0]);L.syncPawn(y2.pawns[0]);L.roll(h,1);L.move(h,r2.pawns[0].id);assert.equal(y2.pawns[0].progress,33);
+ const g=game(),r=g.players[0],y=g.players[1];r.pawns[0].progress=6;y.pawns[0].progress=33;L.syncPawn(r.pawns[0]);L.syncPawn(y.pawns[0]);L.roll(g,1);L.move(g,r.pawns[0].id);assert.equal(y.pawns[0].progress,-1);
+ const h=game(),r2=h.players[0],y2=h.players[1];r2.pawns[0].progress=7;y2.pawns[0].progress=34;L.syncPawn(r2.pawns[0]);L.syncPawn(y2.pawns[0]);L.roll(h,1);L.move(h,r2.pawns[0].id);assert.equal(y2.pawns[0].progress,34);
 });
 
 test('Ludo third consecutive six cancels only the third roll and ends sequence',()=>{
