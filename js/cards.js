@@ -32,7 +32,7 @@ function cgRender(){
  const t=CCR.top(g);if(t){$('#cgTop').className='ucard '+(t.color==='wild'?'w':t.color);$('#cgTop').innerHTML='<span>'+(CCSYM[t.value]||t.value)+'</span>'}
  $('#cgCol').style.background=CCHEX[g.activeColor]||'#5b3ba8';$('#cgCol').textContent=(g.direction>0?'↻ ':'↺ ')+(g.activeColor||'');
  const dr=$('#cgDraw');dr.textContent=g.drawnCardId&&ccMine()?'Pass':'Draw';dr.disabled=CG.cover||g.phase!=='turn'||!ccMine()||p.type==='bot';
- const v=viewer(),hand=v?.hand||[];$('#cgHand').innerHTML=CG.cover?'<p class="hint">Hand hidden</p>':hand.map(card=>{const can=v===p&&ccMine()&&(!g.drawnCardId||g.drawnCardId===card.id)&&CCR.canPlay(g,v,card);return cardEl(card,can?'ok':'no')}).join('');
+ const v=viewer(),hand=v?.hand||[];$('#cgHand').innerHTML=CG.cover?'<p class="hint">Hand hidden</p>':hand.map(card=>{const can=v===p&&ccMine()&&(!g.drawnCardId||g.drawnCardId===card.id)&&CCR.legalPlay(g,v,card);return cardEl(card,can?'ok':'no')}).join('');
  const h=$('#cgHistory');if(h)h.innerHTML=(g.history||[]).slice(-6).reverse().map(x=>'<small>'+({play:(x.player||'Player')+' played '+(CCSYM[x.card?.value]||x.card?.value||'a card'),draw:(x.player||'Player')+' drew a card',catch:(x.by||'Player')+' caught '+(x.offender||'player'),score:(x.winner||'Player')+' scored '+x.points,penalty:(x.player||'Player')+' drew '+x.count}[x.type]||x.type)+'</small>').join('');$('#cgUno').disabled=CG.cover||!ccMine()||g.phase!=='turn'||p.hand.length!==2;$('#cgUno').classList.toggle('on',cgDeclare);$('#cgCatch').disabled=!g.unoWindow||g.unoWindow.offender===CG.myColor
 }
 function chooseColor(done){modalCg('<h2>Choose active color</h2><div class="row">'+CCR.COLORS.map(k=>'<button class="btn" data-col="'+k+'" style="background:'+CCHEX[k]+';color:#fff">'+k+'</button>').join('')+'</div>',done)}
@@ -43,13 +43,13 @@ function ccAct(type,payload={}){
   const id=ccPlayer().id;if(type==='play')CCR.play(CG.game,id,payload.cardId,payload.color,payload.calledUno,ccRand);else if(type==='draw')CCR.draw(CG.game,id,ccRand);else if(type==='pass')CCR.pass(CG.game,id);else if(type==='color')CCR.resolvePending(CG.game,payload.color,ccRand);else if(type==='challenge')CCR.resolvePending(CG.game,payload.choice,ccRand);else if(type==='catch')CCR.catchUno(CG.game,payload.playerId||id,ccRand);else if(type==='uno')CCR.callUno(CG.game,id);ccSave();cgTurn()
  }catch(e){toast(e.message);cgRender()}
 }
-$('#cgHand').onclick=e=>{const b=e.target.closest('[data-card]');if(!b||!CG||CG.cover||!ccMine())return;const card=viewer()?.hand.find(c=>c.id===b.dataset.card);if(!card||!CCR.canPlay(CG.game,viewer(),card))return;const go=color=>ccAct('play',{cardId:card.id,color,calledUno:cgDeclare});if(card.color==='wild')chooseColor(go);else go(null)};
+$('#cgHand').onclick=e=>{const b=e.target.closest('[data-card]');if(!b||!CG||CG.cover||!ccMine())return;const card=viewer()?.hand.find(c=>c.id===b.dataset.card);if(!card||!CCR.legalPlay(CG.game,viewer(),card))return;const go=color=>ccAct('play',{cardId:card.id,color,calledUno:cgDeclare});if(card.color==='wild')chooseColor(go);else go(null)};
 $('#cgDraw').onclick=()=>{if(!CG||CG.cover||!ccMine())return;ccAct(CG.game.drawnCardId?'pass':'draw')};
 $('#cgUno').onclick=()=>{if(!CG||!ccMine())return;cgDeclare=!cgDeclare;toast(cgDeclare?'UNO declaration armed for this play':'UNO declaration cancelled');cgRender()};
 $('#cgCatch').onclick=()=>{if(!CG||!CG.game.unoWindow)return;ccAct('catch',{playerId:CG.online?CG.myColor:ccPlayer().id})};
 function cgBot(){
  if(!CG||CG.online||CG.game.phase!=='turn')return;const g=CG.game,p=ccPlayer();if(p.type!=='bot')return;if(g.unoWindow&&g.unoWindow.offender!==p.id){ccAct('catch',{playerId:p.id});return}
- const legal=p.hand.filter(c=>(!g.drawnCardId||g.drawnCardId===c.id)&&CCR.canPlay(g,p,c));
+ const legal=p.hand.filter(c=>(!g.drawnCardId||g.drawnCardId===c.id)&&CCR.legalPlay(g,p,c));
  if(!legal.length){ccAct(g.drawnCardId?'pass':'draw');return}
  const counts=Object.fromEntries(CCR.COLORS.map(c=>[c,p.hand.filter(x=>x.color===c).length]));
  legal.sort((a,b)=>{const val=x=>(x.value==='wild4'?7:x.value==='wild'?5:['draw2','skip','reverse'].includes(x.value)?4:0)+(x.color==='wild'?0:counts[x.color]);return val(b)-val(a)});
