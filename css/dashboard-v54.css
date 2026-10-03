@@ -106,3 +106,9 @@
   .dash-tile{min-height:132px}.dash-tile .game-art{--art-size:66px}.dash-profile-actions{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){#home *{scroll-behavior:auto!important}}
+
+/* Complete positions for the supplied royal icon/game atlases. */
+#home .icon-coin{background-position:20% 20%}#home .icon-gem{background-position:40% 20%}#home .icon-gift-blue{background-position:60% 20%}#home .icon-gift-pink{background-position:80% 20%}
+#home .icon-wheel{background-position:0 40%}#home .icon-mission{background-position:20% 40%}#home .icon-shop{background-position:40% 40%}#home .icon-daily-rewards{background-position:100% 40%}
+#home .icon-rewards{background-position:40% 60%}#home .icon-inventory{background-position:60% 60%}#home .icon-bell{background-position:0 80%}#home .icon-plus{background-position:40% 80%}#home .icon-season-medal{background-position:80% 80%}#home .icon-invite{background-position:100% 80%}
+#home .art-team{background-position:66.666667% 0}#home .art-carrom{background-position:33.333333% 50%}#home .art-chess{background-position:66.666667% 50%}#home .art-snakes-ladders{background-position:100% 50%}
