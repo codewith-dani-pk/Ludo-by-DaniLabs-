@@ -3,54 +3,104 @@
 <title>LudoByDaniLabs — Ludo + Color Cards</title><meta name="theme-color" content="#1b1140">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Ludo"><meta name="google-site-verification" content="dfl1sF2t12eNp_HY1hmmsu75NjE-HGMjLW-IT0lKFt4" />
 <meta name="description" content="LudoByDaniLabs — play Classic Ludo and Color Cards locally or in private online rooms.">
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"><link rel="stylesheet" href="css/polish.css"></head><body>
-<div id="networkState" class="network-state" role="status" aria-live="polite"></div><main id="home" class="screen on home-screen royal-home">
- <div class="royal-stage">
-  <header class="royal-topbar">
-   <button class="royal-profile" id="bProf" aria-label="Edit local profile"><span class="ludo-icon icon-avatar-1 royal-avatar" id="avatar"></span><span><b id="pName">Guest player</b><small><i></i> LOCAL PROFILE</small></span></button><div class="royal-wallet" aria-label="Earned coin balance"><span>🪙 <b id="coinBalance">0</b></span></div>
-   <div class="royal-top-actions"><button class="round-royal" id="bNotify" aria-label="Notifications"><span class="ludo-icon icon-bell"></span></button><button class="round-royal" id="bOnlineTop" aria-label="Online rooms"><span class="ludo-icon icon-globe"></span></button><button class="round-royal" id="bSet" aria-label="Settings"><span class="ludo-icon icon-settings"></span></button></div>
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/reference-home.css"><link rel="stylesheet" href="css/upgrade.css"><link rel="stylesheet" href="css/realistic.css"><link rel="stylesheet" href="css/lobby.css"><link rel="stylesheet" href="css/game-room.css"><link rel="stylesheet" href="css/polish.css"><link rel="stylesheet" href="css/dashboard-v54.css"></head><body>
+<div id="networkState" class="network-state" role="status" aria-live="polite"></div><main id="home" class="screen on home-screen royal-home dash-home">
+ <div class="dash-shell">
+  <header class="dash-header">
+   <div class="dash-brand" aria-label="LudoByDaniLabs"><img src="assets/home-hd/header-brand.svg" alt="LudoByDaniLabs"></div>
+   <button class="dash-profile" id="bProf" aria-label="Open profile">
+    <span class="ludo-icon icon-avatar-1 royal-avatar" id="avatar"></span>
+    <span class="dash-profile-copy"><b id="pName">Guest player</b><small><i></i> LOCAL PROFILE</small></span>
+   </button>
+   <div class="dash-wallet" aria-label="Earned coin balance"><span class="ludo-icon icon-coin" aria-hidden="true"></span><span><b id="coinBalance">0</b><small>Earned coins</small></span></div>
+   <div class="dash-head-actions">
+    <button id="bNotify" aria-label="Notifications"><span class="ludo-icon icon-bell"></span></button>
+    <button id="bSet" aria-label="Settings"><span class="ludo-icon icon-settings"></span></button>
+    <button id="bOnline" aria-label="Open Online Play"><span class="dash-online-dot"></span><span>Online</span></button>
+   </div>
   </header>
 
-  <section class="royal-hero" aria-label="Ludo Royale by DaniLabs">
-   <img class="royal-logo" src="assets/home-hd/header-brand.svg" alt="LudoByDaniLabs">
-   <img class="royal-board" src="assets/home-hd/hero-classic.svg" alt="Ludo board with pawns and dice">
-   <p>LUDO + COLOR CARDS · OFFLINE + ONLINE</p>
+  <section class="dash-hero-grid" aria-label="Featured games and events">
+   <article class="dash-feature dash-ludo" aria-label="Classic Ludo">
+    <div class="dash-feature-cta"><button class="dash-cta" id="bSetup"><span class="ludo-icon icon-dice"></span>PLAY LUDO</button></div>
+   </article>
+   <article class="dash-feature dash-cards color-cards-panel" aria-label="Color Cards">
+    <div class="dash-feature-cta"><button class="dash-cta" id="bCards"><span class="ludo-icon icon-play"></span>PLAY NOW</button></div>
+   </article>
+   <div class="dash-promo-stack">
+    <button class="dash-promo tournament" data-tournament-open><span><b>TOURNAMENT ARENA</b><small>Free-entry Classic brackets</small></span></button>
+    <button class="dash-promo event" data-tournament-open><span><b>LIMITED-TIME EVENTS</b><small>Verified missions & rewards</small></span></button>
+   </div>
   </section>
 
-  <button class="royal-play" id="bSetup"><span class="ludo-icon icon-play"></span><b>PLAY CLASSIC LUDO</b></button>
+  <section class="dash-row dash-row-main">
+   <section class="dash-panel" id="localPanel">
+    <div class="dash-panel-head"><h2>PLAY MODES</h2><button id="dashOnlineShortcut" type="button">Online Play ›</button></div>
+    <div class="dash-tiles">
+     <button data-mode="classic" class="dash-tile primary" id="dashClassicTile"><span class="game-art art-classic"></span><b>Classic Mode</b><small>Play Ludo Classic</small><span class="availability">PLAY NOW</span></button>
+     <button class="dash-tile" data-dev="Quick Match" disabled><span class="game-art art-quick"></span><b>Quick Match</b><small>Find a match quickly</small><span class="availability">Coming Soon</span></button>
+     <button class="dash-tile" data-dev="Team Up" disabled><span class="game-art art-team"></span><b>Team Up</b><small>Play with friends</small><span class="availability">Coming Soon</span></button>
+     <button class="dash-tile primary" id="bPrivateRoom"><span class="game-art art-private"></span><b>Private Room</b><small>Create or join room</small><span class="availability">JOIN ROOM</span></button>
+    </div>
+    <div id="modes" hidden><button data-mode="classic" class="on" aria-hidden="true" tabindex="-1">Classic</button></div>
+    <select id="sVar" hidden><option value="classic">Classic</option></select><input type="checkbox" id="sBots" hidden>
+    <details class="dash-local-tools">
+     <summary>Local match setup</summary>
+     <div>
+      <label>Computer seats<select id="ludoBotCount"><option value="0">All local humans</option><option value="1">1 computer</option><option value="2">2 computers</option><option value="3">3 computers</option></select></label>
+      <div class="dash-player-buttons">
+       <button data-play="2"><b>2</b>Players</button><button data-play="3"><b>3</b>Players</button><button data-play="4"><b>4</b>Players</button>
+       <button data-bot="2"><b>VS</b>CPU</button><button data-mixed="3"><b>3</b>Mixed</button><button data-mixed="4"><b>4</b>Mixed</button>
+      </div>
+     </div>
+    </details>
+    <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
+   </section>
 
-  <section class="royal-actions" aria-label="Play options">
-   <button class="royal-action quick" data-dev="Quick Match" disabled><span class="ludo-icon icon-quick-match"></span><b>Quick Match</b><small>In development</small></button>
-   <button class="royal-action online" id="bOnline"><span class="ludo-icon icon-globe"></span><b>Play Online</b><small>Ludo + Color Cards</small></button>
-   <button class="royal-action friends" data-dev="Team Up" disabled><span class="ludo-icon icon-friends"></span><b>Team Up</b><small>In development</small></button>
-   <button class="royal-action private" id="bPrivateRoom"><span class="ludo-icon icon-private-room"></span><b>Private Room</b><small>Create or join</small></button>
+   <section class="dash-panel">
+    <div class="dash-panel-head"><h2>MORE GAMES</h2><button id="dashGamesMore" type="button">Available & upcoming</button></div>
+    <div class="dash-tiles">
+     <button class="dash-tile available" id="bCardsCatalog" data-catalog="color-cards"><span class="game-art art-cards"></span><b>Color Cards</b><small>2–4 players</small><span class="availability">Available</span></button>
+     <button class="dash-tile" disabled data-catalog="carrom"><span class="game-art art-carrom"></span><b>Carrom</b><small>Not released</small><span class="availability">Coming Soon</span></button>
+     <button class="dash-tile" disabled data-catalog="chess"><span class="game-art art-chess"></span><b>Chess</b><small>Not released</small><span class="availability">Coming Soon</span></button>
+     <button class="dash-tile" disabled data-catalog="snakes-ladders"><span class="game-art art-snakes-ladders"></span><b>Snakes &amp; Ladders</b><small>Not released</small><span class="availability">Coming Soon</span></button>
+    </div>
+   </section>
   </section>
 
-  <button class="royal-banner" id="bOnlineBanner"><span><b>PRIVATE ONLINE ROOMS</b><small>Invite people to Ludo or Color Cards</small></span><i class="ludo-icon icon-arrow-right"></i></button>
+  <section class="dash-row dash-row-bottom">
+   <section class="dash-panel dash-rewards">
+    <div class="dash-panel-head"><h2>REWARDS & PROGRESS</h2><button data-reward-open="leaders" type="button">Leaderboards ›</button></div>
+    <div class="dash-tiles dash-reward-tiles">
+     <button class="dash-tile primary" data-reward-open="daily"><span class="ludo-icon icon-daily-rewards"></span><b>Daily Rewards</b><small>7-day calendar</small><span class="availability">VIEW</span></button>
+     <button class="dash-tile primary" data-reward-open="missions"><span class="ludo-icon icon-mission"></span><b>Missions</b><small>Daily & weekly</small><span class="availability">VIEW MISSIONS</span></button>
+     <button class="dash-tile" data-demo="Lucky Spin"><span class="ludo-icon icon-wheel"></span><b>Lucky Spin</b><small>Preview only</small><span class="availability">PREVIEW</span></button>
+     <button class="dash-tile primary" data-reward-open="shop"><span class="ludo-icon icon-shop"></span><b>Cosmetics</b><small>Earned coins only</small><span class="availability">OPEN SHOP</span></button>
+    </div>
+   </section>
+
+   <section class="dash-panel">
+    <div class="dash-panel-head"><h2>FRIENDS</h2><button id="dashFriendsMore" type="button">Open ›</button></div>
+    <div class="dash-friends-body"><span class="ludo-icon icon-friends"></span><p>Your real friends, requests and room invitations appear after you sign in. No demo players are shown.</p><button class="btn" id="dashFriendsBtn">Friends & invites</button></div>
+   </section>
+
+   <section class="dash-panel">
+    <div class="dash-panel-head"><h2>YOUR PROFILE</h2><button id="dashProfileMore" type="button">Open ›</button></div>
+    <div class="dash-profile-body"><span class="ludo-icon icon-avatar-1 dash-profile-avatar" aria-hidden="true"></span><strong>Profile & verified stats</strong><p id="stats"></p><div class="dash-profile-actions"><button id="dashAccountBtn">Profile / Stats</button><button id="dashSettingsBtn">Settings</button></div></div>
+   </section>
+  </section>
+
+  <button id="bOnlineBanner" hidden aria-hidden="true">Online rooms</button>
+  <div class="dash-home-footer"><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
+
+  <nav class="royal-nav" aria-label="Main navigation">
+   <button class="active" aria-current="page"><span class="ludo-icon icon-home"></span><small>Home</small></button>
+   <button id="nGames"><span class="ludo-icon icon-crown"></span><small>Games</small></button>
+   <button id="nFriends"><span class="ludo-icon icon-social"></span><small>Friends</small></button>
+   <button id="nRewards"><span class="ludo-icon icon-rewards"></span><small>Rewards</small></button>
+   <button id="nProfile"><span class="ludo-icon icon-profile"></span><small>Profile</small></button>
+  </nav>
  </div>
-
- <section class="royal-panel" id="localPanel">
-  <div class="panel-title"><span class="ludo-icon icon-crown"></span><span><b>Ludo</b><small>Choose your ruleset</small></span></div>
-  <div class="mode-grid" id="modes"><button data-mode="classic" class="on"><span class="game-art art-classic"></span><b>Classic Ludo</b><small>Official DaniLabs ruleset · 4 pawns</small></button></div>
-<select id="sVar" hidden><option value="classic">Classic</option></select><input type="checkbox" id="sBots" hidden>
-  <label class="settings-select">Computer seats<select id="ludoBotCount"><option value="0">All local humans</option><option value="1">1 computer</option><option value="2">2 computers</option><option value="3">3 computers</option></select></label><div class="royal-player-grid"><button data-play="2"><b>2</b><small>Players</small></button><button data-play="3"><b>3</b><small>Players</small></button><button data-play="4"><b>4</b><small>Players</small></button><button data-bot="2"><span class="ludo-icon icon-avatar-1"></span><small>Vs computer</small></button><button data-mixed="3"><b>3</b><small>2 people + CPU</small></button><button data-mixed="4"><b>4</b><small>2 people + 2 CPU</small></button></div>
-  <button class="btn cont home-cont" id="bCont" hidden>Continue your game <span>›</span></button>
- </section>
-
- <section class="royal-panel color-cards-panel hd-cards-panel">
-  <button id="bCards" class="color-cards-royal"><span class="game-art art-cards"></span><span><b>Color Cards</b><small>2–4 players · offline or private online rooms</small></span><i class="ludo-icon icon-arrow-right"></i></button>
- </section>
-
- <section class="royal-panel"><div class="panel-title"><span class="ludo-icon icon-season-medal"></span><span><b>New modes & events</b><small>Only tested modes are playable</small></span></div><div class="mode-grid future-grid"><button disabled><span class="game-art art-quick"></span><b>Quick Match</b><small>In development</small></button><button disabled><span class="game-art art-team"></span><b>Team Up</b><small>In development</small></button><button data-tournament-open><span class="game-art art-new-mode"></span><b>Events</b><small>Live schedules</small></button></div></section>
- <section class="royal-panel"><div class="panel-title"><span class="ludo-icon icon-trophy"></span><span><b>Games</b><small>Built from the central catalog</small></span></div><div class="mode-grid future-grid"><button id="bCardsCatalog" data-catalog="color-cards"><span class="game-art art-cards"></span><b>Color Cards</b><small>Available</small></button><button disabled data-catalog="carrom"><span class="game-art art-carrom"></span><b>Carrom</b><small>Coming Soon</small></button><button disabled data-catalog="chess"><span class="game-art art-chess"></span><b>Chess</b><small>Coming Soon</small></button><button disabled data-catalog="snakes-ladders"><span class="game-art art-snakes-ladders"></span><b>Snakes &amp; Ladders</b><small>Coming Soon</small></button></div></section>
- <section class="royal-panel rewards-hd-panel"><div class="panel-title"><span class="ludo-icon icon-gift-blue"></span><span><b>Rewards & cosmetics</b><small>Verified online rewards · earned coins have no cash value</small></span></div><div class="reward-grid"><button data-reward-open="daily"><span class="ludo-icon icon-daily-rewards"></span><b>Daily Rewards</b><small>7-day calendar</small></button><button data-reward-open="missions"><span class="ludo-icon icon-mission"></span><b>Missions</b><small>Daily & weekly</small></button><button data-demo="Lucky Spin"><span class="ludo-icon icon-wheel"></span><b>Lucky Spin</b><small>Preview only</small></button><button data-reward-open="shop"><span class="ludo-icon icon-shop"></span><b>Cosmetics</b><small>Earned coins only</small></button><button data-reward-open="leaders"><span class="ludo-icon icon-trophy"></span><b>Leaderboards</b><small>Verified online matches</small></button></div><button class="royal-banner" data-tournament-open><span><b>TOURNAMENTS & EVENTS</b><small>Free-entry Classic brackets · server schedule</small></span><i class="ludo-icon icon-arrow-right"></i></button></section>
- <section class="royal-panel royal-friends">
-  <div class="panel-title"><span class="ludo-icon icon-friends"></span><span><b>Friends & private rooms</b><small>Open the online lobby to invite or join</small></span></div>
-  <div class="avatar-row" aria-hidden="true"><span class="ludo-icon icon-avatar-1"></span><span class="ludo-icon icon-avatar-2"></span><span class="ludo-icon icon-avatar-3"></span><span class="ludo-icon icon-avatar-4"></span><span class="ludo-icon icon-avatar-5"></span></div>
- </section>
-
- <div class="home-footer"><p id="stats" class="hint"></p><button class="btn ghost" id="bHow">How to play</button><button class="btn ghost" id="bInst" hidden>Install app</button></div>
- <nav class="royal-nav" aria-label="Main navigation"><button class="active" aria-current="page"><span class="ludo-icon icon-home"></span><small>Home</small></button><button id="nGames"><span class="ludo-icon icon-crown"></span><small>Games</small></button><button id="nFriends"><span class="ludo-icon icon-social"></span><small>Friends</small></button><button id="nRewards"><span class="ludo-icon icon-rewards"></span><small>Rewards</small></button><button id="nProfile"><span class="ludo-icon icon-profile"></span><small>Profile</small></button></nav>
 </main>
 <main id="game" class="screen game-room">
  <header class="game-header"><button class="btn sm game-icon-btn" id="bMenu" aria-label="Menu">☰</button><div class="logo mini game-brand" id="logo2"><img src="assets/icons/icon.svg" alt=""><span><b>LUDO</b><small>by DaniLabs</small></span></div><span class="hr"><button class="btn sm game-icon-btn" id="bSet2" aria-label="Settings">⚙</button></span></header>
