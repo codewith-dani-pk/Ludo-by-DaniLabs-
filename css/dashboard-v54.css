@@ -1,0 +1,114 @@
+/* v54 reference-dashboard layout.
+   Uses the user-supplied royal artwork already optimized in assets/royale + scalable featured art in assets/home-hd.
+   Homepage-only: gameplay boards/rules are untouched. */
+#home.dash-home{
+  --dash-gold:#ffd45f;--dash-gold2:#f5a400;--dash-navy:#050a2b;--dash-blue:#0c1d55;
+  --dash-line:#b277ff;--dash-text:#fff;--dash-muted:#cbd5ff;
+  max-width:none!important;width:100%;min-height:100dvh;margin:0!important;padding:0 0 92px!important;
+  color:var(--dash-text);overflow-x:hidden;
+  background:
+    linear-gradient(180deg,#040824cc,#040824f2 62%,#030621 100%),
+    url("../assets/royale/castle.webp") center top/cover fixed no-repeat!important;
+}
+#home.dash-home:before,#home.dash-home:after{display:none!important}
+.dash-shell{width:min(1600px,100%);margin:0 auto;padding:10px 14px 28px}
+.dash-header{
+  min-height:82px;display:grid;grid-template-columns:minmax(280px,1.15fr) minmax(255px,.9fr) auto auto;
+  align-items:center;gap:12px;padding:8px 10px;margin-bottom:8px;
+  border:1px solid #8057d3;border-radius:0 0 24px 24px;
+  background:linear-gradient(180deg,#100a3df5,#08092fe8);box-shadow:0 8px 26px #0009,inset 0 -1px #f1ad4366;
+}
+.dash-brand{min-width:0;height:62px;display:flex;align-items:center}
+.dash-brand img{display:block;width:min(100%,430px);height:100%;object-fit:contain;object-position:left center;filter:drop-shadow(0 4px 8px #000)}
+.dash-profile{
+  min-width:0;height:62px;display:grid;grid-template-columns:48px 1fr;align-items:center;gap:9px;
+  padding:5px 14px 5px 6px;border:1px solid #735ed1;border-radius:18px;
+  background:linear-gradient(135deg,#12113f,#09123a);color:#fff;text-align:left;box-shadow:inset 0 0 18px #5529ad22;
+}
+.dash-profile .royal-avatar{--icon-size:46px;border-radius:50%;filter:drop-shadow(0 3px 5px #000)}
+.dash-profile-copy{min-width:0;display:grid;gap:2px}.dash-profile-copy b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-profile-copy small{font-size:.62rem;color:#d6ddff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dash-profile-copy i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#16e97f;margin-right:5px}
+.dash-wallet{display:flex;align-items:center;gap:8px;height:54px;padding:5px 10px;border:1px solid #7752c9;border-radius:16px;background:#0c0d37d9;box-shadow:inset 0 0 14px #4721a833}
+.dash-wallet .ludo-icon{--icon-size:40px}.dash-wallet b{font-size:1rem}.dash-wallet small{display:block;font-size:.55rem;color:#d0d7ff}
+.dash-head-actions{display:flex;gap:8px;align-items:center}
+.dash-head-actions button{height:52px;min-width:52px;padding:5px 9px;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #735fd0;border-radius:14px;background:linear-gradient(#11143e,#080a29);color:#fff;box-shadow:inset 0 0 12px #6230b522}
+.dash-head-actions .ludo-icon{--icon-size:34px}.dash-head-actions #bOnline{min-width:112px;font-weight:900}.dash-online-dot{width:12px;height:12px;border-radius:50%;background:#19e978;box-shadow:0 0 10px #19e978}
+
+.dash-hero-grid{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(285px,.82fr) minmax(270px,.88fr);gap:12px}
+.dash-feature,.dash-promo{
+  position:relative;isolation:isolate;overflow:hidden;border:1px solid #f5b63e;border-radius:22px;
+  background-color:#120c39;background-repeat:no-repeat;background-size:cover;background-position:center;
+  box-shadow:0 8px 24px #000b,inset 0 0 0 1px #ffd76f33;
+}
+.dash-feature:after,.dash-promo:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,transparent 46%,#060725d9 100%)}
+.dash-ludo{min-height:385px;background-image:url("../assets/home-hd/hero-classic.svg");background-position:center}
+.dash-cards{min-height:385px;background-image:url("../assets/home-hd/color-cards.svg");background-position:center}
+.dash-feature-cta{position:absolute;left:5%;right:5%;bottom:18px;display:flex;justify-content:center}
+.dash-feature-cta .dash-cta{min-width:min(340px,90%);height:64px;border:2px solid #ffe78e;border-radius:999px;background:linear-gradient(#fff36c,#ffc22f 55%,#e88c00);color:#351238;font-weight:1000;font-size:1.06rem;box-shadow:0 5px 0 #9a4a00,0 10px 22px #0009;text-shadow:0 1px #fff7}
+.dash-cards .dash-feature-cta .dash-cta{border-color:#ff70f1;background:linear-gradient(#ec32e5,#9d08a9 58%,#59006d);color:#fff;box-shadow:0 5px 0 #3e004b,0 10px 22px #0009;text-shadow:0 1px #5d006b}
+.dash-feature-cta .ludo-icon{--icon-size:34px;margin-right:8px}
+.dash-promo-stack{display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.dash-promo{min-height:186px;padding:14px;display:flex;align-items:flex-end;justify-content:flex-end;text-align:right;color:#fff}
+.dash-promo.tournament{background-image:url("../assets/home-hd/tournament.svg")}.dash-promo.event{background-image:url("../assets/home-hd/events.svg")}
+.dash-promo span{display:grid;gap:2px;position:relative;z-index:1;max-width:62%;padding:7px 9px;border-radius:12px;background:#09082bbd}
+.dash-promo b{font-size:.88rem;color:#ffe166}.dash-promo small{font-size:.57rem;color:#fff}
+
+.dash-row{display:grid;gap:12px;margin-top:12px}.dash-row-main{grid-template-columns:minmax(0,1.18fr) minmax(0,1fr)}.dash-row-bottom{grid-template-columns:minmax(0,1.45fr) minmax(270px,.62fr) minmax(270px,.62fr)}
+.dash-panel{min-width:0;padding:10px;border:1px solid #3f5cb7;border-radius:20px;background:linear-gradient(150deg,#0d2457ef,#080d31f5);box-shadow:0 7px 18px #0008,inset 0 1px #ffffff14}
+.dash-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 8px}.dash-panel-head h2{display:flex;align-items:center;gap:7px;margin:0;color:#fff;font-size:.91rem;letter-spacing:.01em}.dash-panel-head h2:before{content:"✦";color:#ffd35a;font-size:.75rem}.dash-panel-head button{border:0;background:transparent;color:#c8d4ff;font-size:.62rem}
+.dash-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.dash-tile{min-width:0;min-height:156px;padding:7px 5px 8px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;border:1px solid #f2b746;border-radius:14px;background:linear-gradient(160deg,#17194a,#091132 72%);color:#fff;box-shadow:inset 0 0 18px #53226b33;text-align:center}
+.dash-tile:disabled{opacity:.69;filter:saturate(.72)}.dash-tile .game-art{--art-size:82px;flex:0 0 auto;margin:-2px 0 1px}.dash-tile .ludo-icon{--icon-size:70px;flex:0 0 auto}
+.dash-tile b{font-size:.72rem;line-height:1.1}.dash-tile small{font-size:.52rem;line-height:1.2;color:#d8e0ff;margin-top:3px}.dash-tile .availability{margin-top:auto;width:92%;padding:4px 6px;border-radius:999px;background:#162552;border:1px solid #7088c2;color:#eef4ff;font-size:.52rem;font-weight:900}
+.dash-tile.primary .availability{background:linear-gradient(#ffe765,#ffbb26);border-color:#fff1a6;color:#2b164a}.dash-tile.available .availability{background:#063d38;border-color:#16d984;color:#5cffae}
+.dash-tile .game-art.art-team{background-position:66.666667% 0}.dash-tile .game-art.art-carrom{background-position:33.333333% 50%}.dash-tile .game-art.art-chess{background-position:66.666667% 50%}.dash-tile .game-art.art-snakes-ladders{background-position:100% 50%}
+
+.dash-local-tools{margin-top:9px;padding-top:9px;border-top:1px solid #ffffff19}
+.dash-local-tools summary{cursor:pointer;color:#dce4ff;font-size:.64rem;font-weight:900}.dash-local-tools>div{display:grid;grid-template-columns:180px 1fr;gap:8px;margin-top:8px;align-items:end}
+.dash-local-tools label{display:grid;gap:4px;font-size:.58rem;color:#cad6ff}.dash-local-tools select{width:100%;min-height:36px;border-radius:9px}
+.dash-player-buttons{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.dash-player-buttons button{min-height:38px;border:1px solid #536fb5;border-radius:9px;background:#10224f;color:#fff;font-size:.58rem}.dash-player-buttons b{display:block;color:#ffe16d;font-size:.82rem}
+#bCont.home-cont{margin:8px 0 0;width:100%}
+
+.dash-reward-tiles .dash-tile{min-height:150px}.dash-reward-tiles .ludo-icon{filter:drop-shadow(0 5px 7px #0008)}
+.dash-panel-link{margin-top:8px;width:100%;min-height:38px;border:1px solid #6750ba;border-radius:10px;background:#111746;color:#dce5ff;font-weight:800}
+.dash-friends-body,.dash-profile-body{min-height:158px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}
+.dash-friends-body .ludo-icon{--icon-size:76px}.dash-friends-body p,.dash-profile-body p{margin:0;color:#cbd6ff;font-size:.62rem;line-height:1.35}
+.dash-friends-body .btn,.dash-profile-body .btn{width:100%;margin:0}.dash-profile-body .dash-profile-avatar{--icon-size:74px}.dash-profile-body strong{font-size:.86rem}
+.dash-profile-actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:7px}.dash-profile-actions button{min-height:40px;border:1px solid #5d66b6;border-radius:10px;background:#111b4c;color:#fff;font-size:.58rem;font-weight:900}
+.dash-home-footer{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:11px 6px 2px}.dash-home-footer #stats{width:100%;margin:0;text-align:center;color:#aebfe9;font-size:.57rem}
+
+#home .royal-nav{position:fixed;z-index:80;left:50%;bottom:0;transform:translateX(-50%);width:min(1600px,100%)!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:7px 14px max(7px,env(safe-area-inset-bottom));border:1px solid #6044a8;border-bottom:0;border-radius:28px 28px 0 0;background:linear-gradient(#0a1745f8,#050924fa);box-shadow:0 -8px 25px #000a}
+#home .royal-nav button{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:0;background:transparent;color:#aebce6}
+#home .royal-nav button.active{color:#fff1ac;background:radial-gradient(ellipse at bottom,#ffad292e,transparent 65%);border-radius:20px}#home .royal-nav .ludo-icon{--icon-size:32px}#home .royal-nav small{font-size:.55rem}
+
+@media (min-width:1101px){
+  .dash-header{position:sticky;top:0;z-index:70;backdrop-filter:blur(14px)}
+}
+@media (max-width:1100px){
+  .dash-shell{padding:8px 10px 25px}.dash-header{grid-template-columns:1.1fr 1fr auto;min-height:72px}.dash-brand{height:54px}.dash-wallet{display:none}.dash-head-actions #bOnline{min-width:54px;font-size:0}.dash-head-actions #bOnline .dash-online-dot{display:block}
+  .dash-hero-grid{grid-template-columns:minmax(0,1.55fr) minmax(280px,.8fr)}.dash-promo-stack{grid-column:1/-1;grid-template-columns:1fr 1fr;grid-template-rows:none}.dash-promo{min-height:150px}
+  .dash-row-main{grid-template-columns:1fr}.dash-row-bottom{grid-template-columns:1fr 1fr}.dash-row-bottom .dash-rewards{grid-column:1/-1}
+}
+@media (max-width:720px){
+  #home.dash-home{padding-bottom:82px!important;background-attachment:scroll!important}.dash-shell{padding:6px 7px 18px}
+  .dash-header{grid-template-columns:1fr auto;gap:6px;padding:7px;border-radius:0 0 18px 18px}.dash-brand{grid-column:1/-1;height:48px;justify-content:center}.dash-brand img{width:min(94%,390px);object-position:center}.dash-profile{height:52px;grid-template-columns:40px 1fr;padding-right:8px}.dash-profile .royal-avatar{--icon-size:39px}.dash-profile-copy b{font-size:.78rem}.dash-profile-copy small{font-size:.5rem}
+  .dash-head-actions{gap:5px}.dash-head-actions button{min-width:42px;height:44px;padding:3px}.dash-head-actions .ludo-icon{--icon-size:29px}.dash-head-actions #bOnline{min-width:42px}.dash-hero-grid{display:flex;flex-direction:column;gap:8px}
+  .dash-ludo{min-height:330px;background-position:center}.dash-cards{min-height:188px;background-position:center}.dash-feature-cta{bottom:12px}.dash-feature-cta .dash-cta{height:52px;font-size:.88rem;min-width:82%}
+  .dash-promo-stack{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dash-promo{min-height:122px;padding:7px;border-radius:16px}.dash-promo span{max-width:78%;padding:4px 6px}.dash-promo b{font-size:.67rem}.dash-promo small{font-size:.48rem}
+  .dash-row{margin-top:8px;gap:8px}.dash-row-main,.dash-row-bottom{display:block}.dash-row-main>.dash-panel,.dash-row-bottom>.dash-panel{margin-top:8px}.dash-panel{padding:8px;border-radius:16px}.dash-panel-head h2{font-size:.8rem}
+  .dash-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.dash-tile{min-height:139px}.dash-tile .game-art{--art-size:72px}.dash-tile .ludo-icon{--icon-size:62px}.dash-tile b{font-size:.66rem}.dash-tile small{font-size:.48rem}
+  .dash-local-tools>div{grid-template-columns:1fr}.dash-player-buttons{grid-template-columns:repeat(3,1fr)}
+  .dash-friends-body,.dash-profile-body{min-height:130px}.dash-home-footer{padding-bottom:4px}
+  #home .royal-nav{border-radius:22px 22px 0 0;padding-left:5px;padding-right:5px}#home .royal-nav button{min-height:48px}#home .royal-nav .ludo-icon{--icon-size:29px}#home .royal-nav small{font-size:.48rem}
+}
+@media (max-width:430px){
+  .dash-ludo{min-height:290px}.dash-cards{min-height:166px}.dash-promo-stack{grid-template-columns:1fr}.dash-promo{min-height:120px}
+  .dash-tile{min-height:132px}.dash-tile .game-art{--art-size:66px}.dash-profile-actions{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){#home *{scroll-behavior:auto!important}}
+
+/* Complete positions for the supplied royal icon/game atlases. */
+#home .icon-coin{background-position:20% 20%}#home .icon-gem{background-position:40% 20%}#home .icon-gift-blue{background-position:60% 20%}#home .icon-gift-pink{background-position:80% 20%}
+#home .icon-wheel{background-position:0 40%}#home .icon-mission{background-position:20% 40%}#home .icon-shop{background-position:40% 40%}#home .icon-daily-rewards{background-position:100% 40%}
+#home .icon-rewards{background-position:40% 60%}#home .icon-inventory{background-position:60% 60%}#home .icon-bell{background-position:0 80%}#home .icon-plus{background-position:40% 80%}#home .icon-season-medal{background-position:80% 80%}#home .icon-invite{background-position:100% 80%}
+#home .art-team{background-position:66.666667% 0}#home .art-carrom{background-position:33.333333% 50%}#home .art-chess{background-position:66.666667% 50%}#home .art-snakes-ladders{background-position:100% 50%}

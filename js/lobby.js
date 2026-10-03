@@ -21,6 +21,13 @@ document.querySelectorAll('#modes [data-mode]').forEach(b=>b.onclick=()=>{Snd.pl
 setMode(Store.get('ldb_mode','classic'));
 ['#bOnlineTop','#bPrivateRoom','#bOnlineBanner'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#bOnline').click()});
 const setup=$('#bSetup');if(setup)setup.onclick=()=>{Snd.play('tap');openHost()};
+const dashClassic=$('#dashClassicTile');if(dashClassic)dashClassic.onclick=()=>{Snd.play('tap');setMode('classic');openHost()};
+const dashOnline=$('#dashOnlineShortcut');if(dashOnline)dashOnline.onclick=()=>$('#bOnline')?.click();
+['#dashFriendsBtn','#dashFriendsMore'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>$('#nFriends')?.click()});
+['#dashAccountBtn','#dashProfileMore'].forEach(id=>{const b=$(id);if(b)b.onclick=()=>window.DaniAccountUI?DaniAccountUI.open():$('#bProf')?.click()});
+const dashSettings=$('#dashSettingsBtn');if(dashSettings)dashSettings.onclick=()=>$('#bSet')?.click();
+const dashGamesMore=$('#dashGamesMore');if(dashGamesMore)dashGamesMore.onclick=()=>document.querySelector('#bCardsCatalog')?.scrollIntoView({behavior:S.reduced?'auto':'smooth',block:'center'});
+
 const ccCat=$('#bCardsCatalog');if(ccCat)ccCat.onclick=()=>$('#bCards').click();
 document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>toast(b.dataset.demo+' is a clearly labeled preview; no real rewards, currency or purchases are active.'));
 document.querySelectorAll('[data-dev]').forEach(b=>b.onclick=()=>toast(b.dataset.dev+' is unavailable until its rules are implemented and tested.'));
