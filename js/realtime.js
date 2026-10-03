@@ -3,7 +3,7 @@ window.DaniRealtime=(()=>{
  let ws=null,topic='',ref=0,heartbeat=null,retry=null,closed=true,onEvent=()=>{},onState=()=>{},cfg=null;
  const state=s=>{try{onState(s)}catch(e){}},send=(event,payload={},t=topic)=>{if(ws?.readyState===1)ws.send(JSON.stringify({topic:t,event,payload,ref:String(++ref)}))};
  function stopSocket(){clearInterval(heartbeat);clearTimeout(retry);if(ws){ws.onclose=null;try{ws.close()}catch(e){}}ws=null}
- async function config(){if(cfg)return cfg;const r=await fetch('/api/online/realtime',{credentials:'same-origin'});if(!r.ok)throw Error('Realtime unavailable');return cfg=await r.json()}
+ async function config(){if(cfg)return cfg;const r=await fetch('/api/online/auth?realtime=1',{credentials:'same-origin'});if(!r.ok)throw Error('Realtime unavailable');return cfg=await r.json()}
  async function connect(roomId,eventCb,stateCb){disconnect();closed=false;topic='realtime:room:'+roomId;onEvent=eventCb||(()=>{});onState=stateCb||(()=>{});state('Connecting');
   try{const c=await config(),base=c.url.replace(/^http/,'ws').replace(/\/$/,'');ws=new WebSocket(base+'/realtime/v1/websocket?apikey='+encodeURIComponent(c.key)+'&vsn=1.0.0');
    ws.onopen=()=>{send('phx_join',{config:{broadcast:{ack:false,self:false},presence:{enabled:false},postgres_changes:[],private:false},access_token:c.key});heartbeat=setInterval(()=>send('heartbeat',{},'phoenix'),25000)};
