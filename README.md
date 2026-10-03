@@ -38,7 +38,7 @@ Online authority:
 - Requests carry room state versions and unique action IDs. The API rejects stale/out-of-turn actions and remembers recent IDs for deduplication.
 - Online state defaults to a 45-second turn deadline and 60-second reconnection grace policy. Configure them with `ONLINE_TURN_SECONDS` and `ONLINE_RECONNECT_GRACE_SECONDS`. On expiry, a server-validated timeout action uses a legal Ludo fallback or safely draws/passes/resolves a pending Color Cards choice.
 - Reopening Online reconnects to the live room. Leaving the screen never silently converts a live online match into a separate offline match.
-- The browser currently uses frequent versioned room refreshes as the realtime-equivalent transport; authoritative state remains on the server.
+- The browser maintains a Supabase Realtime WebSocket subscription per room. Broadcast messages contain only a wake-up/version signal; clients then fetch their own server-filtered state, so private hands and draw-pile order never travel over the public realtime channel.
 
 ## Online privacy
 
@@ -92,3 +92,29 @@ The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Car
 Public room discovery is not implemented yet. Online room creation therefore exposes Private as the supported visibility and labels Public unavailable rather than simulating it.
 
 See `docs/CLEANUP.md` for the recoverable checkpoint, replacements and retained files.
+
+
+## Realtime online multiplayer (v48)
+
+Online rooms use a persistent Supabase Realtime WebSocket for room-change notifications. All mutations still go through the same-origin API, which authenticates the account and validates the action against the shared Ludo/Color Cards engines. Realtime broadcasts never contain authoritative match state.
+
+Room lifecycle:
+- 2–4 players, six-character private codes, ready states, avatars and host ownership.
+- The host can select Classic Ludo or Color Cards and the supported Color Cards match format while waiting. Configuration is rejected after start.
+- Waiting rooms expire after `ONLINE_ROOM_HOURS` (default 24). Full, invalid, expired and already-started rooms are rejected.
+- If the host leaves a waiting lobby, ownership moves to the lowest occupied seat.
+- Clients send a lightweight presence heartbeat every 15 seconds; this is not match-state polling. Connection labels use the server's configurable reconnect grace period.
+- During a live match, leaving the view does not create an offline copy. Reopening Online reconnects the account to the authoritative room/private hand.
+- Turn deadlines remain server-authoritative. A timeout request is accepted only after the stored deadline; overdue state is also resolved when the room API is next touched. Disconnected players are not replaced by bots.
+
+Environment:
+- `SUPABASE_URL`
+- `SUPABASE_SECRET_KEY` — server only.
+- `SUPABASE_ANON_KEY` (or `SUPABASE_PUBLISHABLE_KEY`) — public key used to open Realtime. Browser roles still have no SELECT grants on authoritative online tables.
+- `ONLINE_TURN_SECONDS` (default 45)
+- `ONLINE_RECONNECT_GRACE_SECONDS` (default 60)
+- `ONLINE_ROOM_HOURS` (default 24)
+
+Apply `supabase/migrations/20261001_realtime_online_v48.sql` after the existing online migrations. Supabase Realtime must be enabled for the project. The application sends Broadcast messages through the server; it does not expose database rows through Postgres Changes.
+
+Hosting must support the existing Node 22 server API and outbound HTTPS to Supabase. The persistent socket is between each browser and Supabase Realtime, so the web host itself does not need to hold WebSocket connections open.
