@@ -87,7 +87,7 @@ Color Cards setup adds computer difficulty and hand sorting. Ludo setup document
 
 ## Homepage feature truthfulness
 
-The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Cards and private online rooms are available. Quick Match and Team Up are intentionally disabled until separate rules are implemented and tested. Carrom, Chess and Snakes & Ladders are Coming Soon with no invented release dates. Daily Rewards, Missions, Lucky Spin, Shop and Tournament surfaces are labeled demonstrations/previews; there are no real purchases or redeemable currencies.
+The central runtime catalog is `data/game-catalog.json`. Classic Ludo, Color Cards and private online rooms are available. Quick Match and Team Up are intentionally disabled until separate rules are implemented and tested. Carrom, Chess and Snakes & Ladders are Coming Soon with no invented release dates. Daily Rewards, Missions, earned-coin Cosmetics and verified Leaderboards are implemented for signed-in online accounts. Lucky Spin remains a clearly labeled preview. Free-entry Classic Ludo tournaments and limited-time events are implemented. Coins have no cash value and there are no real-money purchases, wagering or cash-out.
 
 Public room discovery is not implemented yet. Online room creation therefore exposes Private as the supported visibility and labels Public unavailable rather than simulating it.
 
@@ -118,3 +118,90 @@ Environment:
 Apply `supabase/migrations/20261001_realtime_online_v48.sql` after the existing online migrations. Supabase Realtime must be enabled for the project. The application sends Broadcast messages through the server; it does not expose database rows through Postgres Changes.
 
 Hosting must support the existing Node 22 server API and outbound HTTPS to Supabase. The persistent socket is between each browser and Supabase Realtime, so the web host itself does not need to hold WebSocket connections open.
+
+
+## Persistent accounts, friends, invitations and verified history (v49)
+
+Guest/offline play remains available without an account. Online identity uses the existing server-side DaniLabs account/session system: password hashes and recovery hashes stay in server-only tables and are never returned by public APIs. New accounts receive a stable public `DL-…` player ID.
+
+Profiles:
+- Authenticated players may edit only their own display name and supplied avatar choice.
+- The local guest profile stays separate. The Profile screen offers an explicit “Use my guest profile” migration; signup/login never silently overwrites account profile data.
+- Verified online statistics are computed only from authoritative recorded online results. Local/offline results remain separate.
+
+Social:
+- Friends are found by public player ID, not private account identifiers.
+- Requests support send, accept, decline and cancel; accepted friends can be removed.
+- Blocking removes an existing relationship and prevents new friend requests and room invitations in either direction.
+- Invitations are server validated on send and accept, expire, and re-check room status/capacity and block state before membership is created.
+- Presence shown in live rooms comes from the realtime connection/presence heartbeat; history/friends pages do not invent activity.
+
+History:
+- Completed authoritative online matches are inserted into `online_match_results` with a unique `room_id`, preventing duplicate result records.
+- Participant snapshots, winner and Color Cards scores are stored separately and exposed only to authenticated participants through `/api/online/history`.
+- Supported result statuses are completed, abandoned and forfeited. This phase records normal completed matches; abandoned/forfeited policy is reserved for a later explicit match-abandonment feature.
+
+Apply `supabase/migrations/20261001_accounts_social_history_v49.sql` after v48. No additional secrets are required beyond the documented v48 environment variables.
+
+
+## Rewards, missions, cosmetics and leaderboards (v50)
+
+This economy is deterministic and server controlled. Earned coins have no cash value and cannot be bought, wagered or cashed out.
+
+Daily rewards use server UTC. The daily reset is 00:00 UTC and is displayed in the UI. One fixed reward may be claimed per UTC date. Consecutive claims advance Day 1 through Day 7, Day 7 cycles to Day 1 on the next consecutive day, and missing a UTC day resets the next claim to Day 1. A database primary key plus a transactional server-only RPC prevents concurrent duplicate claims.
+
+Currency changes are written to `reward_ledger` with unique transaction keys. PostgreSQL row locking prevents negative balances and makes claim/purchase operations atomic. Reward amounts and cosmetic prices come only from server policy; clients submit identifiers, never balances or prices. Reward RPC execution is revoked from browser roles.
+
+Daily/weekly missions currently cover verified completed matches, verified wins, Ludo pawn finishes and Color Cards action-card plays. Ludo finishes and card actions are counted inside the authoritative online engine. Result/mission/player event keys make progress idempotent. Offline, abandoned and forfeited matches do not qualify.
+
+The cosmetic catalog currently contains an avatar treatment, profile frame, Ludo board theme, pawn treatment and Color Cards card back. Purchases use earned coins only. Equipped cosmetics are visual only and do not affect rules. The last verified loadout is cached locally so its already-available styling can display offline; offline actions never grant ownership or alter the server wallet.
+
+Ludo and Color Cards leaderboards are separate. Eligibility is at least one verified normally completed online match of that game. Ranking is wins descending, then win rate, then games played, with public player ID as a deterministic final tie break. Abandoned/forfeited/offline matches are excluded.
+
+Apply `supabase/migrations/20261001_rewards_inventory_v50.sql` after v49. No new environment secrets are required.
+
+
+## Tournaments and limited-time events (v51)
+
+Supported tournament format:
+- Free entry only. There are no entry fees, wagers, cash prizes or cash-out.
+- Two-player **Classic Ludo**, using the same shared authoritative Classic rules and server-generated dice as normal online rooms.
+- Requested bracket capacities: 4, 8 or 16. Single elimination, one match per pairing.
+- Color Cards tournaments are **not supported** until a separate tournament round/scoring format is specified and implemented. Team tournaments, paid-entry tournaments and best-of series are also unsupported.
+- Registration is unique per account/tournament and capacity is checked while the tournament row is locked. Registration closes at the stored server timestamp.
+- If fewer than four players register, the tournament is cancelled. Otherwise the bracket resizes to the smallest supported capacity that contains every registrant (4/8/16); unused slots become byes, so registered players are not arbitrarily dropped.
+- Brackets are persisted after registration closes. Initial seeding uses registration order with account ID as a deterministic tie break.
+- Schedule and countdown UI uses server time. The displayed tournament timezone is UTC.
+
+Pairings and progression:
+- Every real pairing gets a private two-player Classic room. Ordinary host configure/start/leave controls are disabled for tournament-tagged rooms.
+- Both players must confirm readiness before the stored readiness deadline (default 5 minutes after the scheduled/created pairing time). One no-show forfeits to the ready player; double no-show has no winner.
+- Live tournament matches use account presence heartbeats. After 20 seconds stale presence the UI can show reconnecting; remaining absent beyond the tournament reconnect grace (default 90 seconds) forfeits. If both remain absent, there is no winner.
+- Normal winners advance only from the unique authoritative `online_match_results` row for that room. No-show/reconnect forfeits are server-adjudicated and stored as `forfeited` history, so they do not count for verified missions or leaderboards.
+- Terminal bracket slots are replayed during tournament sweeps. This repairs progression after a server restart between result persistence and next-round creation. Unique slot/result constraints and conditional updates keep retries idempotent.
+- Completed match history is never rewritten when an administrator cancels a tournament. Unfinished pairing rooms are stopped and their tournament slots become cancelled.
+
+Rewards:
+- Tournament reward configuration is displayed before registration.
+- Champion earned coins are granted to a valid final winner; runner-up rewards require a normally completed final, so a final no-show/forfeit loser is not an eligible finisher. Champion/runner-up earned coins use the existing server-controlled ledger with transaction key `tournament:<tournament-id>:<user-id>`. Replays therefore do not duplicate grants.
+- Optional tournament badges are persistent cosmetic achievements. Rewards have no cash value.
+
+Limited-time events:
+- Published/cancelled events persist with title, description, optional artwork, start/end timestamps, eligible games, eligible mission keys and a fixed earned-coin/badge reward summary.
+- Availability and claims use server time. Upcoming, active, expired and cancelled events remain viewable as applicable.
+- Event mission progress is fed only by verified completed online-match metrics. Event reward claims require every configured event mission to be complete and must occur while the published event window is active. Event claims and ledger transactions are unique per account/event.
+
+Administration:
+- Admin permission is server-side in `online_admins`; the browser cannot grant itself admin access.
+- The admin interface supports create/edit/publish/cancel for events and tournaments. Important mutations are written to `admin_audit_log`.
+- Tournament rules/rewards are editable only before start; draft-only structural fields are locked once published. Completed tournaments cannot be cancelled.
+
+Deployment:
+1. Apply migrations through v50 first.
+2. Apply `supabase/migrations/20261001_tournaments_events_v51.sql`.
+3. After the intended administrator has created an account, grant admin explicitly from a trusted Supabase SQL/admin session:
+   `insert into public.online_admins(user_id) values ('<server account user_id>') on conflict do nothing;`
+4. No browser-visible admin secret is used and no new environment variable is required.
+5. The app enforces deadlines when tournament/event APIs are touched (including the open tournament UI's periodic refresh); persisted timestamps make enforcement restart-safe.
+
+Verification is included in `tests/tournament-policy.test.js` plus the existing gameplay/reward suite. It covers supported/resized bracket sizes, registration deadlines/capacity and concurrent-registration database contracts, one/double no-shows, reconnect grace, server-time event availability, winner-slot advancement contracts, duplicate result/reward protections, restart recovery replay and database-backed administrator authorization.

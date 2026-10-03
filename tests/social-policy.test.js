@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {pairKey,playerIdFrom,validPlayerId,canSocial,statsFrom} from '../api/_social-policy.js';
+test('public player IDs are stable and validated',()=>{const id=playerIdFrom('12345678-abcd-ef00');assert.equal(id,'DL-12345678AB');assert.equal(validPlayerId(id),true)});
+test('friend/invite actions are blocked in either direction',()=>{const blocks=[{blocker_id:'a',blocked_id:'b'}];assert.equal(canSocial('a','b',blocks),false);assert.equal(canSocial('b','a',blocks),false);assert.equal(canSocial('a','c',blocks),true);assert.equal(pairKey('b','a'),'a|b')});
+test('verified statistics count games and wins consistently',()=>{assert.deepEqual(statsFrom([{won:true},{won:false},{won:true}]),{gamesPlayed:3,wins:2,winRate:66.7});assert.deepEqual(statsFrom([]),{gamesPlayed:0,wins:0,winRate:0})});

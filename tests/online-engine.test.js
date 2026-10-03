@@ -33,3 +33,8 @@ test('expired online turn uses a server-controlled legal fallback',()=>{
 test('timeout cannot be forced before deadline',()=>{
  const st=newOnlineState(2,'classic');assert.throws(()=>timeoutAction(st),/has not expired/);
 });
+
+test('authoritative engine counts mission events and redacts counters',()=>{
+ const l=newOnlineState(2,'classic'),lc=currentColor(l),lp=l.game.players.find(p=>p.id===lc).pawns[0];lp.progress=56;lp.state='home';l.game.phase='move';l.game.roll=1;const lm=applyAction(l,lc,'move',{token:0});assert.equal(lm.meta.rewardMetrics[lc].ludoFinishes,1);assert.equal(publicState(lm,lc).meta.rewardMetrics,undefined);
+ const st=newOnlineState(2,'color-cards'),cc=currentColor(st),p=st.game.players.find(x=>x.id===cc),top=st.game.discard.at(-1);p.hand[0]={id:'mission-action',color:top.color,value:'skip'};const out=applyAction(st,cc,'play',{card:0});assert.equal(out.meta.rewardMetrics[cc].cardActions,1);
+});
