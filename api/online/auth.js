@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import {db,enc} from '../_db.js';
 import {playerIdFrom} from '../_social-policy.js';
+import {realtimePublicConfig} from '../_realtime.js';
 import {normalizeUsername,validUsername,validPassword,passwordHash,passwordMatches,sha,createSession,revokeSession,optionalUser,requireUser,requireSameOrigin,sessionCookie,clearSessionCookie,recoveryCode,userPublic} from '../_auth.js';
 
 const send=(res,status,data)=>res.status(status).json(data);
@@ -17,7 +18,11 @@ async function throttle(req,username){
 async function issue(res,u){const token=await createSession(u.user_id);res.setHeader('Set-Cookie',sessionCookie(token));return userPublic(u)}
 export default async function handler(req,res){
  try{
-  if(req.method==='GET'){const u=await optionalUser(req);return send(res,200,{user:userPublic(u)})}
+  if(req.method==='GET'){
+   if(String(req.query?.realtime||'')==='1'){const c=realtimePublicConfig();if(!c)return send(res,503,{error:'Realtime is not configured'});res.setHeader('Cache-Control','private, max-age=300');return send(res,200,c)}
+   if(String(req.query?.health||'')==='1'){await db('online_rooms?select=id&limit=1');const u=await optionalUser(req);return send(res,200,{ok:true,service:'danilabs-online',database:'ready',user:userPublic(u)})}
+   const u=await optionalUser(req);return send(res,200,{user:userPublic(u)})
+  }
   if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
   requireSameOrigin(req);const b=req.body||{},action=String(b.action||'');
   if(action==='register'){
