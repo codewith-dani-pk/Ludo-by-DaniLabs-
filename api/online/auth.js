@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import {db,enc} from '../_db.js';
+import {playerIdFrom} from '../_social-policy.js';
 import {normalizeUsername,validUsername,validPassword,passwordHash,passwordMatches,sha,createSession,revokeSession,optionalUser,requireUser,requireSameOrigin,sessionCookie,clearSessionCookie,recoveryCode,userPublic} from '../_auth.js';
 
 const send=(res,status,data)=>res.status(status).json(data);
@@ -25,7 +26,7 @@ export default async function handler(req,res){
    const {salt,hash}=await passwordHash(password),user_id=crypto.randomUUID(),code=recoveryCode();
    try{await db('online_accounts',{method:'POST',body:{user_id,username,display_name:username,password_salt:salt,password_hash:hash,recovery_hash:sha(code)}})}
    catch(e){return send(res,409,{error:'Could not create account with those details.'})}
-   await db('online_profiles?on_conflict=user_id',{method:'POST',body:{user_id,username,display_name:username,last_seen:new Date().toISOString()},prefer:'resolution=merge-duplicates,return=minimal'});
+   await db('online_profiles?on_conflict=user_id',{method:'POST',body:{user_id,username,display_name:username,player_id:playerIdFrom(user_id),avatar:'avatar-1',last_seen:new Date().toISOString()},prefer:'resolution=merge-duplicates,return=minimal'});
    const user=await issue(res,{user_id,username,display_name:username});return send(res,200,{user,recoveryCode:code})
   }
   if(action==='login'){
